@@ -9,11 +9,7 @@ use Validator;
 
 class UnivesityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(Request $request)
     {
 
@@ -36,15 +32,12 @@ class UnivesityController extends Controller
 
     }
 
-
     public function Sort(Request $request)
     {
-
         $input = $request->all();
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-
                 if ($request->get('rows')) {
                     foreach ($request->get('rows') as $row) {
                         University::whereId($row['id'])->update([
@@ -66,7 +59,6 @@ class UnivesityController extends Controller
         }
 
     }
-
 
     public function store(Request $request)
     {
@@ -99,16 +91,7 @@ class UnivesityController extends Controller
         }
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function update(Request $request)
+    public function update(Request $request)
     {
         $input = $request->all();
         $user = check_api_token($request->header('api_token'));
@@ -140,8 +123,7 @@ class UnivesityController extends Controller
         }
     }
 
-    public
-    function destroy(Request $request, $id)
+    public function destroy(Request $request, $id)
     {
         $input = $request->all();
         $user = check_api_token($request->header('api_token'));
@@ -170,5 +152,32 @@ class UnivesityController extends Controller
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
 
         }
+    }
+
+    public function show(Request $request, $id)
+    {
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $university = University::whereId($id)->with('Colleges')->first();
+                if ($university) {
+
+                    return msgdata($request, success(), trans('lang.shown_s'), $university);
+                } else {
+                    return msgdata($request, not_found(), trans('lang.not_found'), (object)[]);
+
+                }
+
+            } else {
+
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+
     }
 }

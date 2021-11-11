@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\UnivesityController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\Students\ProfileController;
 use Illuminate\Http\Request;
@@ -27,8 +28,16 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/register', [LoginController::class, 'register']);
 
-    Route::post('/student/home', [LoginController::class, 'register']);
+    Route::post('/home', [LoginController::class, 'register']);
+    Route::get('/profile', [ProfileController::class, 'index']);
 
+    Route::group(['prefix' => 'admin'], function () {
 
-    Route::get('/profile', [\App\Http\Controllers\Api\Students\ProfileController::class, 'index']);
+        Route::get('/universities', [UnivesityController::class, 'index']);
+        Route::post('/universities-Sort', [UnivesityController::class, 'Sort']);
+        Route::post('/universities-store', [UnivesityController::class, 'store']);
+        Route::post('/universities-update', [UnivesityController::class, 'update']);
+        Route::get('/universities-destroy', [UnivesityController::class, 'destroy']);
+        Route::get('/universities-specialists', [UnivesityController::class, 'show']);
+    });
 });
