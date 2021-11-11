@@ -13,7 +13,6 @@ class PeopelSeeder extends Seeder
         $admin = User::create([
             'name' => 'admin',
             'phone' => '01094641332',
-            'image' => '',
             'email' => 'admin@admin.com',
             'type' => 'admin',
             'verified' => 1,
@@ -25,7 +24,6 @@ class PeopelSeeder extends Seeder
         $student= User::create([
             'name' => 'student',
             'phone' => '01201636129',
-            'image' => '',
             'email' => 'student@gmail.com',
             'type' => 'student',
             'verified' => 1,
@@ -37,7 +35,6 @@ class PeopelSeeder extends Seeder
         $assistant= User::create([
             'name' => 'assistant',
             'phone' => '01111651415',
-            'image' => '',
             'email' => 'assistant@gmail.com',
             'type' => 'assistant',
             'verified' => 1,

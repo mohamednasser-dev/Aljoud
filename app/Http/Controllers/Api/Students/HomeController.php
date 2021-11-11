@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Students;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -9,9 +9,8 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Validator;
 
-class LoginController extends Controller
+class HomeController extends Controller
 {
-
     public function login(Request $request)
     {
         $rules = [
@@ -34,11 +33,11 @@ class LoginController extends Controller
         $user = Auth::user();
         if ($user->verified == 0) {
             Auth::logout();
-            return msgdata($request, not_active(), trans('lang.verify_first'), null);
+            return msgdata($request, not_active(), 'verify phone first', null);
         }
         if ($user->status == 'disable') {
             Auth::logout();
-            return msgdata($request, not_active(), trans('lang.account_un_active'), null);
+            return msgdata($request, not_active(), trans('lang.acount_unactive'), null);
         }
         if ($request->fcm_token) {
             User::where('id', $user->id)->update(['fcm_token' => $request->fcm_token]);
@@ -73,7 +72,7 @@ class LoginController extends Controller
             $user->api_token = Str::random(60);
             $user->save();
             //User created, return success response
-            return msgdata($request, success(), trans('lang.register_done'), $user);
+            return msgdata($request, success(), 'login_success', array('user' => $user));
         }
     }
 }
