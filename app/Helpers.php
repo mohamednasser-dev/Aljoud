@@ -185,8 +185,6 @@ function not_active()
 }
 
 
-
-
 function upload($file, $dir)
 {
     $image = time() . uniqid() . '.' . $file->getClientOriginalExtension();
@@ -217,7 +215,6 @@ if (!function_exists('HttpPost')) {
         curl_close($ch);
         return json_decode($output);
     }
-
 
 
 }

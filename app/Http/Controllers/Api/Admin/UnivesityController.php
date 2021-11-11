@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\University;
 use Illuminate\Http\Request;
+use Validator;
 
 class UnivesityController extends Controller
 {
@@ -19,8 +20,14 @@ class UnivesityController extends Controller
         $input = $request->all();
         $user = check_api_token($request->header('api_token'));
         if ($user) {
-            $universities = University::orderBy('sort', 'asc')->paginate(10);
-            return msgdata($request, success(), trans('lang.success'), $universities);
+            if ($user->type == "admin") {
+
+                $universities = University::orderBy('sort', 'asc')->paginate(10);
+                return msgdata($request, success(), trans('lang.success'), $universities);
+            } else {
+
+                return msgdata($request, failed(), trans('lang.not_authorize'), []);
+            }
 
         } else {
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
@@ -29,25 +36,32 @@ class UnivesityController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+
+                $rules = [
+                    'phone' => 'required|exists:users,phone',
+                    'password' => 'required',
+                    'fcm_token' => 'required',
+                    'device_id' => 'required',
+                ];
+                $validator = Validator::make($request->all(), $rules);
+                if ($validator->fails()) {
+                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                }
+            } else {
+
+                return msgdata($request, failed(), trans('lang.not_authorize'), []);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+
+        }
     }
 
     /**
@@ -56,7 +70,8 @@ class UnivesityController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public
+    function show($id)
     {
         //
     }
@@ -67,7 +82,8 @@ class UnivesityController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public
+    function edit($id)
     {
         //
     }
@@ -79,7 +95,8 @@ class UnivesityController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public
+    function update(Request $request, $id)
     {
         //
     }
@@ -90,7 +107,8 @@ class UnivesityController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public
+    function destroy($id)
     {
         //
     }
