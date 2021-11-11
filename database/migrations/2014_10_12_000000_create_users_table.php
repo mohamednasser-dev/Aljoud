@@ -17,9 +17,18 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('image')->nullable();
+            $table->string('phone')->unique();
             $table->string('password');
+            $table->string('api_token')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
+            $table->string('device_id');
+            $table->string('fcm_token');
+            $table->integer('verified')->default(0);
+            $table->string('code')->nullable();
+            $table->enum('type',['admin','student','assistant'])->nullable()->default('student');
+            $table->enum('status',['disable','enable'])->default('enable');
             $table->timestamps();
         });
     }
