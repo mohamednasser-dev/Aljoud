@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\User;
 use App\Models\Adminhistory;
 use Illuminate\Support\Facades\Validator;
@@ -186,6 +187,8 @@ function not_active()
 }
 
 
+
+
 function upload($file, $dir)
 {
     $image = time() . uniqid() . '.' . $file->getClientOriginalExtension();
@@ -200,11 +203,9 @@ if (!function_exists('HttpPost')) {
 
         // Create curl resource
         $ch = curl_init($apiURL);
-
         // Request headers
         $headers = array();
         $headers[] = 'Content-Type: application/json';
-
         // Return the transfer as a string
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -218,4 +219,7 @@ if (!function_exists('HttpPost')) {
         curl_close($ch);
         return json_decode($output);
     }
+
+
+
 }
