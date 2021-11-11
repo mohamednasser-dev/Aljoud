@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\LoginController;
+use App\Http\Controllers\Api\Students\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,11 +24,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
 //student
     //login
-    Route::post('/login', [\App\Http\Controllers\Api\LoginController::class, 'login']);
-    Route::post('/register', [\App\Http\Controllers\Api\LoginController::class, 'register']);
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/register', [LoginController::class, 'register']);
 
-    Route::post('/student/home', [\App\Http\Controllers\Api\LoginController::class, 'register']);
+    Route::post('/student/home', [LoginController::class, 'register']);
 
 
-    Route::post('/profile', [\App\Http\Controllers\Api\Students\ProfileController::class, 'index']);
+    Route::post('/profile', [ProfileController::class, 'index']);
 });

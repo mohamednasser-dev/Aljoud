@@ -26,7 +26,7 @@ class UnivesityController extends Controller
                 return msgdata($request, success(), trans('lang.shown_s'), $universities);
             } else {
 
-                return msgdata($request, failed(), trans('lang.not_authorize'), []);
+                return msgdata($request, failed(), trans('lang.permission_warrning'), []);
             }
 
         } else {
@@ -35,6 +35,38 @@ class UnivesityController extends Controller
         }
 
     }
+
+
+    public function Sort(Request $request)
+    {
+
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+
+                if ($request->get('rows')) {
+                    foreach ($request->get('rows') as $row) {
+                        University::whereId($row['id'])->update([
+                            'sort' => $row['sort'],
+                        ]);
+                    }
+                } else {
+                    return response()->json(msgdata($request, failed(), 'sort_failed', (object)[]));
+
+                }
+            } else {
+
+                return msgdata($request, failed(), trans('lang.permission_warrning'), []);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+
+        }
+
+    }
+
 
     public function store(Request $request)
     {
@@ -44,49 +76,29 @@ class UnivesityController extends Controller
             if ($user->type == "admin") {
 
                 $rules = [
-                    'phone' => 'required|exists:users,phone',
-                    'password' => 'required',
-                    'fcm_token' => 'required',
-                    'device_id' => 'required',
+                    'name_ar' => 'required',
+                    'name_en' => 'required',
+                    'image' => 'nullable|image',
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                } else {
+                    $university = University::create($input);
+                    return msgdata($request, success(), trans('lang.added_s'), $university);
                 }
+
             } else {
 
-                return msgdata($request, failed(), trans('lang.not_authorize'), []);
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
 
         } else {
-            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
 
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -96,20 +108,67 @@ class UnivesityController extends Controller
      * @return \Illuminate\Http\Response
      */
     public
-    function update(Request $request, $id)
+    function update(Request $request)
     {
-        //
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $rules = [
+                    'id' => 'required|exists:universities,id',
+                    'name_ar' => 'required',
+                    'name_en' => 'required',
+                    'image' => 'nullable|image',
+                ];
+                $validator = Validator::make($request->all(), $rules);
+                if ($validator->fails()) {
+                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                } else {
+                    unset($input['id']);
+                    $university = University::whereId($request->id)->update($input);
+                    return msgdata($request, success(), trans('lang.updated_s'), $university);
+                }
+
+            } else {
+
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public
-    function destroy($id)
+    function destroy(Request $request, $id)
     {
-        //
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $university = University::whereId($request->id)->first();
+                if ($university) {
+                    try {
+                        $university->delete();
+                    } catch (\Exception $e) {
+                        return msgdata($request, failed(), trans('lang.error'), (object)[]);
+
+                    }
+
+                    return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+                } else {
+                    return msgdata($request, not_found(), trans('lang.not_found'), (object)[]);
+                }
+
+            } else {
+
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
     }
 }

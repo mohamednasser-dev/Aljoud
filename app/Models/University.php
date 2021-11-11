@@ -4,24 +4,41 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 
 class University extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i',
     ];
-    public function Colleges(){
-        return $this->hasMany(College::class ,'university_id');
+
+
+    protected $appends = ['name'];
+
+    public function getNameAttribute()
+    {
+        if ($locale = App::currentLocale() == "ar") {
+            return $this->name_ar;
+        } else {
+            return $this->name_en;
+        }
+    }
+
+
+    public function Colleges()
+    {
+        return $this->hasMany(College::class, 'university_id');
     }
 
 
     public function getImageAttribute($image)
     {
-        if (!empty($image)){
-            return asset('uploads/universities').'/'.$image;
+        if (!empty($image)) {
+            return asset('uploads/universities') . '/' . $image;
         }
         return asset('uploads/users/default.jpg');
     }
