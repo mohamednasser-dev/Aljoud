@@ -43,16 +43,16 @@ class User extends Authenticatable
     public function getImageAttribute($image)
     {
         if (!empty($image)){
-            return asset('uploads/admins').'/'.$image;
+            return asset('uploads/users').'/'.$image;
         }
-        return asset('uploads/admins/default.jpg');
+        return asset('uploads/users/default.jpg');
     }
 
     public function setImageAttribute($image)
     {
 
         if (is_file($image)) {
-            $imageFields = upload($image, 'admins');
+            $imageFields = upload($image, 'users');
             $this->attributes['image'] = $imageFields;
 
         }
@@ -71,7 +71,6 @@ class User extends Authenticatable
         if ($this->getCastType($key) == 'string' && is_null($value)) {
             return '';
         }
-
 
         return parent::castAttribute($key, $value);
     }

@@ -9,4 +9,7 @@ class University extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+
+
 }
