@@ -80,8 +80,7 @@ function checkLang()
 
 function check_api_token($api_token)
 {
-    return
-        User::where("api_token", $api_token)->first();
+    return \App\Models\User::where("api_token", $api_token)->first();
 }
 
 
