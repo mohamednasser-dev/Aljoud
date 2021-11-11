@@ -201,11 +201,9 @@ if (!function_exists('HttpPost')) {
 
         // Create curl resource
         $ch = curl_init($apiURL);
-
         // Request headers
         $headers = array();
         $headers[] = 'Content-Type: application/json';
-
         // Return the transfer as a string
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
