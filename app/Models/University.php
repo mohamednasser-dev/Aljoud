@@ -17,4 +17,24 @@ class University extends Model
         return $this->hasMany(College::class ,'university_id');
     }
 
+
+    public function getImageAttribute($image)
+    {
+        if (!empty($image)){
+            return asset('uploads/universities').'/'.$image;
+        }
+        return asset('uploads/users/default.jpg');
+    }
+
+    public function setImageAttribute($image)
+    {
+
+        if (is_file($image)) {
+            $imageFields = upload($image, 'universities');
+            $this->attributes['image'] = $imageFields;
+
+        }
+
+    }
+
 }
