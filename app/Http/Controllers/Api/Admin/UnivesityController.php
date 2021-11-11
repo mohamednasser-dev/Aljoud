@@ -23,7 +23,7 @@ class UnivesityController extends Controller
             if ($user->type == "admin") {
 
                 $universities = University::orderBy('sort', 'asc')->paginate(10);
-                return msgdata($request, success(), trans('lang.success'), $universities);
+                return msgdata($request, success(), trans('lang.shown_s'), $universities);
             } else {
 
                 return msgdata($request, failed(), trans('lang.not_authorize'), []);
