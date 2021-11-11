@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Validator;
 
 class LoginController extends Controller
@@ -43,9 +44,9 @@ class LoginController extends Controller
             User::where('id', $user->id)->update(['fcm_token' => $request->fcm_token]);
         }
         $user_data = User::where('id', $user->id)->first();
-        $user_data->access_token = $token;
-
-        return msgdata($request, success(), 'login success', $user_data);
+        $user_data->api_token = Str::random(60);
+        $user_data->save();
+        return msgdata($request, success(), trans('lang.login_s'), $user_data);
     }
 
     public function Register(Request $request)
@@ -69,7 +70,8 @@ class LoginController extends Controller
         $user = User::create($data);
         if ($user) {
             $token = Auth::attempt(['phone' => $request->phone, 'password' => $request->password]);
-            $user->token_api = $token;
+            $user->api_token = Str::random(60);
+            $user->save();
             //User created, return success response
             return msgdata($request, success(), 'login_success', array('user' => $user));
         }
