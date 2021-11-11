@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\User;
-use App\User;
-use App\Models\Adminhistory;
 use Illuminate\Support\Facades\Validator;
 
 // send fcm notification

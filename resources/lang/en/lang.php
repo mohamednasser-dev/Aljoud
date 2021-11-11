@@ -8,6 +8,7 @@ return [
     'updated_s' => 'updated successfully',
     'deleted_s' => 'deleted successfully',
     'shown_s' => 'data shown successfully',
+    'permission_warrning'=>'You do not have permission for this page',
 
     'verify_first' => 'verify phone first',
     'account_un_active' => 'Your Account NotActive',
