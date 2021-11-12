@@ -32,6 +32,21 @@ class InstructorsController extends Controller
         }
     }
 
+    public function delete(Request $request,$id)
+    {
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                User::where('id', $id)->delete();
+                return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+            } else {
+                return msgdata($request, failed(), trans('lang.permission_warrning'), []);
+            }
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+        }
+    }
+
     public function store(Request $request)
     {
         $data = $request->all();

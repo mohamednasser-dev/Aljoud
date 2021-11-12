@@ -18,7 +18,7 @@ class CreateCoursesTable extends Migration
             $table->string('name_ar');
             $table->string('name_en');
             $table->float('price');
-            $table->float('discount');
+            $table->float('discount')->nullable();
             $table->string('image')->nullable();
             $table->integer('sort')->default(1);
             $table->integer('show')->default(1);
