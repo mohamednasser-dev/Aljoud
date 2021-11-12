@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\ExamQuestionController;
 use App\Http\Controllers\Api\Admin\QuizQuestionController;
 use App\Http\Controllers\Api\Admin\InstructorsController;
 use App\Http\Controllers\Api\Admin\CurrenciesController;
+use App\Http\Controllers\Api\Admin\RequestTypesController;
 use App\Http\Controllers\Api\Students\ProfileController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
@@ -213,6 +214,14 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/offers/store', [OffersController::class, 'store']);
         Route::post('/offers/update', [OffersController::class, 'update']);
         Route::get('/offers-status-Action/{id}', [OffersController::class, 'statusAction']);
+
+
+//request types Crud
+        Route::get('/request-types', [RequestTypesController::class, 'index']);
+        Route::post('/request-types-store', [RequestTypesController::class, 'store']);
+        Route::post('/request-types-update', [RequestTypesController::class, 'update']);
+        Route::get('/request-types-destroy/{id}', [RequestTypesController::class, 'destroy']);
+        Route::get('/request-types-status-Action/{id}', [RequestTypesController::class, 'statusAction']);
 
     });
     // helpers
