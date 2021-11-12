@@ -10,4 +10,14 @@ class UserLesson extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function Lesson()
+    {
+        return $this->belongsTo(Lesson::class, 'lesson_id');
+    }
+
+    public function Users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

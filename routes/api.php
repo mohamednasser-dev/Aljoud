@@ -96,6 +96,10 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/courses-lessons/{id}', [CoursesController::class, 'show']);
         Route::get('/courses-status-Action/{id}', [CoursesController::class, 'statusAction']);
 
+        Route::get('/course-users/{id}', [CoursesController::class, 'Users']);
+        Route::post('/add-course-users', [CoursesController::class, 'AddUsers']);
+        Route::post('/delete-course-users', [CoursesController::class, 'DeleteUsers']);
+
 
 //        Lesson Crud
         Route::get('/lessons/{course_id}', [LessonController::class, 'index']);

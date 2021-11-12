@@ -275,6 +275,8 @@ class LessonController extends Controller
                 }
 
                 if ($request->users) {
+                    $lesson_users = UserLesson::whereIn('user_id', $request->users)->where('lesson_id', $request->lesson_id)->delete();
+
                     foreach ($request->users as $user) {
                         UserLesson::create([
                             'user_id' => $user,
