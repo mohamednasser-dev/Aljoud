@@ -48,6 +48,10 @@ class Lesson extends Model
         return $this->belongsTo(Course::class, 'course_id');
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_lessons', 'lesson_id', 'user_id');
+    }
 
     public function getImageAttribute($image)
     {
