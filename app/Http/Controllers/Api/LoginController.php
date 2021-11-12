@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendCode;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Milon\Barcode\Facades\DNS2DFacade;
 use Validator;
+use Mail;
 
 class LoginController extends Controller
 {
@@ -57,7 +59,7 @@ class LoginController extends Controller
         return msgdata($request, success(), trans('lang.login_s'), $user_data);
     }
 
-    public function Register(Request $request)
+    public function sign_up(Request $request)
     {
         $data = $request->all();
         $validator = Validator::make($data, [
@@ -88,6 +90,88 @@ class LoginController extends Controller
             $user->save();
             //User created, return success response
             return msgdata($request, success(), trans('lang.register_done'), $user);
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        $api_token = $request->header('api_token');
+        $user = check_api_token($api_token);
+        if (!$user) {
+            return response()->json(msg($request, not_authoize(), 'not_authorize'), (object)[]);
+        }
+        $user->api_token = null;
+        if ($user->save()) {
+            return msgdata($request, success(), trans('lang.logout_s'), (object)[]);
+        } else {
+            return response()->json(msg($request, not_authoize(), 'not_authorize'), (object)[]);
+        }
+    }
+    public function forget_password(Request $request) {
+        $manual_pass ="";
+        $data = $request->all();
+        $validator = Validator::make($data, [
+            'email' => 'required|email|exists:users,email',
+        ]);
+        if (!$validator->fails()) {
+            //make token of 4 degits random...
+            $six_digit_random_number = mt_rand(1000, 9999);
+            $target_user = User::where('email',$request->email)->first();
+            // dd($pass_reset);
+            if($target_user != null){
+                $target_user->code = $six_digit_random_number;
+                $target_user->save();
+                Mail::to($request->email)->send(new SendCode($six_digit_random_number));
+                return sendResponse(200,trans('lang.email_send_code'),(object)[]);
+            }else{
+                return msgdata($request, failed(), trans('lang.not_authorized'), (object)[]);
+            }
+        }else {
+            return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
+        }
+    }
+    public function verify_code(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+            'code' => 'required',
+        ]);
+        if (!$validator->fails()) {
+            //make token of 4 degits random...
+            $six_digit_random_number = mt_rand(1000, 9999);
+            $target_user = User::where('code',$request->code)->where('email',$request->email)->first();
+            // dd($pass_reset);
+            if($target_user != null){
+                $data['status'] = true;
+                return sendResponse(200,trans('lang.code_checked_s'),$data);
+            }else{
+                $data['status'] = false;
+                return msgdata($request, failed(), trans('lang.make_sure_code'), $data);
+            }
+        }else {
+            $data['status'] = false;
+            return msgdata($request, failed(), $validator->messages()->first(), $data);
+        }
+    }
+
+    public function change_password(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|confirmed',
+        ]);
+        if (!$validator->fails()) {
+            $target_user = User::where('code','!=',null)->where('email',$request->email)->first();
+            if($target_user != null){
+                $target_user->password = $request->password;
+                $target_user->code = null;
+                $target_user->save();
+                return sendResponse(200,trans('lang.password_changed_s'),$target_user);
+            }else{
+                return msgdata($request, failed(), trans('lang.make_sure_code'), (object)[]);
+            }
+        }else {
+            return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
         }
     }
 }

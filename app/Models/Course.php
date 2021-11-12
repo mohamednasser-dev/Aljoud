@@ -72,6 +72,10 @@ class Course extends Model
         return $this->belongsTo(Instructor::class, 'instructor_id');
     }
 
+    public function Offers()
+    {
+        return $this->belongsToMany(Offer::class, 'offer_courses', 'course_id', 'offer_id');
+    }
 
     public function getImageAttribute($image)
     {
@@ -91,4 +95,5 @@ class Course extends Model
         }
 
     }
+
 }

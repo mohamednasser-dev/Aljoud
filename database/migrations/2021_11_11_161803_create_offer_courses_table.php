@@ -16,7 +16,7 @@ class CreateOfferCoursesTable extends Migration
         Schema::create('offer_courses', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('offer_id')->unsigned();
-            $table->foreign('offer_id')->references('id')->on('offers')->onDelete('restrict');
+            $table->foreign('offer_id')->references('id')->on('offers')->onDelete('cascade');
             $table->bigInteger('course_id')->unsigned();
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('restrict');
             $table->timestamps();

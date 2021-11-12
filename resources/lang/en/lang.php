@@ -22,6 +22,11 @@ return [
     'status_changed' => 'status changed successfully',
     'currency_required' => 'currency required',
     'currency_notFound' => 'currency not Found',
+    'logout_s' => 'logout done',
+    'email_send_code' => 'Reset password link sent on your email',
+    'code_checked_s' => 'code checked successfully',
+    'make_sure_code' => 'make sure is this code is correct',
+    'password_changed_s' => 'password changed successfully',
 
 
 ];
