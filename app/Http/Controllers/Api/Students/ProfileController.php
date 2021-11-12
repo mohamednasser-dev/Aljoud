@@ -38,7 +38,7 @@ class ProfileController extends Controller
             ]);
             //Request is valid, create new user
             if ($validator->fails()) {
-                return response()->json(msg($request, failed(), $validator->messages()->first()));
+                return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
             }
             $user->email = $request->email;
             $user->phone = $request->phone;

@@ -24,7 +24,7 @@ class LoginController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+            return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
         }
         $credentials = $request->only(['phone', 'password']);
         //to check the type of user not admine
@@ -70,7 +70,7 @@ class LoginController extends Controller
         ]);
         //Request is valid, create new user
         if ($validator->fails()) {
-            return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+            return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
         }
         //Request is valid, create new user
         $data['password'] = $request->password;

@@ -76,7 +76,7 @@ class CurrenciesController extends Controller
                 ]);
                 //Request is valid, create new user
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 }
                 $user = Currency::create($data);
                 $out = Currency::where('id',$user->id)->first();
@@ -103,7 +103,7 @@ class CurrenciesController extends Controller
                 ]);
                 //Request is valid, create new user
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 }
                 Currency::whereId($request->id)->update($data);
                 return msgdata($request, success(), trans('lang.updated_s'), (object)[]);

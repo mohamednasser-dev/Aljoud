@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\Admin\UnivesityController;
 use App\Http\Controllers\Api\Admin\UsersController;
 use App\Http\Controllers\Api\Admin\InstructorsController;
 use App\Http\Controllers\Api\Admin\CurrenciesController;
+use App\Http\Controllers\Api\Admin\OffersController;
+use App\Http\Controllers\Api\HelpersController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\Students\ProfileController;
 use Illuminate\Http\Request;
@@ -89,5 +91,19 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/currencies/data/{id}', [CurrenciesController::class, 'show']);
         Route::post('/currencies/store', [CurrenciesController::class, 'store']);
         Route::post('/currencies/update', [CurrenciesController::class, 'update']);
+        // offers
+        Route::get('/offers', [OffersController::class, 'index']);
+        Route::get('/offers/delete/{id}', [OffersController::class, 'delete']);
+        Route::get('/offers/data/{id}', [OffersController::class, 'show']);
+        Route::post('/offers/store', [OffersController::class, 'store']);
+        Route::post('/offers/update', [OffersController::class, 'update']);
+
+
+
+    });
+    // helpers
+    Route::group(['prefix' => 'helpers'], function () {
+
+        Route::get('/get_universities', [HelpersController::class, 'get_universities']);
     });
 });

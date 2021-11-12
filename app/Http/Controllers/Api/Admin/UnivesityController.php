@@ -12,25 +12,17 @@ class UnivesityController extends Controller
 
     public function index(Request $request)
     {
-
-        $input = $request->all();
         $user = check_api_token($request->header('api_token'));
         if ($user) {
-
             if ($user->type == "admin") {
-
                 $universities = University::orderBy('sort', 'asc')->paginate(10);
                 return msgdata($request, success(), trans('lang.shown_s'), $universities);
             } else {
-
                 return msgdata($request, failed(), trans('lang.permission_warrning'), []);
             }
-
         } else {
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
-
         }
-
     }
 
     public function Sort(Request $request)
@@ -39,9 +31,7 @@ class UnivesityController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-
                 if ($request->get('rows')) {
-
                     foreach ($request->get('rows') as $row) {
                         University::whereId($row['id'])->update([
                             'sort' => $row['sort'],

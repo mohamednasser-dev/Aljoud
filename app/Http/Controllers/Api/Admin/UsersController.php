@@ -110,13 +110,14 @@ class UsersController extends Controller
                 ]);
                 //Request is valid, create new user
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 }
                 //Request is valid, create new user
                 $data['password'] = $request->password;
                 $data['type'] = $type;
                 $user = User::create($data);
-                return msgdata($request, success(), trans('lang.added_s'), $user);
+                $out = User::where('id',$user->id)->first();
+                return msgdata($request, success(), trans('lang.added_s'), $out);
             } else {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
@@ -141,7 +142,7 @@ class UsersController extends Controller
                 ]);
                 //Request is valid, create new user
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 }
                 $user = User::where('id', $id)->first();
                 $user->name = $request->name;
