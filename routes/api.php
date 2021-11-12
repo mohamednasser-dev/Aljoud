@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Admin\OffersController;
 use App\Http\Controllers\Api\HelpersController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\Students\ProfileController;
+use App\Http\Controllers\Api\Students\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,11 +40,18 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
 //student
     //login
     Route::post('/login', [LoginController::class, 'login']);
-    Route::post('/register', [LoginController::class, 'register']);
+    Route::get('/logout', [LoginController::class, 'logout']);
+    Route::post('/sign_up', [LoginController::class, 'sign_up']);
+    Route::post('/password/forget', [LoginController::class, 'forget_password']);
+    Route::post('/password/verify_code', [LoginController::class, 'verify_code']);
+    Route::post('/password/change', [LoginController::class, 'change_password']);
+
 
     //profile
 
-    Route::post('/home', [LoginController::class, 'register']);
+    Route::get('/home', [HomeController::class, 'home']);
+    Route::get('/offers', [HomeController::class, 'offers']);
+
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::post('/update/profile', [ProfileController::class, 'update']);
 
@@ -155,10 +163,12 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/currencies/update', [CurrenciesController::class, 'update']);
         // offers
         Route::get('/offers', [OffersController::class, 'index']);
+        Route::post('/offers/sort', [OffersController::class, 'sort']);
         Route::get('/offers/delete/{id}', [OffersController::class, 'delete']);
         Route::get('/offers/data/{id}', [OffersController::class, 'show']);
         Route::post('/offers/store', [OffersController::class, 'store']);
         Route::post('/offers/update', [OffersController::class, 'update']);
+        Route::get('/offers-status-Action/{id}', [OffersController::class, 'statusAction']);
 
 
     });
@@ -168,6 +178,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/get_universities', [HelpersController::class, 'get_universities']);
         Route::get('/get_specialty_by_university/{id}', [HelpersController::class, 'get_specialty_by_university']);
         Route::get('/get_levels_by_specialty/{id}', [HelpersController::class, 'get_levels_by_specialty']);
+        Route::get('/get_courses_by_level/{id}', [HelpersController::class, 'get_courses_by_level']);
         Route::get('/get_currency', [HelpersController::class, 'get_currency']);
     });
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\College;
+use App\Models\Course;
 use App\Models\Currency;
 use App\Models\Level;
 use App\Models\University;
@@ -30,6 +31,11 @@ class HelpersController extends Controller
     public function get_levels_by_specialty(Request $request ,$id)
     {
         $universities = Level::where('college_id',$id)->where('show',1)->orderBy('sort', 'asc')->get();
+        return msgdata($request, success(), trans('lang.shown_s'), $universities);
+    }
+    public function get_courses_by_level(Request $request ,$id)
+    {
+        $universities = Course::where('level_id',$id)->where('show',1)->orderBy('sort', 'asc')->get();
         return msgdata($request, success(), trans('lang.shown_s'), $universities);
     }
     public function get_currency(Request $request )

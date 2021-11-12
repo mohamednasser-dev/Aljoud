@@ -28,8 +28,8 @@ class CreateCoursesTable extends Migration
             $table->foreign('instructor_id')->references('id')->on('instructors')->onDelete('set null');
             $table->bigInteger('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('restrict');
-            $table->string('desc_ar');
-            $table->string('desc_en');
+            $table->longText('desc_ar')->nullable();
+            $table->longText('desc_en')->nullable();
             $table->timestamps();
         });
     }

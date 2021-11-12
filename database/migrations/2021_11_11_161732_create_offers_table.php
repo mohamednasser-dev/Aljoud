@@ -17,8 +17,8 @@ class CreateOffersTable extends Migration
             $table->id();
             $table->string('name_ar');
             $table->string('name_en');
-            $table->longText('desc_ar');
-            $table->longText('desc_en');
+            $table->longText('desc_ar')->nullable();
+            $table->longText('desc_en')->nullable();
             $table->float('price');
             $table->integer('sort')->default(1);
             $table->integer('show')->default(1);
