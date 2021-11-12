@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\ExamQuestionController;
 use App\Http\Controllers\Api\Admin\LessonController;
 use App\Http\Controllers\Api\Admin\LevelsController;
 use App\Http\Controllers\Api\Admin\QuizController;
+use App\Http\Controllers\Api\Admin\QuizQuestionAnswerController;
 use App\Http\Controllers\Api\Admin\QuizQuestionController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
@@ -125,7 +126,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/exams-data/{id}', [ExamController::class, 'show']);
         Route::get('/exams-status-Action/{id}', [ExamController::class, 'statusAction']);
 
-
 //        Course Exams Questions Crud
         Route::get('/exam-question/{exam_id}', [ExamQuestionController::class, 'index']);
         Route::post('/exam-question-Sort', [ExamQuestionController::class, 'Sort']);
@@ -140,7 +140,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/exam-question-answer-store', [ExamQuestionAnswerController::class, 'store']);
         Route::post('/exam-question-answer-update', [ExamQuestionAnswerController::class, 'update']);
 
-
 //        lesson Quize Crud
         Route::get('/quizzes/{lesson_id}', [QuizController::class, 'index']);
         Route::post('/quizzes-Sort', [QuizController::class, 'Sort']);
@@ -149,8 +148,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/quizzes-destroy/{id}', [QuizController::class, 'destroy']);
         Route::get('/quizzes-data/{id}', [QuizController::class, 'show']);
         Route::get('/quizzes-status-Action/{id}', [QuizController::class, 'statusAction']);
-
-
 
 //        lesson Quize Questions Crud
         Route::get('/quiz-question/{quiz_id}', [QuizQuestionController::class, 'index']);
@@ -161,6 +158,10 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/quiz-question-data/{id}', [QuizQuestionController::class, 'show']);
         Route::get('/quiz-question-status-Action/{id}', [QuizQuestionController::class, 'statusAction']);
 
+        //        Course Exams Questions Answer ADD-Delete
+        Route::get('/quiz-question-answer/{question_id}', [QuizQuestionAnswerController::class, 'index']);
+        Route::post('/quiz-question-answer-store', [QuizQuestionAnswerController::class, 'store']);
+        Route::post('/quiz-question-answer-update', [QuizQuestionAnswerController::class, 'update']);
 
         //    cpanel users
         Route::get('/users/{type}', [UsersController::class, 'index']);
