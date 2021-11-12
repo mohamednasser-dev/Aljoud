@@ -9,4 +9,19 @@ class Quiz extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d h:i',
+    ];
+
+
+    public function lesson()
+    {
+        return $this->belongsTo(Lesson::class, 'lesson_id');
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(QuizQuestion::class, 'quiz_id');
+    }
 }
