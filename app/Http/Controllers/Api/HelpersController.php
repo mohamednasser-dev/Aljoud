@@ -43,4 +43,16 @@ class HelpersController extends Controller
         $universities = Currency::orderBy('created_at', 'desc')->get();
         return msgdata($request, success(), trans('lang.shown_s'), $universities);
     }
+
+    public function get_active_students(Request $request )
+    {
+        $result = User::query();
+        if($request->search){
+            $result = $result->where('name',$request->search);
+            $result = $result->orWhere('phone',$request->search);
+            $result = $result->orWhere('email',$request->search);
+        }
+        $result =  $result->where('type', 'student')->orderBy('created_at', 'desc')->paginate(10);
+        return msgdata($request, success(), trans('lang.shown_s'), $result);
+    }
 }
