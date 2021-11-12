@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\LevelsController;
+use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\Students\ProfileController;
@@ -32,12 +34,35 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::get('/profile', [ProfileController::class, 'index']);
 
     Route::group(['prefix' => 'admin'], function () {
-
+//        universities Crud
         Route::get('/universities', [UnivesityController::class, 'index']);
         Route::post('/universities-Sort', [UnivesityController::class, 'Sort']);
         Route::post('/universities-store', [UnivesityController::class, 'store']);
         Route::post('/universities-update', [UnivesityController::class, 'update']);
-        Route::get('/universities-destroy', [UnivesityController::class, 'destroy']);
-        Route::get('/universities-specialists', [UnivesityController::class, 'show']);
+        Route::get('/universities-destroy/{id}', [UnivesityController::class, 'destroy']);
+        Route::get('/universities-specialists/{id}', [UnivesityController::class, 'show']);
+        Route::get('/universities-status-Action/{id}', [UnivesityController::class, 'statusAction']);
+
+
+
+//        Colleges Crud
+        Route::get('/specialists/{university_id}', [SpecialistController::class, 'index']);
+        Route::post('/specialists-Sort', [SpecialistController::class, 'Sort']);
+        Route::post('/specialists-store', [SpecialistController::class, 'store']);
+        Route::post('/specialists-update', [SpecialistController::class, 'update']);
+        Route::get('/specialists-destroy/{id}', [SpecialistController::class, 'destroy']);
+        Route::get('/specialists-specialists/{id}', [SpecialistController::class, 'show']);
+        Route::get('/specialists-status-Action/{id}', [SpecialistController::class, 'statusAction']);
+
+
+
+//        levels Crud
+        Route::get('/levels/{university_id}', [LevelsController::class, 'index']);
+        Route::post('/levels-Sort', [LevelsController::class, 'Sort']);
+        Route::post('/levels-store', [LevelsController::class, 'store']);
+        Route::post('/levels-update', [LevelsController::class, 'update']);
+        Route::get('/levels-destroy/{id}', [LevelsController::class, 'destroy']);
+        Route::get('/levels-specialists/{id}', [LevelsController::class, 'show']);
+        Route::get('/levels-status-Action/{id}', [LevelsController::class, 'statusAction']);
     });
 });

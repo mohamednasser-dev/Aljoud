@@ -84,7 +84,7 @@ function check_api_token($api_token)
 
         return \App\Models\User::where("api_token", $api_token)->first();
     } else {
-        return (object)[];
+        return null;
     }
 }
 
