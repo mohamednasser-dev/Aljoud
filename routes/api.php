@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
 use App\Http\Controllers\Api\Admin\UsersController;
 use App\Http\Controllers\Api\Admin\InstructorsController;
+use App\Http\Controllers\Api\Admin\CurrenciesController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\Students\ProfileController;
 use Illuminate\Http\Request;
@@ -78,6 +79,15 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         // instructors
         Route::get('/instructors', [InstructorsController::class, 'index']);
         Route::get('/instructors/delete/{id}', [InstructorsController::class, 'delete']);
+        Route::get('/instructors/data/{id}', [InstructorsController::class, 'show']);
         Route::post('/instructors/store', [InstructorsController::class, 'store']);
+        Route::post('/instructors/update', [InstructorsController::class, 'update']);
+
+        // currencies
+        Route::get('/currencies', [CurrenciesController::class, 'index']);
+        Route::get('/currencies/delete/{id}', [CurrenciesController::class, 'delete']);
+        Route::get('/currencies/data/{id}', [CurrenciesController::class, 'show']);
+        Route::post('/currencies/store', [CurrenciesController::class, 'store']);
+        Route::post('/currencies/update', [CurrenciesController::class, 'update']);
     });
 });

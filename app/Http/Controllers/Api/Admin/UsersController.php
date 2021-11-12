@@ -29,7 +29,8 @@ class UsersController extends Controller
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
         }
     }
-    public function show(Request $request,$id)
+
+    public function show(Request $request, $id)
     {
         $user = check_api_token($request->header('api_token'));
         if ($user) {
@@ -37,47 +38,50 @@ class UsersController extends Controller
                 $data = User::where('id', $id)->first();
                 return msgdata($request, success(), trans('lang.shown_s'), $data);
             } else {
-                return msgdata($request, failed(), trans('lang.permission_warrning'), []);
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
         } else {
-            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
     }
-    public function refresh(Request $request,$id)
+
+    public function refresh(Request $request, $id)
     {
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                User::where('id', $id)->update(['device_id'=>null]);
+                User::where('id', $id)->update(['device_id' => null]);
                 return msgdata($request, success(), trans('lang.user_refresh_s'), (object)[]);
             } else {
-                return msgdata($request, failed(), trans('lang.permission_warrning'), []);
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
         } else {
-            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
     }
-    public function disable(Request $request,$id)
+
+    public function disable(Request $request, $id)
     {
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-               $selected_user = User::whereId($id)->first();
-                if($selected_user->status == 'enable'){
+                $selected_user = User::whereId($id)->first();
+                if ($selected_user->status == 'enable') {
                     $data['status'] = 'disable';
-                }else{
+                } else {
                     $data['status'] = 'enable';
                 }
                 User::where('id', $id)->update($data);
                 return msgdata($request, success(), trans('lang.status_changed'), (object)[]);
             } else {
-                return msgdata($request, failed(), trans('lang.permission_warrning'), []);
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
         } else {
-            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
     }
-    public function delete(Request $request,$id)
+
+    public function delete(Request $request, $id)
     {
         $user = check_api_token($request->header('api_token'));
         if ($user) {
@@ -85,55 +89,74 @@ class UsersController extends Controller
                 User::where('id', $id)->delete();
                 return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
             } else {
-                return msgdata($request, failed(), trans('lang.permission_warrning'), []);
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
         } else {
-            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
     }
 
     public function store(Request $request, $type)
     {
-        $data = $request->all();
-        $validator = Validator::make($data, [
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|unique:users,phone',
-            'password' => 'required'
-        ]);
-        //Request is valid, create new user
-        if ($validator->fails()) {
-            return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $data = $request->all();
+                $validator = Validator::make($data, [
+                    'name' => 'required|string',
+                    'email' => 'required|email|unique:users,email',
+                    'phone' => 'required|unique:users,phone',
+                    'password' => 'required'
+                ]);
+                //Request is valid, create new user
+                if ($validator->fails()) {
+                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                }
+                //Request is valid, create new user
+                $data['password'] = $request->password;
+                $data['type'] = $type;
+                $user = User::create($data);
+                return msgdata($request, success(), trans('lang.added_s'), $user);
+            } else {
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
-        //Request is valid, create new user
-        $data['password'] = $request->password;
-        $data['type'] = $type;
-        $user = User::create($data);
-        return msgdata($request, success(), trans('lang.added_s'), $user);
     }
+
     public function update(Request $request)
     {
-        $data = $request->all();
-        $id = $request->id ;
-        $validator = Validator::make($data, [
-            'id' => 'required',
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email,'.$id,
-            'phone' => 'required|unique:users,phone,'.$id,
-            'image' => 'nullable|image'
-        ]);
-        //Request is valid, create new user
-        if ($validator->fails()) {
-            return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $data = $request->all();
+                $id = $request->id;
+                $validator = Validator::make($data, [
+                    'id' => 'required',
+                    'name' => 'required|string',
+                    'email' => 'required|email|unique:users,email,' . $id,
+                    'phone' => 'required|unique:users,phone,' . $id,
+                    'image' => 'nullable|image'
+                ]);
+                //Request is valid, create new user
+                if ($validator->fails()) {
+                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                }
+                $user = User::where('id', $id)->first();
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->phone = $request->phone;
+                if ($request->image) {
+                    $user->image = $request->image;
+                }
+                $user->save();
+                return msgdata($request, success(), trans('lang.updated_s'), $user);
+            } else {
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
-        $user = User::where('id',$id)->first();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        if($request->image){
-            $user->image = $request->image;
-        }
-        $user->save();
-        return msgdata($request, success(), trans('lang.updated_s'), $user);
     }
 }
