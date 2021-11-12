@@ -205,7 +205,8 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/get_specialty_by_university/{id}', [HelpersController::class, 'get_specialty_by_university']);
         Route::get('/get_levels_by_specialty/{id}', [HelpersController::class, 'get_levels_by_specialty']);
         Route::get('/get_courses_by_level/{id}', [HelpersController::class, 'get_courses_by_level']);
+        Route::get('/get_lessons_by_course/{id}', [HelpersController::class, 'get_lessons_by_course']);
         Route::get('/get_currency', [HelpersController::class, 'get_currency']);
-        Route::get('/get_active_students', [HelpersController::class, 'get_active_students']);
+        Route::get('/get_enable_students', [HelpersController::class, 'get_enable_students']);
     });
 });
