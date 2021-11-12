@@ -7,6 +7,7 @@ use App\Models\College;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\University;
+use App\Models\UserLesson;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -225,6 +226,135 @@ class LessonController extends Controller
 
     }
 
+    public function Users(Request $request, $id)
+    {
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $college = Lesson::whereId($id)->with('users', function ($q) {
+                    $q->whereHas('UserLessons', function ($query) {
+                        $query->where('status', 1);
+                    });
+                })->first();
+
+                if ($college) {
+                    $users = $college->users;
+                    return msgdata($request, success(), trans('lang.shown_s'), $users);
+                } else {
+                    return msgdata($request, not_found(), trans('lang.not_found'), (object)[]);
+
+                }
+
+            } else {
+
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+
+    }
+
+    public function AddUsers(Request $request)
+    {
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $rules = [
+
+                    'lesson_id' => 'required|exists:lessons,id',
+
+                ];
+                $validator = Validator::make($request->all(), $rules);
+                if ($validator->fails()) {
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
+                }
+
+                if ($request->users) {
+                    foreach ($request->users as $user) {
+                        UserLesson::create([
+                            'user_id' => $user,
+                            'lesson_id' => $request->lesson_id,
+                            'status' => 1
+                        ]);
+                    }
+
+                    $college = Lesson::whereId($request->lesson_id)->with('users', function ($q) {
+                        $q->whereHas('UserLessons', function ($query) {
+                            $query->where('status', 1);
+                        });
+                    })->first();
+
+                    $users = $college->users;
+                    return msgdata($request, success(), trans('lang.shown_s'), $users);
+
+
+                } else {
+                    return msgdata($request, failed(), trans('lang.error'), (object)[]);
+
+                }
+
+            } else {
+
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+
+    }
+
+    public function DeleteUsers(Request $request)
+    {
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $rules = [
+
+                    'lesson_id' => 'required|exists:lessons,id',
+
+                ];
+                $validator = Validator::make($request->all(), $rules);
+                if ($validator->fails()) {
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
+                }
+
+                if ($request->users) {
+
+                    $lesson_users = UserLesson::whereIn('user_id', $request->users)->where('lesson_id', $request->lesson_id)->delete();
+
+                } else {
+                    $lesson_users = UserLesson::where('lesson_id', $request->lesson_id)->delete();
+                }
+
+                $college = Lesson::whereId($request->lesson_id)->with('users', function ($q) {
+                    $q->whereHas('UserLessons', function ($query) {
+                        $query->where('status', 1);
+                    });
+                })->first();
+
+                $users = $college->users;
+                return msgdata($request, success(), trans('lang.shown_s'), $users);
+
+
+            } else {
+
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+
+    }
 
 
 }

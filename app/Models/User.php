@@ -49,10 +49,16 @@ class User extends Authenticatable
     ];
 
 
+
+    public function UserLessons()
+    {
+        return $this->hasOne(UserLesson::class, 'user_id');
+    }
+
     public function getImageAttribute($image)
     {
-        if (!empty($image)){
-            return asset('uploads/users').'/'.$image;
+        if (!empty($image)) {
+            return asset('uploads/users') . '/' . $image;
         }
         return asset('uploads/users/default.jpg');
     }
@@ -67,15 +73,15 @@ class User extends Authenticatable
 
     public function getQrImageAttribute($image)
     {
-        if (!empty($image)){
-               return asset('uploads/qr_images').'/'.$image;
+        if (!empty($image)) {
+            return asset('uploads/qr_images') . '/' . $image;
         }
         return '';
     }
 
     public function setPasswordAttribute($password)
     {
-        if (!empty($password)){
+        if (!empty($password)) {
             $this->attributes['password'] = Hash::make($password);
         }
     }
