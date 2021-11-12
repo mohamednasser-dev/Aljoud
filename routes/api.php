@@ -105,5 +105,8 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::group(['prefix' => 'helpers'], function () {
 
         Route::get('/get_universities', [HelpersController::class, 'get_universities']);
+        Route::get('/get_specialty_by_university/{id}', [HelpersController::class, 'get_specialty_by_university']);
+        Route::get('/get_levels_by_specialty/{id}', [HelpersController::class, 'get_levels_by_specialty']);
+        Route::get('/get_currency', [HelpersController::class, 'get_currency']);
     });
 });
