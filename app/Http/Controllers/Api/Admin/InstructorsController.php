@@ -16,7 +16,7 @@ use Validator;
 class InstructorsController extends Controller
 {
 
-    public function index(Request $request, $type)
+    public function index(Request $request)
     {
         $input = $request->all();
         $user = check_api_token($request->header('api_token'));
@@ -32,7 +32,7 @@ class InstructorsController extends Controller
         }
     }
 
-    public function store(Request $request, $type)
+    public function store(Request $request)
     {
         $data = $request->all();
         $validator = Validator::make($data, [
