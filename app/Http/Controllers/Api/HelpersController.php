@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\College;
 use App\Models\Course;
 use App\Models\Currency;
+use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\University;
 use Illuminate\Support\Facades\Auth;
@@ -38,13 +39,18 @@ class HelpersController extends Controller
         $universities = Course::where('level_id',$id)->where('show',1)->orderBy('sort', 'asc')->get();
         return msgdata($request, success(), trans('lang.shown_s'), $universities);
     }
+    public function get_lessons_by_course(Request $request ,$id)
+    {
+        $universities = Lesson::where('course_id',$id)->where('show',1)->orderBy('sort', 'asc')->get();
+        return msgdata($request, success(), trans('lang.shown_s'), $universities);
+    }
     public function get_currency(Request $request )
     {
         $universities = Currency::orderBy('created_at', 'desc')->get();
         return msgdata($request, success(), trans('lang.shown_s'), $universities);
     }
 
-    public function get_active_students(Request $request )
+    public function get_enable_students(Request $request )
     {
         $result = User::query();
         if($request->search){
@@ -52,7 +58,7 @@ class HelpersController extends Controller
             $result = $result->orWhere('phone',$request->search);
             $result = $result->orWhere('email',$request->search);
         }
-        $result =  $result->where('type', 'student')->orderBy('created_at', 'desc')->paginate(10);
+        $result =  $result->where('type', 'student')->where('status','enable')->orderBy('created_at', 'desc')->get();
         return msgdata($request, success(), trans('lang.shown_s'), $result);
     }
 }
