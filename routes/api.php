@@ -1,27 +1,28 @@
 <?php
 
-use App\Http\Controllers\Api\Admin\ArticlesController;
-use App\Http\Controllers\Api\Admin\CoursesController;
-use App\Http\Controllers\Api\Admin\ExamController;
 use App\Http\Controllers\Api\Admin\ExamQuestionAnswerController;
-use App\Http\Controllers\Api\Admin\ExamQuestionController;
-use App\Http\Controllers\Api\Admin\LessonController;
-use App\Http\Controllers\Api\Admin\LevelsController;
-use App\Http\Controllers\Api\Admin\QuizController;
 use App\Http\Controllers\Api\Admin\QuizQuestionAnswerController;
+use App\Http\Controllers\Api\Admin\ExamQuestionController;
 use App\Http\Controllers\Api\Admin\QuizQuestionController;
-use App\Http\Controllers\Api\Admin\SpecialistController;
-use App\Http\Controllers\Api\Admin\UnivesityController;
-use App\Http\Controllers\Api\Admin\UsersController;
 use App\Http\Controllers\Api\Admin\InstructorsController;
 use App\Http\Controllers\Api\Admin\CurrenciesController;
+use App\Http\Controllers\Api\Students\ProfileController;
+use App\Http\Controllers\Api\Admin\SpecialistController;
+use App\Http\Controllers\Api\Admin\UnivesityController;
+use App\Http\Controllers\Api\Admin\ArticlesController;
+use App\Http\Controllers\Api\Students\HomeController;
+use App\Http\Controllers\Api\Admin\CoursesController;
+use App\Http\Controllers\Api\Admin\VideosController;
+use App\Http\Controllers\Api\Admin\LessonController;
+use App\Http\Controllers\Api\Admin\LevelsController;
 use App\Http\Controllers\Api\Admin\OffersController;
+use App\Http\Controllers\Api\Admin\UsersController;
+use App\Http\Controllers\Api\Admin\ExamController;
+use App\Http\Controllers\Api\Admin\QuizController;
 use App\Http\Controllers\Api\HelpersController;
 use App\Http\Controllers\Api\LoginController;
-use App\Http\Controllers\Api\Students\ProfileController;
-use App\Http\Controllers\Api\Students\HomeController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +60,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/update/profile', [ProfileController::class, 'update']);
 
     Route::group(['prefix' => 'admin'], function () {
-//        universities Crud
+//universities Crud
         Route::get('/universities', [UnivesityController::class, 'index']);
         Route::post('/universities-Sort', [UnivesityController::class, 'Sort']);
         Route::post('/universities-store', [UnivesityController::class, 'store']);
@@ -68,7 +69,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/universities-specialists/{id}', [UnivesityController::class, 'show']);
         Route::get('/universities-status-Action/{id}', [UnivesityController::class, 'statusAction']);
 
-//        Colleges Crud
+//Colleges Crud
         Route::get('/specialists/{university_id}', [SpecialistController::class, 'index']);
         Route::post('/specialists-Sort', [SpecialistController::class, 'Sort']);
         Route::post('/specialists-store', [SpecialistController::class, 'store']);
@@ -77,7 +78,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/specialists-levels/{id}', [SpecialistController::class, 'show']);
         Route::get('/specialists-status-Action/{id}', [SpecialistController::class, 'statusAction']);
 
-//        levels Crud
+//levels Crud
         Route::get('/levels/{university_id}', [LevelsController::class, 'index']);
         Route::post('/levels-Sort', [LevelsController::class, 'Sort']);
         Route::post('/levels-store', [LevelsController::class, 'store']);
@@ -87,7 +88,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/levels-status-Action/{id}', [LevelsController::class, 'statusAction']);
 
 
-//        Courses Crud
+//Courses Crud
         Route::get('/courses/{level_id?}', [CoursesController::class, 'index']);
         Route::post('/courses-Sort', [CoursesController::class, 'Sort']);
         Route::post('/courses-store', [CoursesController::class, 'store']);
@@ -97,7 +98,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/courses-status-Action/{id}', [CoursesController::class, 'statusAction']);
 
 
-//        Lesson Crud
+//Lesson Crud
         Route::get('/lessons/{course_id}', [LessonController::class, 'index']);
         Route::post('/lessons-Sort', [LessonController::class, 'Sort']);
         Route::post('/lessons-store', [LessonController::class, 'store']);
@@ -110,7 +111,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/delete-lesson-users', [LessonController::class, 'DeleteUsers']);
 
 
-//        Lesson Crud
+//articles Crud
         Route::get('/articles/{lesson_id}', [ArticlesController::class, 'index']);
         Route::post('/articles-Sort', [ArticlesController::class, 'Sort']);
         Route::post('/articles-store', [ArticlesController::class, 'store']);
@@ -119,8 +120,17 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/articles-data/{id}', [ArticlesController::class, 'show']);
         Route::get('/articles-status-Action/{id}', [ArticlesController::class, 'statusAction']);
 
+//videos Crud
+        Route::get('/videos/{lesson_id}', [VideosController::class, 'index']);
+        Route::post('/videos-Sort', [VideosController::class, 'Sort']);
+        Route::post('/videos-store', [VideosController::class, 'store']);
+        Route::post('/videos-update', [VideosController::class, 'update']);
+        Route::get('/videos-destroy/{id}', [VideosController::class, 'destroy']);
+        Route::get('/videos-data/{id}', [VideosController::class, 'show']);
+        Route::get('/videos-status-Action/{id}', [VideosController::class, 'statusAction']);
 
-//        Course Exams Crud
+
+//Course Exams Crud
         Route::get('/exams/{course_id}', [ExamController::class, 'index']);
         Route::post('/exams-Sort', [ExamController::class, 'Sort']);
         Route::post('/exams-store', [ExamController::class, 'store']);
@@ -129,7 +139,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/exams-data/{id}', [ExamController::class, 'show']);
         Route::get('/exams-status-Action/{id}', [ExamController::class, 'statusAction']);
 
-//        Course Exams Questions Crud
+//Course Exams Questions Crud
         Route::get('/exam-question/{exam_id}', [ExamQuestionController::class, 'index']);
         Route::post('/exam-question-Sort', [ExamQuestionController::class, 'Sort']);
         Route::post('/exam-question-store', [ExamQuestionController::class, 'store']);
@@ -138,12 +148,12 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/exam-question-data/{id}', [ExamQuestionController::class, 'show']);
         Route::get('/exam-question-status-Action/{id}', [ExamQuestionController::class, 'statusAction']);
 
-        //        Course Exams Questions Answer ADD-Delete
+//Course Exams Questions Answer ADD-Delete
         Route::get('/exam-question-answer/{question_id}', [ExamQuestionAnswerController::class, 'index']);
         Route::post('/exam-question-answer-store', [ExamQuestionAnswerController::class, 'store']);
         Route::post('/exam-question-answer-update', [ExamQuestionAnswerController::class, 'update']);
 
-//        lesson Quize Crud
+//lesson Quize Crud
         Route::get('/quizzes/{lesson_id}', [QuizController::class, 'index']);
         Route::post('/quizzes-Sort', [QuizController::class, 'Sort']);
         Route::post('/quizzes-store', [QuizController::class, 'store']);
@@ -152,7 +162,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/quizzes-data/{id}', [QuizController::class, 'show']);
         Route::get('/quizzes-status-Action/{id}', [QuizController::class, 'statusAction']);
 
-//        lesson Quize Questions Crud
+//lesson Quize Questions Crud
         Route::get('/quiz-question/{quiz_id}', [QuizQuestionController::class, 'index']);
         Route::post('/quiz-question-Sort', [QuizQuestionController::class, 'Sort']);
         Route::post('/quiz-question-store', [QuizQuestionController::class, 'store']);
@@ -161,12 +171,12 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/quiz-question-data/{id}', [QuizQuestionController::class, 'show']);
         Route::get('/quiz-question-status-Action/{id}', [QuizQuestionController::class, 'statusAction']);
 
-        //        Course Exams Questions Answer ADD-Delete
+//Course Exams Questions Answer ADD-Delete
         Route::get('/quiz-question-answer/{question_id}', [QuizQuestionAnswerController::class, 'index']);
         Route::post('/quiz-question-answer-store', [QuizQuestionAnswerController::class, 'store']);
         Route::post('/quiz-question-answer-update', [QuizQuestionAnswerController::class, 'update']);
 
-        //    cpanel users
+//cpanel users
         Route::get('/users/{type}', [UsersController::class, 'index']);
         Route::get('/users/data/{id}', [UsersController::class, 'show']);
         Route::get('/users/refresh/{id}', [UsersController::class, 'refresh']);
@@ -177,20 +187,21 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/users/assign_lesson', [UsersController::class, 'assign_lesson']);
         Route::post('/users/assign_course', [UsersController::class, 'assign_course']);
 
-        // instructors
+//instructors
         Route::get('/instructors', [InstructorsController::class, 'index']);
         Route::get('/instructors/delete/{id}', [InstructorsController::class, 'delete']);
         Route::get('/instructors/data/{id}', [InstructorsController::class, 'show']);
         Route::post('/instructors/store', [InstructorsController::class, 'store']);
         Route::post('/instructors/update', [InstructorsController::class, 'update']);
 
-        // currencies
+//currencies
         Route::get('/currencies', [CurrenciesController::class, 'index']);
         Route::get('/currencies/delete/{id}', [CurrenciesController::class, 'delete']);
         Route::get('/currencies/data/{id}', [CurrenciesController::class, 'show']);
         Route::post('/currencies/store', [CurrenciesController::class, 'store']);
         Route::post('/currencies/update', [CurrenciesController::class, 'update']);
-        // offers
+
+//offers
         Route::get('/offers', [OffersController::class, 'index']);
         Route::post('/offers/sort', [OffersController::class, 'sort']);
         Route::get('/offers/delete/{id}', [OffersController::class, 'delete']);
@@ -198,7 +209,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/offers/store', [OffersController::class, 'store']);
         Route::post('/offers/update', [OffersController::class, 'update']);
         Route::get('/offers-status-Action/{id}', [OffersController::class, 'statusAction']);
-
 
     });
     // helpers
