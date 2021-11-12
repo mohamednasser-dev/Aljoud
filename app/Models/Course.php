@@ -11,12 +11,13 @@ class Course extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $with = ['Level'];
+
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i',
     ];
 
     protected $appends = ['name', 'desc'];
+    protected $with = ['Instructor'];
 
     public function getNameAttribute()
     {
@@ -69,5 +70,25 @@ class Course extends Model
     public function Instructor()
     {
         return $this->belongsTo(Instructor::class, 'instructor_id');
+    }
+
+
+    public function getImageAttribute($image)
+    {
+        if (!empty($image)) {
+            return asset('uploads/courses') . '/' . $image;
+        }
+        return asset('uploads/users/default.jpg');
+    }
+
+    public function setImageAttribute($image)
+    {
+
+        if (is_file($image)) {
+            $imageFields = upload($image, 'courses');
+            $this->attributes['image'] = $imageFields;
+
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\CoursesController;
 use App\Http\Controllers\Api\Admin\LevelsController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
@@ -54,7 +55,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/specialists-store', [SpecialistController::class, 'store']);
         Route::post('/specialists-update', [SpecialistController::class, 'update']);
         Route::get('/specialists-destroy/{id}', [SpecialistController::class, 'destroy']);
-        Route::get('/specialists-specialists/{id}', [SpecialistController::class, 'show']);
+        Route::get('/specialists-levels/{id}', [SpecialistController::class, 'show']);
         Route::get('/specialists-status-Action/{id}', [SpecialistController::class, 'statusAction']);
 
 //        levels Crud
@@ -63,8 +64,19 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/levels-store', [LevelsController::class, 'store']);
         Route::post('/levels-update', [LevelsController::class, 'update']);
         Route::get('/levels-destroy/{id}', [LevelsController::class, 'destroy']);
-        Route::get('/levels-specialists/{id}', [LevelsController::class, 'show']);
+        Route::get('/levels-courses/{id}', [LevelsController::class, 'show']);
         Route::get('/levels-status-Action/{id}', [LevelsController::class, 'statusAction']);
+
+
+//        Courses Crud
+        Route::get('/courses/{level_id?}', [CoursesController::class, 'index']);
+        Route::post('/courses-Sort', [CoursesController::class, 'Sort']);
+        Route::post('/courses-store', [CoursesController::class, 'store']);
+        Route::post('/courses-update', [CoursesController::class, 'update']);
+        Route::get('/courses-destroy/{id}', [CoursesController::class, 'destroy']);
+        Route::get('/courses-lessons/{id}', [CoursesController::class, 'show']);
+        Route::get('/courses-status-Action/{id}', [CoursesController::class, 'statusAction']);
+
 
         //    cpanel users
         Route::get('/users/{type}', [UsersController::class, 'index']);
