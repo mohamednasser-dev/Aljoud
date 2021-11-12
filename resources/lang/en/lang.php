@@ -18,6 +18,8 @@ return [
     'should_login' => 'you should login first',
     'not_found' => 'sorry ,not found',
     'error' => 'sorry ,Something went wrong',
+    'user_refresh_s' => 'user has been refreshed successfully',
+    'status_changed' => 'status changed successfully',
 
 
 ];

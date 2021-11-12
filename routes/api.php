@@ -68,7 +68,12 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
 
         //    cpanel users
         Route::get('/users/{type}', [UsersController::class, 'index']);
+        Route::get('/users/data/{id}', [UsersController::class, 'show']);
+        Route::get('/users/refresh/{id}', [UsersController::class, 'refresh']);
+        Route::get('/users/disable/{id}', [UsersController::class, 'disable']);
+        Route::get('/users/delete/{id}', [UsersController::class, 'delete']);
         Route::post('/users/{type}/store', [UsersController::class, 'store']);
+        Route::post('/users/update', [UsersController::class, 'update']);
 
         // instructors
         Route::get('/instructors', [InstructorsController::class, 'index']);

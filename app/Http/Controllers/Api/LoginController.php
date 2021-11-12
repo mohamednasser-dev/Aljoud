@@ -34,9 +34,11 @@ class LoginController extends Controller
             return msgdata($request, failed(), trans('lang.not_authorized'), (object)[]);
         }
         $user = Auth::user();
-        if ($user->type == 'student' && $user->device_id != $request->device_id) {
-            Auth::logout();
-            return msgdata($request, not_active(), trans('lang.device_invalid'), (object)[]);
+        if ($user->type == 'student') {
+            if ($user->device_id != null && $user->device_id != $request->device_id) {
+                Auth::logout();
+                return msgdata($request, not_active(), trans('lang.device_invalid'), (object)[]);
+            }
         }
         if ($user->verified == 0) {
             Auth::logout();
@@ -47,7 +49,7 @@ class LoginController extends Controller
             return msgdata($request, not_active(), trans('lang.account_un_active'), (object)[]);
         }
         if ($request->fcm_token) {
-            User::where('id', $user->id)->update(['fcm_token' => $request->fcm_token,'device_id' => $request->device_id]);
+            User::where('id', $user->id)->update(['fcm_token' => $request->fcm_token, 'device_id' => $request->device_id]);
         }
         $user_data = User::where('id', $user->id)->first();
         $user_data->api_token = Str::random(60);
@@ -79,10 +81,10 @@ class LoginController extends Controller
             $token = Auth::attempt(['phone' => $request->phone, 'password' => $request->password]);
             $user->api_token = Str::random(60);
             //generate student qr image ...
-            $idString = (string)$user->id ;
-            $qr_image_name = 'qr_'.$user->id.'.png' ;
-            Storage::disk('public')->put($qr_image_name,base64_decode(DNS2DFacade::getBarcodePNG($idString, "QRCODE")));
-            $user->qr_image = $qr_image_name ;
+            $idString = (string)$user->id;
+            $qr_image_name = 'qr_' . $user->id . '.png';
+            Storage::disk('public')->put($qr_image_name, base64_decode(DNS2DFacade::getBarcodePNG($idString, "QRCODE")));
+            $user->qr_image = $qr_image_name;
             $user->save();
             //User created, return success response
             return msgdata($request, success(), trans('lang.register_done'), $user);

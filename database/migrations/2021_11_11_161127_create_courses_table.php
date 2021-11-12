@@ -25,7 +25,7 @@ class CreateCoursesTable extends Migration
             $table->bigInteger('level_id')->unsigned();
             $table->foreign('level_id')->references('id')->on('levels')->onDelete('restrict');
             $table->bigInteger('instructor_id')->unsigned()->nullable();
-            $table->foreign('instructor_id')->references('id')->on('instructors')->onDelete('restrict');
+            $table->foreign('instructor_id')->references('id')->on('instructors')->onDelete('set null');
             $table->bigInteger('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('restrict');
 
