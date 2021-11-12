@@ -77,6 +77,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
 
         // instructors
         Route::get('/instructors', [InstructorsController::class, 'index']);
+        Route::get('/instructors/delete/{id}', [InstructorsController::class, 'delete']);
         Route::post('/instructors/store', [InstructorsController::class, 'store']);
     });
 });
