@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 
 class Course extends Model
 {
@@ -14,6 +15,27 @@ class Course extends Model
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i',
     ];
+
+    protected $appends = ['name', 'desc'];
+    protected $with = ['Instructor'];
+
+    public function getNameAttribute()
+    {
+        if ($locale = App::currentLocale() == "ar") {
+            return $this->name_ar;
+        } else {
+            return $this->name_en;
+        }
+    }
+
+    public function getDescAttribute()
+    {
+        if ($locale = App::currentLocale() == "ar") {
+            return $this->desc_ar;
+        } else {
+            return $this->desc_en;
+        }
+    }
 
     public function Lesson()
     {
@@ -39,6 +61,7 @@ class Course extends Model
     {
         return $this->belongsTo(Level::class, 'level_id');
     }
+
     public function Currency()
     {
         return $this->belongsTo(Currency::class, 'currency_id');
@@ -47,5 +70,25 @@ class Course extends Model
     public function Instructor()
     {
         return $this->belongsTo(Instructor::class, 'instructor_id');
+    }
+
+
+    public function getImageAttribute($image)
+    {
+        if (!empty($image)) {
+            return asset('uploads/courses') . '/' . $image;
+        }
+        return asset('uploads/users/default.jpg');
+    }
+
+    public function setImageAttribute($image)
+    {
+
+        if (is_file($image)) {
+            $imageFields = upload($image, 'courses');
+            $this->attributes['image'] = $imageFields;
+
+        }
+
     }
 }
