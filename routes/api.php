@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\CoursesController;
+use App\Http\Controllers\Api\Admin\LessonController;
 use App\Http\Controllers\Api\Admin\LevelsController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
@@ -79,6 +80,16 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/courses-destroy/{id}', [CoursesController::class, 'destroy']);
         Route::get('/courses-lessons/{id}', [CoursesController::class, 'show']);
         Route::get('/courses-status-Action/{id}', [CoursesController::class, 'statusAction']);
+
+
+//        Lesson Crud
+        Route::get('/lessons/{course_id}', [LessonController::class, 'index']);
+        Route::post('/lessons-Sort', [LessonController::class, 'Sort']);
+        Route::post('/lessons-store', [LessonController::class, 'store']);
+        Route::post('/lessons-update', [LessonController::class, 'update']);
+        Route::get('/lessons-destroy/{id}', [LessonController::class, 'destroy']);
+        Route::get('/lessons-data/{id}', [LessonController::class, 'show']);
+        Route::get('/lessons-status-Action/{id}', [LessonController::class, 'statusAction']);
 
 
         //    cpanel users
