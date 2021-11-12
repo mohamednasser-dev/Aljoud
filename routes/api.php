@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ArticlesController;
 use App\Http\Controllers\Api\Admin\CoursesController;
 use App\Http\Controllers\Api\Admin\ExamController;
 use App\Http\Controllers\Api\Admin\ExamQuestionAnswerController;
@@ -95,6 +96,15 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/lessons-status-Action/{id}', [LessonController::class, 'statusAction']);
 
 
+//        Lesson Crud
+        Route::get('/articles/{lesson_id}', [ArticlesController::class, 'index']);
+        Route::post('/articles-Sort', [ArticlesController::class, 'Sort']);
+        Route::post('/articles-store', [ArticlesController::class, 'store']);
+        Route::post('/articles-update', [ArticlesController::class, 'update']);
+        Route::get('/articles-destroy/{id}', [ArticlesController::class, 'destroy']);
+        Route::get('/articles-data/{id}', [ArticlesController::class, 'show']);
+        Route::get('/articles-status-Action/{id}', [ArticlesController::class, 'statusAction']);
+
 
 //        Course Exams Crud
         Route::get('/exams/{course_id}', [ExamController::class, 'index']);
@@ -149,7 +159,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/offers/data/{id}', [OffersController::class, 'show']);
         Route::post('/offers/store', [OffersController::class, 'store']);
         Route::post('/offers/update', [OffersController::class, 'update']);
-
 
 
     });

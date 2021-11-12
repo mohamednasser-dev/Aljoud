@@ -3,23 +3,24 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Article;
 use App\Models\College;
 use App\Models\Level;
 use App\Models\University;
 use Illuminate\Http\Request;
 use Validator;
 
-class LevelsController extends Controller
+class ArticlesController extends Controller
 {
 
-    public function index(Request $request, $college_id)
+    public function index(Request $request, $lesson_id)
     {
 
         $input = $request->all();
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $levels = Level::orderBy('sort', 'asc')->where('college_id', $college_id)->paginate(10);
+                $levels = Article::orderBy('sort', 'asc')->where('lesson_id', $lesson_id)->paginate(10);
                 return msgdata($request, success(), trans('lang.shown_s'), $levels);
             } else {
 
@@ -43,7 +44,7 @@ class LevelsController extends Controller
                 if ($request->get('rows')) {
 
                     foreach ($request->get('rows') as $row) {
-                        Level::whereId($row['id'])->update([
+                        Article::whereId($row['id'])->update([
                             'sort' => $row['sort'],
                         ]);
 
@@ -77,16 +78,16 @@ class LevelsController extends Controller
                 $rules = [
                     'name_ar' => 'required',
                     'name_en' => 'required',
-                    'image' => 'nullable|image',
-                    'college_id' => 'required|exists:colleges,id',
+                    'file' => 'required|file|mimes:ppt,pptx,doc,docx,pdf',
+                    'lesson_id' => 'required|exists:lessons,id',
 
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
-                    $level = Level::create($input);
-                    $level = Level::whereId($level->id)->first();
+                    $level = Article::create($input);
+                    $level = Article::whereId($level->id)->first();
                     return msgdata($request, success(), trans('lang.added_s'), $level);
                 }
 
@@ -108,23 +109,23 @@ class LevelsController extends Controller
         if ($user) {
             if ($user->type == "admin") {
                 $rules = [
-                    'id' => 'required|exists:levels,id',
+                    'id' => 'required|exists:articles,id',
                     'name_ar' => 'required',
                     'name_en' => 'required',
-                    'image' => 'nullable|image',
+                    'file' => 'nullable|file|mimes:ppt,pptx,doc,docx,pdf',
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
-                    $college = Level::whereId($request->id)->first();
+                    $college = Article::whereId($request->id)->first();
                     $college->name_ar = $request->name_ar;
                     $college->name_en = $request->name_en;
-                    if ($request->file('image')) {
-                        $college->image = $request->image;
+                    if ($request->file('file')) {
+                        $college->file = $request->file;
                     }
                     $college->save();
-                    $college = Level::whereId($request->id)->first();
+                    $college = Article::whereId($request->id)->first();
                     return msgdata($request, success(), trans('lang.updated_s'), $college);
                 }
 
@@ -145,7 +146,7 @@ class LevelsController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $university = Level::whereId($id)->first();
+                $university = Article::whereId($id)->first();
                 if ($university) {
                     try {
                         $university->delete();
@@ -172,7 +173,7 @@ class LevelsController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $college = Level::whereId($id)->with('Courses')->first();
+                $college = Article::whereId($id)->first();
                 if ($college) {
                     return msgdata($request, success(), trans('lang.shown_s'), $college);
                 } else {
@@ -198,7 +199,7 @@ class LevelsController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $college = Level::whereId($id)->first();
+                $college = Article::whereId($id)->first();
                 if ($college) {
 
                     if ($college->show == 1) {
