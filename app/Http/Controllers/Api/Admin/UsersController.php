@@ -80,7 +80,8 @@ class UsersController extends Controller
                     $data['status'] = 'enable';
                 }
                 User::where('id', $id)->update($data);
-                return msgdata($request, success(), trans('lang.status_changed'), (object)[]);
+                $out = User::where('id', $id)->first();
+                return msgdata($request, success(), trans('lang.status_changed'), $out);
             } else {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
