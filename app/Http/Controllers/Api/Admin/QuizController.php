@@ -4,23 +4,25 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\College;
+use App\Models\Exam;
 use App\Models\Lesson;
 use App\Models\Level;
+use App\Models\Quiz;
 use App\Models\University;
 use Illuminate\Http\Request;
 use Validator;
 
-class LessonController extends Controller
+class QuizController extends Controller
 {
 
-    public function index(Request $request, $course_id)
+    public function index(Request $request, $lesson_id)
     {
 
         $input = $request->all();
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $levels = Lesson::orderBy('sort', 'asc')->where('course_id', $course_id)->paginate(10);
+                $levels = Quiz::orderBy('sort', 'asc')->where('lesson_id', $lesson_id)->paginate(10);
                 return msgdata($request, success(), trans('lang.shown_s'), $levels);
             } else {
 
@@ -44,7 +46,7 @@ class LessonController extends Controller
                 if ($request->get('rows')) {
 
                     foreach ($request->get('rows') as $row) {
-                        Lesson::whereId($row['id'])->update([
+                        Quiz::whereId($row['id'])->update([
                             'sort' => $row['sort'],
                         ]);
 
@@ -76,18 +78,16 @@ class LessonController extends Controller
             if ($user->type == "admin") {
 
                 $rules = [
-                    'name_ar' => 'required',
-                    'name_en' => 'required',
-                    'image' => 'nullable|image',
-                    'course_id' => 'required|exists:courses,id',
+                    'name' => 'required',
+                    'lesson_id' => 'required|exists:lessons,id',
 
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
-                    $level = Lesson::create($input);
-                    $level = Lesson::whereId($level->id)->first();
+                    $level = Quiz::create($input);
+                    $level = Quiz::whereId($level->id)->first();
                     return msgdata($request, success(), trans('lang.added_s'), $level);
                 }
 
@@ -109,23 +109,18 @@ class LessonController extends Controller
         if ($user) {
             if ($user->type == "admin") {
                 $rules = [
-                    'id' => 'required|exists:lessons,id',
-                    'name_ar' => 'required',
-                    'name_en' => 'required',
-                    'image' => 'nullable|image',
+                    'id' => 'required|exists:quizzes,id',
+                    'name' => 'required',
+
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
-                    $college = Lesson::whereId($request->id)->first();
-                    $college->name_ar = $request->name_ar;
-                    $college->name_en = $request->name_en;
-                    if ($request->file('image')) {
-                        $college->image = $request->image;
-                    }
+                    $college = Quiz::whereId($request->id)->first();
+                    $college->name = $request->name;
                     $college->save();
-                    $college = Lesson::whereId($request->id)->first();
+                    $college = Quiz::whereId($request->id)->first();
                     return msgdata($request, success(), trans('lang.updated_s'), $college);
                 }
 
@@ -146,7 +141,7 @@ class LessonController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $university = Lesson::whereId($id)->first();
+                $university = Quiz::whereId($id)->first();
                 if ($university) {
                     try {
                         $university->delete();
@@ -173,7 +168,7 @@ class LessonController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $college = Lesson::whereId($id)->with(['videos', 'quizes', 'articles'])->first();
+                $college = Quiz::whereId($id)->with(['questions'])->first();
                 if ($college) {
                     return msgdata($request, success(), trans('lang.shown_s'), $college);
                 } else {
@@ -199,7 +194,7 @@ class LessonController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $college = Lesson::whereId($id)->first();
+                $college = Quiz::whereId($id)->first();
                 if ($college) {
                     if ($college->show == 1) {
                         $college->show = 0;
@@ -224,7 +219,6 @@ class LessonController extends Controller
         }
 
     }
-
 
 
 }
