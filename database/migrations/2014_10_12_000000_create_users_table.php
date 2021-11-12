@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('image')->nullable();
+            $table->string('qr_image')->nullable();
             $table->string('phone')->unique();
             $table->string('password');
             $table->string('api_token')->nullable();
@@ -25,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('device_id');
             $table->string('fcm_token');
-            $table->integer('verified')->default(0);
+            $table->integer('verified')->default(1);
             $table->string('code')->nullable();
             $table->enum('type',['admin','student','assistant'])->nullable()->default('student');
             $table->enum('status',['disable','enable'])->default('enable');

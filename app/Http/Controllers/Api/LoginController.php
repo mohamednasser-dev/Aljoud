@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Milon\Barcode\Facades\DNS2DFacade;
 use Validator;
 
 class LoginController extends Controller
@@ -29,16 +31,20 @@ class LoginController extends Controller
         $token = Auth::attempt($credentials);
         //return token
         if (!$token) {
-            return $this->returnError('e001', ' بيانات الدخول غير صحيحه');
+            return msgdata($request, failed(), trans('lang.not_authorized'), (object)[]);
         }
         $user = Auth::user();
+        if ($user->device_id != $request->device_id) {
+            Auth::logout();
+            return msgdata($request, not_active(), trans('lang.device_invalid'), (object)[]);
+        }
         if ($user->verified == 0) {
             Auth::logout();
-            return msgdata($request, not_active(), trans('lang.verify_first'), null);
+            return msgdata($request, not_active(), trans('lang.verify_first'), (object)[]);
         }
         if ($user->status == 'disable') {
             Auth::logout();
-            return msgdata($request, not_active(), trans('lang.account_un_active'), null);
+            return msgdata($request, not_active(), trans('lang.account_un_active'), (object)[]);
         }
         if ($request->fcm_token) {
             User::where('id', $user->id)->update(['fcm_token' => $request->fcm_token]);
@@ -47,6 +53,19 @@ class LoginController extends Controller
         $user_data->api_token = Str::random(60);
         $user_data->save();
         return msgdata($request, success(), trans('lang.login_s'), $user_data);
+    }
+
+    public function generate($id)
+    {
+
+        $data = Ticket::get()->find($id);
+        $image = \QrCode::format('png')
+            ->merge('img/t.jpg', 0.1, true)
+            ->size(200)->errorCorrection('H')
+            ->generate('A simple example of QR code!');
+        return response($image)->header('Content-type','image/png');
+
+        return view('qrCode', compact('qrData', $qrData));
     }
 
     public function Register(Request $request)
@@ -68,9 +87,15 @@ class LoginController extends Controller
         $data['password'] = $request->password;
         $data['type'] = 'student';
         $user = User::create($data);
+
         if ($user) {
             $token = Auth::attempt(['phone' => $request->phone, 'password' => $request->password]);
             $user->api_token = Str::random(60);
+            //generate student qr image ...
+            $idString = (string)$user->id ;
+            $qr_image_name = 'qr_'.$user->id.'.png' ;
+            Storage::disk('public')->put($qr_image_name,base64_decode(DNS2DFacade::getBarcodePNG($idString, "QRCODE")));
+            $user->qr_image = $qr_image_name ;
             $user->save();
             //User created, return success response
             return msgdata($request, success(), trans('lang.register_done'), $user);

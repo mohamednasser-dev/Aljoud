@@ -25,8 +25,10 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/login', [\App\Http\Controllers\Api\LoginController::class, 'login']);
     Route::post('/register', [\App\Http\Controllers\Api\LoginController::class, 'register']);
 
-    Route::post('/student/home', [\App\Http\Controllers\Api\LoginController::class, 'register']);
-
-
+    //profile
     Route::get('/profile', [\App\Http\Controllers\Api\Students\ProfileController::class, 'index']);
+    Route::post('/update/profile', [\App\Http\Controllers\Api\Students\ProfileController::class, 'update']);
+
+    Route::post('/home', [\App\Http\Controllers\Api\LoginController::class, 'register']);
+
 });

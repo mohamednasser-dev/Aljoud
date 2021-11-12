@@ -19,3 +19,15 @@ Route::get('/', function () {
 Route::post('login', [\App\Http\Controllers\Api\LoginController::class, 'login']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+//Route::get('qr-code-g', function () {
+//
+//    \SimpleSoftwareIO\QrCode::size(500)
+//        ->format('png')
+//        ->generate('ItSolutionStuff.com', public_path('images/qrcode.png'));
+//    return view('qrCode');
+//
+//});
+
+Route::get('/generate-barcode', [\App\Http\Controllers\HomeController::class, 'index'])->name('generate.barcode');

@@ -15,6 +15,9 @@ return [
     'register_done' => 'account added successfully and login done',
 
     'not_authorize' => 'sorry you are not authenticated',
+    'device_invalid' => 'please login with your device or contact admin to verify new device',
+    'not_authorized' => 'phone or password incorrect',
+    'should_login' => 'you should login first',
 
 
 ];

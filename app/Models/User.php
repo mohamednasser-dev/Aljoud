@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -50,13 +51,18 @@ class User extends Authenticatable
 
     public function setImageAttribute($image)
     {
-
         if (is_file($image)) {
             $imageFields = upload($image, 'users');
             $this->attributes['image'] = $imageFields;
-
         }
+    }
 
+    public function getQrImageAttribute($image)
+    {
+        if (!empty($image)){
+            return  Storage::url($image);
+        }
+        return '';
     }
 
     public function setPasswordAttribute($password)
