@@ -29,4 +29,6 @@ return [
     'password_changed_s' => 'password changed successfully',
     'answers_must_be_more_two' => 'answers must be more than two',
     'must_be_one_answer_correct' => 'at least one answer must be correct',
+    'should_select_student' => 'you should select student first',
+    'this_lesson_exists' => 'selected student have this lesson before',
 ];

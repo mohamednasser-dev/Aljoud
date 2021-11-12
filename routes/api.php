@@ -174,6 +174,8 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/users/delete/{id}', [UsersController::class, 'delete']);
         Route::post('/users/{type}/store', [UsersController::class, 'store']);
         Route::post('/users/update', [UsersController::class, 'update']);
+        Route::post('/users/assign_lesson', [UsersController::class, 'assign_lesson']);
+        Route::post('/users/assign_course', [UsersController::class, 'assign_course']);
 
         // instructors
         Route::get('/instructors', [InstructorsController::class, 'index']);
@@ -207,5 +209,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/get_levels_by_specialty/{id}', [HelpersController::class, 'get_levels_by_specialty']);
         Route::get('/get_courses_by_level/{id}', [HelpersController::class, 'get_courses_by_level']);
         Route::get('/get_currency', [HelpersController::class, 'get_currency']);
+        Route::get('/get_active_students', [HelpersController::class, 'get_active_students']);
     });
 });
