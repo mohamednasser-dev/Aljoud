@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\ExamQuestionController;
 use App\Http\Controllers\Api\Admin\LessonController;
 use App\Http\Controllers\Api\Admin\LevelsController;
 use App\Http\Controllers\Api\Admin\QuizController;
+use App\Http\Controllers\Api\Admin\QuizQuestionController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
 use App\Http\Controllers\Api\Admin\UsersController;
@@ -126,7 +127,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
 
 
 //        Course Exams Questions Crud
-        Route::get('/exam-question/{course_id}', [ExamQuestionController::class, 'index']);
+        Route::get('/exam-question/{exam_id}', [ExamQuestionController::class, 'index']);
         Route::post('/exam-question-Sort', [ExamQuestionController::class, 'Sort']);
         Route::post('/exam-question-store', [ExamQuestionController::class, 'store']);
         Route::post('/exam-question-update', [ExamQuestionController::class, 'update']);
@@ -148,6 +149,17 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/quizzes-destroy/{id}', [QuizController::class, 'destroy']);
         Route::get('/quizzes-data/{id}', [QuizController::class, 'show']);
         Route::get('/quizzes-status-Action/{id}', [QuizController::class, 'statusAction']);
+
+
+
+//        lesson Quize Questions Crud
+        Route::get('/quiz-question/{quiz_id}', [QuizQuestionController::class, 'index']);
+        Route::post('/quiz-question-Sort', [QuizQuestionController::class, 'Sort']);
+        Route::post('/quiz-question-store', [QuizQuestionController::class, 'store']);
+        Route::post('/quiz-question-update', [QuizQuestionController::class, 'update']);
+        Route::get('/quiz-question-destroy/{id}', [QuizQuestionController::class, 'destroy']);
+        Route::get('/quiz-question-data/{id}', [QuizQuestionController::class, 'show']);
+        Route::get('/quiz-question-status-Action/{id}', [QuizQuestionController::class, 'statusAction']);
 
 
         //    cpanel users
