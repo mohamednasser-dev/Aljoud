@@ -84,7 +84,7 @@ class LessonController extends Controller
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     $level = Lesson::create($input);
                     $level = Lesson::whereId($level->id)->first();
@@ -116,7 +116,7 @@ class LessonController extends Controller
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     $college = Lesson::whereId($request->id)->first();
                     $college->name_ar = $request->name_ar;

@@ -82,7 +82,7 @@ class SpecialistController extends Controller
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     $college = College::create($input);
                     $college = College::whereId($college->id)->first();
@@ -114,7 +114,7 @@ class SpecialistController extends Controller
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     $college = College::whereId($request->id)->first();
                     $college->name_ar = $request->name_ar;

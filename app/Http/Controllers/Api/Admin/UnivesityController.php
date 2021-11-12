@@ -71,7 +71,7 @@ class UnivesityController extends Controller
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     $university = University::create($input);
                     $university = University::whereId($university->id)->first();
@@ -103,7 +103,7 @@ class UnivesityController extends Controller
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     $university = University::whereId($request->id)->first();
                     $university->name_ar = $request->name_ar;

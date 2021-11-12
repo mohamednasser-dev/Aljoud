@@ -197,6 +197,15 @@ function upload($file, $dir)
     return $image;
 }
 
+function upload_multiple($file, $dir)
+{
+    $image = time() . uniqid() . '.' . $file->getClientOriginalExtension();
+    $destinationPath = $dir;
+    $file->storeAs($destinationPath, $image, 'my_upload');
+    return $image;
+}
+
+
 if (!function_exists('HttpPost')) {
     function HttpPost($url_path, $data = [])
     {

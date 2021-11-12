@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\CoursesController;
 use App\Http\Controllers\Api\Admin\ExamController;
+use App\Http\Controllers\Api\Admin\ExamQuestionAnswerController;
 use App\Http\Controllers\Api\Admin\ExamQuestionController;
 use App\Http\Controllers\Api\Admin\LessonController;
 use App\Http\Controllers\Api\Admin\LevelsController;
@@ -114,6 +115,10 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/exam-question-data/{id}', [ExamQuestionController::class, 'show']);
         Route::get('/exam-question-status-Action/{id}', [ExamQuestionController::class, 'statusAction']);
 
+        //        Course Exams Questions Answer ADD-Delete
+        Route::get('/exam-question-answer/{question_id}', [ExamQuestionAnswerController::class, 'index']);
+        Route::post('/exam-question-answer-store', [ExamQuestionAnswerController::class, 'store']);
+        Route::post('/exam-question-answer-update', [ExamQuestionAnswerController::class, 'update']);
 
 
         //    cpanel users

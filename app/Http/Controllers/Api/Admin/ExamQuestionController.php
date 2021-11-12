@@ -85,7 +85,7 @@ class ExamQuestionController extends Controller
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     $question = new ExamQuestion;
                     $question->type = $request->type;
@@ -125,7 +125,7 @@ class ExamQuestionController extends Controller
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
-                    return response()->json(['status' => 401, 'msg' => $validator->messages()->first()]);
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     $question = ExamQuestion::whereId($request->id)->first();
                     $question->type = $request->type;
