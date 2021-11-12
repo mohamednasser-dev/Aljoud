@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\CoursesController;
+use App\Http\Controllers\Api\Admin\ExamController;
+use App\Http\Controllers\Api\Admin\ExamQuestionAnswerController;
+use App\Http\Controllers\Api\Admin\ExamQuestionController;
+use App\Http\Controllers\Api\Admin\LessonController;
 use App\Http\Controllers\Api\Admin\LevelsController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
@@ -87,6 +91,42 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/courses-destroy/{id}', [CoursesController::class, 'destroy']);
         Route::get('/courses-lessons/{id}', [CoursesController::class, 'show']);
         Route::get('/courses-status-Action/{id}', [CoursesController::class, 'statusAction']);
+
+
+//        Lesson Crud
+        Route::get('/lessons/{course_id}', [LessonController::class, 'index']);
+        Route::post('/lessons-Sort', [LessonController::class, 'Sort']);
+        Route::post('/lessons-store', [LessonController::class, 'store']);
+        Route::post('/lessons-update', [LessonController::class, 'update']);
+        Route::get('/lessons-destroy/{id}', [LessonController::class, 'destroy']);
+        Route::get('/lessons-data/{id}', [LessonController::class, 'show']);
+        Route::get('/lessons-status-Action/{id}', [LessonController::class, 'statusAction']);
+
+
+
+//        Course Exams Crud
+        Route::get('/exams/{course_id}', [ExamController::class, 'index']);
+        Route::post('/exams-Sort', [ExamController::class, 'Sort']);
+        Route::post('/exams-store', [ExamController::class, 'store']);
+        Route::post('/exams-update', [ExamController::class, 'update']);
+        Route::get('/exams-destroy/{id}', [ExamController::class, 'destroy']);
+        Route::get('/exams-data/{id}', [ExamController::class, 'show']);
+        Route::get('/exams-status-Action/{id}', [ExamController::class, 'statusAction']);
+
+
+//        Course Exams Questions Crud
+        Route::get('/exam-question/{course_id}', [ExamQuestionController::class, 'index']);
+        Route::post('/exam-question-Sort', [ExamQuestionController::class, 'Sort']);
+        Route::post('/exam-question-store', [ExamQuestionController::class, 'store']);
+        Route::post('/exam-question-update', [ExamQuestionController::class, 'update']);
+        Route::get('/exam-question-destroy/{id}', [ExamQuestionController::class, 'destroy']);
+        Route::get('/exam-question-data/{id}', [ExamQuestionController::class, 'show']);
+        Route::get('/exam-question-status-Action/{id}', [ExamQuestionController::class, 'statusAction']);
+
+        //        Course Exams Questions Answer ADD-Delete
+        Route::get('/exam-question-answer/{question_id}', [ExamQuestionAnswerController::class, 'index']);
+        Route::post('/exam-question-answer-store', [ExamQuestionAnswerController::class, 'store']);
+        Route::post('/exam-question-answer-update', [ExamQuestionAnswerController::class, 'update']);
 
 
         //    cpanel users

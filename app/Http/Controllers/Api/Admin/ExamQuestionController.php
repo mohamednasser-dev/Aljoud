@@ -4,22 +4,26 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\College;
+use App\Models\Exam;
+use App\Models\ExamQuestion;
+use App\Models\Lesson;
+use App\Models\Level;
 use App\Models\University;
 use Illuminate\Http\Request;
 use Validator;
 
-class SpecialistController extends Controller
+class ExamQuestionController extends Controller
 {
 
-    public function index(Request $request, $university_id)
+    public function index(Request $request, $exam_id)
     {
 
         $input = $request->all();
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $colleges = College::orderBy('sort', 'asc')->where('university_id', $university_id)->paginate(10);
-                return msgdata($request, success(), trans('lang.shown_s'), $colleges);
+                $levels = ExamQuestion::orderBy('sort', 'asc')->where('exam_id', $exam_id)->paginate(10);
+                return msgdata($request, success(), trans('lang.shown_s'), $levels);
             } else {
 
                 return msgdata($request, failed(), trans('lang.permission_warrning'), []);
@@ -42,7 +46,7 @@ class SpecialistController extends Controller
                 if ($request->get('rows')) {
 
                     foreach ($request->get('rows') as $row) {
-                        College::whereId($row['id'])->update([
+                        ExamQuestion::whereId($row['id'])->update([
                             'sort' => $row['sort'],
                         ]);
 
@@ -74,19 +78,26 @@ class SpecialistController extends Controller
             if ($user->type == "admin") {
 
                 $rules = [
-                    'name_ar' => 'required',
-                    'name_en' => 'required',
-                    'image' => 'nullable|image',
-                    'university_id' => 'required|exists:universities,id',
+                    'name' => 'required', // image or text
+                    'type' => 'required|in:text,image',
+                    'exam_id' => 'required|exists:exams,id',
 
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
-                    $college = College::create($input);
-                    $college = College::whereId($college->id)->first();
-                    return msgdata($request, success(), trans('lang.added_s'), $college);
+                    $question = new ExamQuestion;
+                    $question->type = $request->type;
+                    $question->exam_id = $request->exam_id;
+                    if ($request->type == 'image') {
+                        $imageFields = upload($request->name, 'exams');
+                        $question->name = $imageFields;
+                    } else {
+                        $question->name = $request->name;
+                    }
+                    $question->save();
+                    return msgdata($request, success(), trans('lang.added_s'), $question);
                 }
 
             } else {
@@ -107,24 +118,25 @@ class SpecialistController extends Controller
         if ($user) {
             if ($user->type == "admin") {
                 $rules = [
-                    'id' => 'required|exists:colleges,id',
-                    'name_ar' => 'required',
-                    'name_en' => 'required',
-                    'image' => 'nullable|image',
+                    'id' => 'required|exists:exam_questions,id',
+                    'name' => 'required', // image or text
+                    'type' => 'required|in:text,image',
+
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
-                    $college = College::whereId($request->id)->first();
-                    $college->name_ar = $request->name_ar;
-                    $college->name_en = $request->name_en;
-                    if ($request->file('image')) {
-                        $college->image = $request->image;
+                    $question = ExamQuestion::whereId($request->id)->first();
+                    $question->type = $request->type;
+                    if ($request->type == 'image') {
+                        $imageFields = upload($request->name, 'exams');
+                        $question->name = $imageFields;
+                    } else {
+                        $question->name = $request->name;
                     }
-                    $college->save();
-                    $college = College::whereId($request->id)->first();
-                    return msgdata($request, success(), trans('lang.updated_s'), $college);
+                    $question->save();
+                    return msgdata($request, success(), trans('lang.updated_s'), $question);
                 }
 
             } else {
@@ -144,22 +156,18 @@ class SpecialistController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $university = College::whereId($id)->first();
+                $university = ExamQuestion::whereId($id)->first();
                 if ($university) {
                     try {
                         $university->delete();
                     } catch (\Exception $e) {
                         return msgdata($request, failed(), trans('lang.error'), (object)[]);
-
                     }
-
                     return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
                 } else {
                     return msgdata($request, not_found(), trans('lang.not_found'), (object)[]);
                 }
-
             } else {
-
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
 
@@ -175,7 +183,7 @@ class SpecialistController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $college = College::whereId($id)->with('Levels')->first();
+                $college = ExamQuestion::whereId($id)->first();
                 if ($college) {
                     return msgdata($request, success(), trans('lang.shown_s'), $college);
                 } else {
@@ -201,9 +209,8 @@ class SpecialistController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $college = College::whereId($id)->first();
+                $college = ExamQuestion::whereId($id)->first();
                 if ($college) {
-
                     if ($college->show == 1) {
                         $college->show = 0;
                     } else {

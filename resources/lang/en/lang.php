@@ -27,6 +27,6 @@ return [
     'code_checked_s' => 'code checked successfully',
     'make_sure_code' => 'make sure is this code is correct',
     'password_changed_s' => 'password changed successfully',
-
-
+    'answers_must_be_more_two' => 'answers must be more than two',
+    'must_be_one_answer_correct' => 'at least one answer must be correct',
 ];
