@@ -29,6 +29,12 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'fcm_token',
+        'created_at',
+        'updated_at',
+        'code',
+        'verified',
+        'device_id',
         'remember_token',
         'email_verified_at'
     ];
@@ -62,7 +68,7 @@ class User extends Authenticatable
     public function getQrImageAttribute($image)
     {
         if (!empty($image)){
-            return  Storage::url($image);
+               return asset('uploads/qr_images').'/'.$image;
         }
         return '';
     }

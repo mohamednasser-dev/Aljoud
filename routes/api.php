@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\Admin\LevelsController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
+use App\Http\Controllers\Api\Admin\UsersController;
+use App\Http\Controllers\Api\Admin\InstructorsController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\Students\ProfileController;
 use Illuminate\Http\Request;
@@ -63,5 +65,13 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/levels-destroy/{id}', [LevelsController::class, 'destroy']);
         Route::get('/levels-specialists/{id}', [LevelsController::class, 'show']);
         Route::get('/levels-status-Action/{id}', [LevelsController::class, 'statusAction']);
+
+        //    cpanel users
+        Route::get('/users/{type}', [UsersController::class, 'index']);
+        Route::post('/users/{type}/store', [UsersController::class, 'store']);
+
+        // instructors
+        Route::get('/instructors', [InstructorsController::class, 'index']);
+        Route::post('/instructors/store', [InstructorsController::class, 'store']);
     });
 });

@@ -16,7 +16,7 @@ class ProfileController extends Controller
         $api_token = $request->header('api_token');
         $user = check_api_token($api_token);
         if ($user) {
-            $user = User::select('id', 'name', 'phone', 'email', 'image','qr_image')->where('id', $user->id)->first();
+            $user = User::where('id', $user->id)->first();
             return msgdata($request, success(), 'success', $user);
         } else {
             return response()->json(msg($request, not_authoize(), trans('lang.should_login')));

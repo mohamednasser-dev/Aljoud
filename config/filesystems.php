@@ -37,7 +37,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => public_path(),
+            'root' => public_path('uploads/qr_images'),
             'url' => env('APP_URL'),
             'visibility' => 'public',
         ],

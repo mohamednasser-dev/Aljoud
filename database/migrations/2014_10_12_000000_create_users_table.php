@@ -24,8 +24,8 @@ class CreateUsersTable extends Migration
             $table->string('api_token')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
-            $table->string('device_id');
-            $table->string('fcm_token');
+            $table->string('device_id')->nullable();
+            $table->string('fcm_token')->nullable();
             $table->integer('verified')->default(1);
             $table->string('code')->nullable();
             $table->enum('type',['admin','student','assistant'])->nullable()->default('student');

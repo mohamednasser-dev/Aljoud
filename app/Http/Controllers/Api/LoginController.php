@@ -34,7 +34,7 @@ class LoginController extends Controller
             return msgdata($request, failed(), trans('lang.not_authorized'), (object)[]);
         }
         $user = Auth::user();
-        if ($user->device_id != $request->device_id) {
+        if ($user->type == 'student' && $user->device_id != $request->device_id) {
             Auth::logout();
             return msgdata($request, not_active(), trans('lang.device_invalid'), (object)[]);
         }
@@ -47,25 +47,12 @@ class LoginController extends Controller
             return msgdata($request, not_active(), trans('lang.account_un_active'), (object)[]);
         }
         if ($request->fcm_token) {
-            User::where('id', $user->id)->update(['fcm_token' => $request->fcm_token]);
+            User::where('id', $user->id)->update(['fcm_token' => $request->fcm_token,'device_id' => $request->device_id]);
         }
         $user_data = User::where('id', $user->id)->first();
         $user_data->api_token = Str::random(60);
         $user_data->save();
         return msgdata($request, success(), trans('lang.login_s'), $user_data);
-    }
-
-    public function generate($id)
-    {
-
-        $data = Ticket::get()->find($id);
-        $image = \QrCode::format('png')
-            ->merge('img/t.jpg', 0.1, true)
-            ->size(200)->errorCorrection('H')
-            ->generate('A simple example of QR code!');
-        return response($image)->header('Content-type','image/png');
-
-        return view('qrCode', compact('qrData', $qrData));
     }
 
     public function Register(Request $request)
