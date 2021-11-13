@@ -10,7 +10,7 @@ class Level extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $with =['College'];
+//    protected $with =['College'];
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i',
     ];

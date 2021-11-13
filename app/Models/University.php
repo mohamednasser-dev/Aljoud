@@ -34,6 +34,11 @@ class University extends Model
         return $this->hasMany(College::class, 'university_id');
     }
 
+    public function Specialists()
+    {
+        return $this->hasMany(College::class, 'university_id')->where('show',1);
+    }
+
 
     public function getImageAttribute($image)
     {

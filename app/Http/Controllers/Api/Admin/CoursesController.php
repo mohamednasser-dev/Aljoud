@@ -258,31 +258,21 @@ class CoursesController extends Controller
 
     public function Users(Request $request, $id)
     {
-        $input = $request->all();
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-
                 $user_lessons = UserLesson::whereHas('Lesson', function ($q) use ($id) {
                     $q->where('course_id', $id);
                 })->with('Users')->get()->unique('user_id');
-
                 $user_lessons = $user_lessons->pluck('user_id');
-
                 $users = User::whereIn('id', $user_lessons)->get();
                 return msgdata($request, success(), trans('lang.shown_s'), $users);
-
-
             } else {
-
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
-
         } else {
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
-
         }
-
     }
 
     public function AddUsers(Request $request)
