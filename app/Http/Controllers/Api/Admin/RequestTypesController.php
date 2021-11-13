@@ -68,7 +68,6 @@ class RequestTypesController extends Controller
                     'id' => 'required|exists:request_types,id',
                     'name_ar' => 'required',
                     'name_en' => 'required',
-
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
