@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\CourseContentController;
 use App\Http\Controllers\Api\Admin\ExamQuestionAnswerController;
 use App\Http\Controllers\Api\Admin\QuizQuestionAnswerController;
 use App\Http\Controllers\Api\Admin\ExamQuestionController;
 use App\Http\Controllers\Api\Admin\QuizQuestionController;
 use App\Http\Controllers\Api\Admin\InstructorsController;
 use App\Http\Controllers\Api\Admin\CurrenciesController;
+use App\Http\Controllers\Api\Admin\RequestTypesController;
 use App\Http\Controllers\Api\Students\ProfileController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
@@ -139,6 +141,13 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/videos-status-Action/{id}', [VideosController::class, 'statusAction']);
 
 
+//Course Content Crud
+        Route::get('/course-content/{course_id}', [CourseContentController::class, 'index']);
+        Route::post('/course-content-store', [CourseContentController::class, 'store']);
+        Route::post('/course-content-update', [CourseContentController::class, 'update']);
+        Route::get('/course-content-destroy/{id}', [CourseContentController::class, 'destroy']);
+
+
 //Course Exams Crud
         Route::get('/exams/{course_id}', [ExamController::class, 'index']);
         Route::post('/exams-Sort', [ExamController::class, 'Sort']);
@@ -219,6 +228,14 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/offers/store', [OffersController::class, 'store']);
         Route::post('/offers/update', [OffersController::class, 'update']);
         Route::get('/offers-status-Action/{id}', [OffersController::class, 'statusAction']);
+
+
+//request types Crud
+        Route::get('/request-types', [RequestTypesController::class, 'index']);
+        Route::post('/request-types-store', [RequestTypesController::class, 'store']);
+        Route::post('/request-types-update', [RequestTypesController::class, 'update']);
+        Route::get('/request-types-destroy/{id}', [RequestTypesController::class, 'destroy']);
+        Route::get('/request-types-status-Action/{id}', [RequestTypesController::class, 'statusAction']);
 
     });
     // helpers

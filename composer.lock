@@ -170,10 +170,6 @@
                 "file uploads",
                 "laravel"
             ],
-            "support": {
-                "issues": "https://github.com/cloudinary-labs/cloudinary-laravel/issues",
-                "source": "https://github.com/cloudinary-labs/cloudinary-laravel/tree/1.0.4"
-            },
             "time": "2021-02-17T04:23:45+00:00"
         },
         {
@@ -233,11 +229,6 @@
                 "image management",
                 "sdk"
             ],
-            "support": {
-                "email": "info@cloudinary.com",
-                "issues": "https://github.com/cloudinary/cloudinary_php/issues",
-                "source": "https://github.com/cloudinary/cloudinary_php/tree/2.5.0"
-            },
             "time": "2021-11-10T13:20:53+00:00"
         },
         {
@@ -2786,10 +2777,6 @@
             "keywords": [
                 "http"
             ],
-            "support": {
-                "issues": "https://github.com/shrikeh/teapot/issues",
-                "source": "https://github.com/shrikeh/teapot/tree/master"
-            },
             "time": "2017-09-01T13:56:48+00:00"
         },
         {
@@ -4673,10 +4660,6 @@
             "keywords": [
                 "http"
             ],
-            "support": {
-                "issues": "https://github.com/teapot-php/status-code/issues",
-                "source": "https://github.com/teapot-php/status-code/tree/v1.1.2"
-            },
             "time": "2020-11-03T17:14:32+00:00"
         },
         {
@@ -7056,6 +7039,5 @@
     "platform": {
         "php": "^7.3|^8.0"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "platform-dev": []
 }
