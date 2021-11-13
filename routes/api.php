@@ -241,7 +241,9 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::get('/replies/{id}', [InboxController::class, 'Replies']);
     Route::post('/store-reply', [InboxController::class, 'storeReply']);
     Route::post('/store-inbox', [InboxController::class, 'storeInbox']);
-    Route::post('/lock-inbox', [InboxController::class, 'LockInbox']);
+    Route::get('/lock-inbox/{id}', [InboxController::class, 'LockInbox']);
+    Route::get('/unread-inbox/{id}', [InboxController::class, 'unreadInbox']);
+    Route::post('/append-assinstance', [InboxController::class, 'AppendInboxToAssinstance']);
 
 
     // helpers
@@ -254,5 +256,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/get_lessons_by_course/{id}', [HelpersController::class, 'get_lessons_by_course']);
         Route::get('/get_currency', [HelpersController::class, 'get_currency']);
         Route::get('/get_enable_students', [HelpersController::class, 'get_enable_students']);
+        Route::get('/inbox_count', [HelpersController::class, 'inbox_count']);
     });
 });

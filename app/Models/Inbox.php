@@ -10,10 +10,9 @@ class Inbox extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $with = ['files','Sender','Receiver'];
+    protected $with = ['files', 'Sender', 'Receiver', 'Assistance'];
 
     protected $casts = [
-
         'is_read' => 'integer',
         'is_lock' => 'integer',
         'created_at' => 'datetime:Y-m-d h:i',
@@ -48,5 +47,10 @@ class Inbox extends Model
     public function Receiver()
     {
         return $this->belongsTo(User::class, 'receiver_id')->select('id', 'name', 'image');
+    }
+
+    public function Assistance()
+    {
+        return $this->belongsTo(User::class, 'assistant_id')->select('id', 'name', 'image');
     }
 }

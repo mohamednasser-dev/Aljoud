@@ -103,6 +103,7 @@ class InboxController extends Controller
                         $inbox->receiver_id = $parent_inbox->receiver_id;
                     }
                     $inbox->sender_id = $user->id;
+                    $inbox->assistant_id = $parent_inbox->assistant_id;
 
                     try {
                         $inbox->save();
@@ -191,20 +192,83 @@ class InboxController extends Controller
         }
     }
 
-
     public function LockInbox(Request $request, $id)
     {
 
         $user = check_api_token($request->header('api_token'));
         if ($user) {
-            $inbox = Inbox::whereId($id)->with('childreninboxes')->first();
+            $inbox = Inbox::whereId($id)->first();
             if ($inbox) {
                 if ($user->type == "admin") {
-                    $admins = User::where('type', 'admin')->pluck('id')->toArray();
-                    if (in_array($inbox->receiver_id, $admins)) {
-                        $inbox->is_read = 1;
-                        $inbox->save();
+                    $inbox->is_lock = 1;
+                    $inbox->save();
+
+                    return msgdata($request, success(), trans('lang.updated_s'), $inbox);
+
+                } else {
+                    return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+
+                }
+
+            } else {
+                return msgdata($request, not_found(), trans('lang.not_found'), (object)[]);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+    }
+
+    public function unreadInbox(Request $request, $id)
+    {
+
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            $inbox = Inbox::whereId($id)->first();
+            if ($inbox) {
+                if ($user->type == "admin") {
+                    $inbox->is_read = 0;
+                    $inbox->save();
+
+                    return msgdata($request, success(), trans('lang.updated_s'), $inbox);
+
+                } else {
+                    return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+
+                }
+
+            } else {
+                return msgdata($request, not_found(), trans('lang.not_found'), (object)[]);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+    }
+
+
+    public function AppendInboxToAssinstance(Request $request)
+    {
+
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            $inbox = Inbox::whereId($request->id)->first();
+            if ($inbox) {
+                if ($user->type == "admin") {
+                    $rules =
+                        [
+                            'assistant_id' => 'required|exists:users,id',
+                        ];
+                    $validator = Validator::make($request->all(), $rules);
+                    if ($validator->fails()) {
+                        return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                     }
+
+                    $inbox->assistant_id = $request->assistant_id;
+                    $inbox->save();
+
                     return msgdata($request, success(), trans('lang.updated_s'), $inbox);
 
                 } else {
