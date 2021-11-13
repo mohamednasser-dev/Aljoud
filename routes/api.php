@@ -191,6 +191,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/users/update', [UsersController::class, 'update']);
         Route::post('/users/assign_lesson', [UsersController::class, 'assign_lesson']);
         Route::post('/users/assign_course', [UsersController::class, 'assign_course']);
+        Route::get('/user/courses/{id}', [UsersController::class, 'courses']);
 
 //instructors
         Route::get('/instructors', [InstructorsController::class, 'index']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\University;
 use App\Models\User;
@@ -234,6 +235,29 @@ class UsersController extends Controller
                 }
                 $user->save();
                 return msgdata($request, success(), trans('lang.updated_s'), $user);
+            } else {
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+        }
+    }
+
+    public function courses(Request $request, $id)
+    {
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+/*
+ * whereHas('Lesson', function ($q) use ($id) {
+                    $q->where('course_id', $id);
+                })
+*/
+                $user_lessons = UserLesson::where('user_id',$id)->pluck('lesson_id')->toArray();
+                $user_courses = Lesson::whereIn('id',$user_lessons)->pluck('course_id')->toArray();
+                $courses = Course::whereIn('id',$user_courses)->get();
+                return msgdata($request, success(), trans('lang.shown_s'), $courses);
             } else {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
