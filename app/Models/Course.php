@@ -17,7 +17,7 @@ class Course extends Model
     ];
 
     protected $appends = ['name', 'desc'];
-    protected $with = ['Instructor'];
+    protected $with = ['Instructor', 'Content'];
 
     public function getNameAttribute()
     {
@@ -40,6 +40,11 @@ class Course extends Model
     public function Lesson()
     {
         return $this->hasMany(Lesson::class, 'course_id');
+    }
+
+    public function Content()
+    {
+        return $this->hasMany(CourseContent::class, 'course_id');
     }
 
     public function CourseContents()

@@ -18,7 +18,7 @@ class PeopelSeeder extends Seeder
             'verified' => 1,
             'device_id' => '122device_id',
             'fcm_token' => 'fcm_tokenfcm_tokenfcm_token',
-            'password' => bcrypt('123456'),
+            'password' => '123456',
         ]);
 
         $student= User::create([
@@ -29,7 +29,7 @@ class PeopelSeeder extends Seeder
             'verified' => 1,
             'device_id' => '123device_id',
             'fcm_token' => 'fcm3_tokenfcm_tokenfcm_token',
-            'password' => bcrypt('123456'),
+            'password' => '123456',
         ]);
 
         $assistant= User::create([
@@ -40,7 +40,7 @@ class PeopelSeeder extends Seeder
             'verified' => 1,
             'device_id' => '124device_id',
             'fcm_token' => 'fcm4_tokenfcm_tokenfcm_token',
-            'password' => bcrypt('123456'),
+            'password' => '123456',
         ]);
     }
 }

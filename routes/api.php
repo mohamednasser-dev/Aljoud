@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\CourseContentController;
 use App\Http\Controllers\Api\Admin\ExamQuestionAnswerController;
 use App\Http\Controllers\Api\Admin\QuizQuestionAnswerController;
 use App\Http\Controllers\Api\Admin\ExamQuestionController;
@@ -133,6 +134,13 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/videos-destroy/{id}', [VideosController::class, 'destroy']);
         Route::get('/videos-data/{id}', [VideosController::class, 'show']);
         Route::get('/videos-status-Action/{id}', [VideosController::class, 'statusAction']);
+
+
+//Course Content Crud
+        Route::get('/course-content/{course_id}', [CourseContentController::class, 'index']);
+        Route::post('/course-content-store', [CourseContentController::class, 'store']);
+        Route::post('/course-content-update', [CourseContentController::class, 'update']);
+        Route::get('/course-content-destroy/{id}', [CourseContentController::class, 'destroy']);
 
 
 //Course Exams Crud
