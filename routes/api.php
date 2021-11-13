@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\InboxController;
 use App\Http\Controllers\Api\Students\ProfileController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
+use App\Http\Controllers\Api\Students\HomeCoursesController;
 use App\Http\Controllers\Api\Admin\ArticlesController;
 use App\Http\Controllers\Api\Students\HomeController;
 use App\Http\Controllers\Api\Admin\CoursesController;
@@ -56,7 +57,11 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
 
     //profile
 
-    Route::get('/home', [HomeController::class, 'home']);
+    Route::get('/home/university', [HomeController::class, 'home']);
+    Route::get('/home/university/colleges/{id}', [HomeController::class, 'colleges']);
+    Route::get('/home/college/levels/{id}', [HomeController::class, 'levels']);
+    Route::get('/home/level/courses', [HomeController::class, 'courses']);
+    Route::get('/course/details/{id}', [HomeCoursesController::class, 'details']);
     Route::get('/offers', [HomeController::class, 'offers']);
 
     Route::get('/profile', [ProfileController::class, 'index']);
