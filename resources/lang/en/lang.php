@@ -31,4 +31,6 @@ return [
     'must_be_one_answer_correct' => 'at least one answer must be correct',
     'should_select_student' => 'you should select student first',
     'this_lesson_exists' => 'selected student have this lesson before',
+    'inbox_locked' => 'admin has lock the conversation',
+    'inbox_sent' => 'message sent successfully',
 ];

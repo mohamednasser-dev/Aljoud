@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\QuizQuestionController;
 use App\Http\Controllers\Api\Admin\InstructorsController;
 use App\Http\Controllers\Api\Admin\CurrenciesController;
 use App\Http\Controllers\Api\Admin\RequestTypesController;
+use App\Http\Controllers\Api\InboxController;
 use App\Http\Controllers\Api\Students\ProfileController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
@@ -233,6 +234,16 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/request-types-status-Action/{id}', [RequestTypesController::class, 'statusAction']);
 
     });
+
+//    inboxes
+
+    Route::get('/inboxes', [InboxController::class, 'MyInbox']);
+    Route::get('/replies/{id}', [InboxController::class, 'Replies']);
+    Route::post('/store-reply', [InboxController::class, 'storeReply']);
+    Route::post('/store-inbox', [InboxController::class, 'storeInbox']);
+    Route::post('/lock-inbox', [InboxController::class, 'LockInbox']);
+
+
     // helpers
     Route::group(['prefix' => 'helpers'], function () {
 
