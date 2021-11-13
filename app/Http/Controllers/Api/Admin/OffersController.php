@@ -116,7 +116,6 @@ class OffersController extends Controller
     }
     public function store(Request $request)
     {
-
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {

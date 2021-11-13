@@ -282,9 +282,7 @@ class CoursesController extends Controller
         if ($user) {
             if ($user->type == "admin") {
                 $rules = [
-
                     'course_id' => 'required|exists:courses,id',
-
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {

@@ -16,8 +16,8 @@ class Course extends Model
         'created_at' => 'datetime:Y-m-d h:i',
     ];
 
-    protected $appends = ['name', 'desc'];
-    protected $with = ['Instructor', 'Content'];
+    protected $appends = ['name', 'desc','rate'];
+    protected $with = ['Instructor', 'Content','Currency'];
 
     public function getNameAttribute()
     {
@@ -88,6 +88,16 @@ class Course extends Model
             return asset('uploads/courses') . '/' . $image;
         }
         return asset('uploads/users/default.jpg');
+    }
+    public function getRateAttribute($image)
+    {
+        $count_rates = CourseRate::where('course_id',$this->id)->get()->count();
+        if($count_rates == 0){
+            return 0 ;
+        }
+        $sum_rates = CourseRate::where('course_id',$this->id)->get()->sum('rate');
+        $rate = $sum_rates / $count_rates;
+        return $rate ;
     }
 
     public function setImageAttribute($image)
