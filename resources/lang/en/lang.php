@@ -32,4 +32,7 @@ return [
     'should_select_student' => 'you should select student first',
     'this_lesson_exists' => 'selected student have this lesson before',
     'rate_added_s' => 'rate added successfully',
+
+    'inbox_locked' => 'admin has lock the conversation',
+    'inbox_sent' => 'message sent successfully',
 ];

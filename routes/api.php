@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\QuizQuestionController;
 use App\Http\Controllers\Api\Admin\InstructorsController;
 use App\Http\Controllers\Api\Admin\CurrenciesController;
 use App\Http\Controllers\Api\Admin\RequestTypesController;
+use App\Http\Controllers\Api\InboxController;
 use App\Http\Controllers\Api\Students\ProfileController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
@@ -241,6 +242,18 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/request-types-status-Action/{id}', [RequestTypesController::class, 'statusAction']);
 
     });
+
+//    inboxes
+
+    Route::get('/inboxes', [InboxController::class, 'MyInbox']);
+    Route::get('/replies/{id}', [InboxController::class, 'Replies']);
+    Route::post('/store-reply', [InboxController::class, 'storeReply']);
+    Route::post('/store-inbox', [InboxController::class, 'storeInbox']);
+    Route::get('/lock-inbox/{id}', [InboxController::class, 'LockInbox']);
+    Route::get('/unread-inbox/{id}', [InboxController::class, 'unreadInbox']);
+    Route::post('/append-assinstance', [InboxController::class, 'AppendInboxToAssinstance']);
+
+
     // helpers
     Route::group(['prefix' => 'helpers'], function () {
 
@@ -251,5 +264,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/get_lessons_by_course/{id}', [HelpersController::class, 'get_lessons_by_course']);
         Route::get('/get_currency', [HelpersController::class, 'get_currency']);
         Route::get('/get_enable_students', [HelpersController::class, 'get_enable_students']);
+        Route::get('/inbox_count', [HelpersController::class, 'inbox_count']);
     });
 });
