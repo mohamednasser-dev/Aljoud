@@ -35,7 +35,7 @@ class HomeController extends Controller
             $my_courses = Course::where('show',1)->whereIn('id',$user_courses)->paginate(10);
             return msgdata($request, success(), trans('lang.shown_s'), $my_courses);
         } else {
-            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]); //pagination return object not array
         }
     }
 
