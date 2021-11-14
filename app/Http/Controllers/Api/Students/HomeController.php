@@ -27,9 +27,9 @@ class HomeController extends Controller
             //user courses
             $user_lessons = UserLesson::where('user_id',$user->id)->pluck('lesson_id')->toArray();
             $user_courses = Lesson::whereIn('id',$user_lessons)->pluck('course_id')->toArray();
-            $data['my_courses'] = Course::whereIn('id',$user_courses)->paginate(10);
+            $data['my_courses'] = Course::whereIn('id',$user_courses)->get();
         }else{
-            $data['my_courses'] = null;
+            $data['my_courses'] = [];
         }
         return msgdata($request, success(), trans('lang.shown_s'), $data);
     }

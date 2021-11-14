@@ -54,9 +54,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/password/verify_code', [LoginController::class, 'verify_code']);
     Route::post('/password/change', [LoginController::class, 'change_password']);
 
-
     //profile
-
     Route::get('/home/university', [HomeController::class, 'home']);
     Route::get('/home/university/colleges/{id}', [HomeController::class, 'colleges']);
     Route::get('/home/college/levels/{id}', [HomeController::class, 'levels']);
@@ -66,7 +64,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::get('/course/lessons/{id}', [HomeCoursesController::class, 'lessons']);
     Route::get('/course/exames/{id}', [HomeCoursesController::class, 'exames']);
     Route::get('/offers', [HomeController::class, 'offers']);
-
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::post('/update/profile', [ProfileController::class, 'update']);
 
@@ -80,7 +77,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/universities-specialists/{id}', [UnivesityController::class, 'show']);
         Route::get('/universities-status-Action/{id}', [UnivesityController::class, 'statusAction']);
         Route::get('/universities-show-data-Action/{id}', [UnivesityController::class, 'ShowDataStatusAction']);
-
 //Colleges Crud
         Route::get('/specialists/{university_id}', [SpecialistController::class, 'index']);
         Route::post('/specialists-Sort', [SpecialistController::class, 'Sort']);
@@ -89,7 +85,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/specialists-destroy/{id}', [SpecialistController::class, 'destroy']);
         Route::get('/specialists-levels/{id}', [SpecialistController::class, 'show']);
         Route::get('/specialists-status-Action/{id}', [SpecialistController::class, 'statusAction']);
-
 //levels Crud
         Route::get('/levels/{university_id}', [LevelsController::class, 'index']);
         Route::post('/levels-Sort', [LevelsController::class, 'Sort']);
@@ -98,8 +93,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/levels-destroy/{id}', [LevelsController::class, 'destroy']);
         Route::get('/levels-courses/{id}', [LevelsController::class, 'show']);
         Route::get('/levels-status-Action/{id}', [LevelsController::class, 'statusAction']);
-
-
 //Courses Crud
         Route::get('/courses/{level_id?}', [CoursesController::class, 'index']);
         Route::post('/courses-Sort', [CoursesController::class, 'Sort']);
@@ -108,12 +101,9 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/courses-destroy/{id}', [CoursesController::class, 'destroy']);
         Route::get('/courses-lessons/{id}', [CoursesController::class, 'show']);
         Route::get('/courses-status-Action/{id}', [CoursesController::class, 'statusAction']);
-
         Route::get('/course-users/{id}', [CoursesController::class, 'Users']);
         Route::post('/add-course-users', [CoursesController::class, 'AddUsers']);
         Route::post('/delete-course-users', [CoursesController::class, 'DeleteUsers']);
-
-
 //Lesson Crud
         Route::get('/lessons/{course_id}', [LessonController::class, 'index']);
         Route::post('/lessons-Sort', [LessonController::class, 'Sort']);
@@ -125,8 +115,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/lessons-users/{id}', [LessonController::class, 'Users']);
         Route::post('/add-lesson-users', [LessonController::class, 'AddUsers']);
         Route::post('/delete-lesson-users', [LessonController::class, 'DeleteUsers']);
-
-
 //articles Crud
         Route::get('/articles/{lesson_id}', [ArticlesController::class, 'index']);
         Route::post('/articles-Sort', [ArticlesController::class, 'Sort']);
@@ -135,7 +123,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/articles-destroy/{id}', [ArticlesController::class, 'destroy']);
         Route::get('/articles-data/{id}', [ArticlesController::class, 'show']);
         Route::get('/articles-status-Action/{id}', [ArticlesController::class, 'statusAction']);
-
 //videos Crud
         Route::get('/videos/{lesson_id}', [VideosController::class, 'index']);
         Route::post('/videos-Sort', [VideosController::class, 'Sort']);
@@ -144,15 +131,11 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/videos-destroy/{id}', [VideosController::class, 'destroy']);
         Route::get('/videos-data/{id}', [VideosController::class, 'show']);
         Route::get('/videos-status-Action/{id}', [VideosController::class, 'statusAction']);
-
-
 //Course Content Crud
         Route::get('/course-content/{course_id}', [CourseContentController::class, 'index']);
         Route::post('/course-content-store', [CourseContentController::class, 'store']);
         Route::post('/course-content-update', [CourseContentController::class, 'update']);
         Route::get('/course-content-destroy/{id}', [CourseContentController::class, 'destroy']);
-
-
 //Course Exams Crud
         Route::get('/exams/{course_id}', [ExamController::class, 'index']);
         Route::post('/exams-Sort', [ExamController::class, 'Sort']);
@@ -161,7 +144,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/exams-destroy/{id}', [ExamController::class, 'destroy']);
         Route::get('/exams-data/{id}', [ExamController::class, 'show']);
         Route::get('/exams-status-Action/{id}', [ExamController::class, 'statusAction']);
-
 //Course Exams Questions Crud
         Route::get('/exam-question/{exam_id}', [ExamQuestionController::class, 'index']);
         Route::post('/exam-question-Sort', [ExamQuestionController::class, 'Sort']);
@@ -170,12 +152,10 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/exam-question-destroy/{id}', [ExamQuestionController::class, 'destroy']);
         Route::get('/exam-question-data/{id}', [ExamQuestionController::class, 'show']);
         Route::get('/exam-question-status-Action/{id}', [ExamQuestionController::class, 'statusAction']);
-
 //Course Exams Questions Answer ADD-Delete
         Route::get('/exam-question-answer/{question_id}', [ExamQuestionAnswerController::class, 'index']);
         Route::post('/exam-question-answer-store', [ExamQuestionAnswerController::class, 'store']);
         Route::post('/exam-question-answer-update', [ExamQuestionAnswerController::class, 'update']);
-
 //lesson Quize Crud
         Route::get('/quizzes/{lesson_id}', [QuizController::class, 'index']);
         Route::post('/quizzes-Sort', [QuizController::class, 'Sort']);
@@ -184,7 +164,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/quizzes-destroy/{id}', [QuizController::class, 'destroy']);
         Route::get('/quizzes-data/{id}', [QuizController::class, 'show']);
         Route::get('/quizzes-status-Action/{id}', [QuizController::class, 'statusAction']);
-
 //lesson Quize Questions Crud
         Route::get('/quiz-question/{quiz_id}', [QuizQuestionController::class, 'index']);
         Route::post('/quiz-question-Sort', [QuizQuestionController::class, 'Sort']);
@@ -193,12 +172,10 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/quiz-question-destroy/{id}', [QuizQuestionController::class, 'destroy']);
         Route::get('/quiz-question-data/{id}', [QuizQuestionController::class, 'show']);
         Route::get('/quiz-question-status-Action/{id}', [QuizQuestionController::class, 'statusAction']);
-
 //Course Exams Questions Answer ADD-Delete
         Route::get('/quiz-question-answer/{question_id}', [QuizQuestionAnswerController::class, 'index']);
         Route::post('/quiz-question-answer-store', [QuizQuestionAnswerController::class, 'store']);
         Route::post('/quiz-question-answer-update', [QuizQuestionAnswerController::class, 'update']);
-
 //cpanel users
         Route::get('/users/{type}', [UsersController::class, 'index']);
         Route::get('/users/data/{id}', [UsersController::class, 'show']);
@@ -210,21 +187,18 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/users/assign_lesson', [UsersController::class, 'assign_lesson']);
         Route::post('/users/assign_course', [UsersController::class, 'assign_course']);
         Route::get('/user/courses/{id}', [UsersController::class, 'courses']);
-
 //instructors
         Route::get('/instructors', [InstructorsController::class, 'index']);
         Route::get('/instructors/delete/{id}', [InstructorsController::class, 'delete']);
         Route::get('/instructors/data/{id}', [InstructorsController::class, 'show']);
         Route::post('/instructors/store', [InstructorsController::class, 'store']);
         Route::post('/instructors/update', [InstructorsController::class, 'update']);
-
 //currencies
         Route::get('/currencies', [CurrenciesController::class, 'index']);
         Route::get('/currencies/delete/{id}', [CurrenciesController::class, 'delete']);
         Route::get('/currencies/data/{id}', [CurrenciesController::class, 'show']);
         Route::post('/currencies/store', [CurrenciesController::class, 'store']);
         Route::post('/currencies/update', [CurrenciesController::class, 'update']);
-
 //offers
         Route::get('/offers', [OffersController::class, 'index']);
         Route::post('/offers/sort', [OffersController::class, 'sort']);
@@ -233,19 +207,15 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/offers/store', [OffersController::class, 'store']);
         Route::post('/offers/update', [OffersController::class, 'update']);
         Route::get('/offers-status-Action/{id}', [OffersController::class, 'statusAction']);
-
-
 //request types Crud
         Route::get('/request-types', [RequestTypesController::class, 'index']);
         Route::post('/request-types-store', [RequestTypesController::class, 'store']);
         Route::post('/request-types-update', [RequestTypesController::class, 'update']);
         Route::get('/request-types-destroy/{id}', [RequestTypesController::class, 'destroy']);
         Route::get('/request-types-status-Action/{id}', [RequestTypesController::class, 'statusAction']);
-
     });
 
 //    inboxes
-
     Route::get('/inboxes', [InboxController::class, 'MyInbox']);
     Route::get('/replies/{id}', [InboxController::class, 'Replies']);
     Route::post('/store-reply', [InboxController::class, 'storeReply']);
@@ -256,11 +226,8 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/Ask-in-course', [InboxController::class, 'AskInCourse']);
     Route::post('/Ask-in-lesson', [InboxController::class, 'AskInLesson']);
     Route::post('/Request-service', [InboxController::class, 'RequestService']);
-
-
     // helpers
     Route::group(['prefix' => 'helpers'], function () {
-
         Route::get('/get_universities', [HelpersController::class, 'get_universities']);
         Route::get('/get_specialty_by_university/{id}', [HelpersController::class, 'get_specialty_by_university']);
         Route::get('/get_levels_by_specialty/{id}', [HelpersController::class, 'get_levels_by_specialty']);
