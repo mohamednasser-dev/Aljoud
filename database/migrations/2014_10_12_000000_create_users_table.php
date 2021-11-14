@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('device_id')->nullable();
             $table->string('fcm_token')->nullable();
-            $table->integer('verified')->default(1);
+            $table->integer('verified')->default(0);
             $table->string('code')->nullable();
             $table->enum('type',['admin','student','assistant'])->nullable()->default('student');
             $table->enum('status',['disable','enable'])->default('enable');
