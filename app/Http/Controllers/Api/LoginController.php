@@ -80,16 +80,13 @@ class LoginController extends Controller
         $user = User::create($data);
 
         if ($user) {
-            $token = Auth::attempt(['phone' => $request->phone, 'password' => $request->password]);
-            $user->api_token = Str::random(60);
-            //generate student qr image ...
             $idString = (string)$user->id;
             $qr_image_name = 'qr_' . $user->id . '.png';
             Storage::disk('public')->put($qr_image_name, base64_decode(DNS2DFacade::getBarcodePNG($idString, "QRCODE")));
             $user->qr_image = $qr_image_name;
             $user->save();
-            //User created, return success response
-            return msgdata($request, success(), trans('lang.register_done'), $user);
+
+            return msgdata($request, success(), trans('lang.register_done'), (object)[]);
         }
     }
 
