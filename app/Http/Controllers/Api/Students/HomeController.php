@@ -29,7 +29,7 @@ class HomeController extends Controller
             $user_courses = Lesson::whereIn('id',$user_lessons)->pluck('course_id')->toArray();
             $data['my_courses'] = Course::whereIn('id',$user_courses)->paginate(10);
         }else{
-            $data['my_courses'] = [];
+            $data['my_courses'] = null;
         }
         return msgdata($request, success(), trans('lang.shown_s'), $data);
     }
