@@ -21,18 +21,24 @@ class HomeController extends Controller
 
     public function home(Request $request)
     {
+        $universities = University::where('show',1)->orderBy('sort', 'asc')->paginate(10);
+        return msgdata($request, success(), trans('lang.shown_s'), $universities);
+    }
+
+    public function my_courses(Request $request)
+    {
         $user = check_api_token($request->header('api_token'));
-        $data['universities'] = University::where('show',1)->orderBy('sort', 'asc')->paginate(10);
         if ($user) {
             //user courses
             $user_lessons = UserLesson::where('user_id',$user->id)->pluck('lesson_id')->toArray();
             $user_courses = Lesson::whereIn('id',$user_lessons)->pluck('course_id')->toArray();
-            $data['my_courses'] = Course::whereIn('id',$user_courses)->get();
-        }else{
-            $data['my_courses'] = [];
+            $my_courses = Course::where('show',1)->whereIn('id',$user_courses)->paginate(10);
+            return msgdata($request, success(), trans('lang.shown_s'), $my_courses);
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
         }
-        return msgdata($request, success(), trans('lang.shown_s'), $data);
     }
+
     public function colleges(Request $request,$id)
     {
         $university_data = University::where('id',$id)->first();
