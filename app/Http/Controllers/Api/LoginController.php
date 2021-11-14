@@ -107,8 +107,10 @@ class LoginController extends Controller
             return response()->json(msg($request, not_authoize(), 'not_authorize'), (object)[]);
         }
     }
-    public function forget_password(Request $request) {
-        $manual_pass ="";
+
+    public function forget_password(Request $request)
+    {
+        $manual_pass = "";
         $data = $request->all();
         $validator = Validator::make($data, [
             'email' => 'required|email|exists:users,email',
@@ -116,39 +118,50 @@ class LoginController extends Controller
         if (!$validator->fails()) {
             //make token of 4 degits random...
             $six_digit_random_number = mt_rand(1000, 9999);
-            $target_user = User::where('email',$request->email)->first();
+            $target_user = User::where('email', $request->email)->first();
             // dd($pass_reset);
-            if($target_user != null){
+            if ($target_user != null) {
                 $target_user->code = $six_digit_random_number;
                 $target_user->save();
                 Mail::to($request->email)->send(new SendCode($six_digit_random_number));
-                return sendResponse(200,trans('lang.email_send_code'),(object)[]);
-            }else{
+                return sendResponse(200, trans('lang.email_send_code'), (object)[]);
+            } else {
                 return msgdata($request, failed(), trans('lang.not_authorized'), (object)[]);
             }
-        }else {
+        } else {
             return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
         }
     }
-    public function verify_code(Request $request) {
+
+    public function verify_code(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required',
             'code' => 'required',
         ]);
         if (!$validator->fails()) {
             //make token of 4 degits random...
             $six_digit_random_number = mt_rand(1000, 9999);
-            $target_user = User::where('code',$request->code)->where('email',$request->email)->first();
+            $target_user = User::where('code', $request->code)
+                ->where('email', $request->email)->first();
+
             // dd($pass_reset);
-            if($target_user != null){
+            if ($target_user != null) {
                 $data['status'] = true;
-                return sendResponse(200,trans('lang.code_checked_s'),$data);
-            }else{
+                return sendResponse(200, trans('lang.code_checked_s'), $data);
+            } else {
+                $target_user = User::where('code', $request->code)
+                    ->where('email', $request->phone)->first();
+
+                if ($target_user != null) {
+                    $data['status'] = true;
+                    return sendResponse(200, trans('lang.code_checked_s'), $data);
+                }
                 $data['status'] = false;
                 return msgdata($request, failed(), trans('lang.make_sure_code'), $data);
             }
-        }else {
+        } else {
             $data['status'] = false;
             return msgdata($request, failed(), $validator->messages()->first(), $data);
         }
@@ -161,16 +174,16 @@ class LoginController extends Controller
             'password' => 'required|confirmed',
         ]);
         if (!$validator->fails()) {
-            $target_user = User::where('code','!=',null)->where('email',$request->email)->first();
-            if($target_user != null){
+            $target_user = User::where('code', '!=', null)->where('email', $request->email)->first();
+            if ($target_user != null) {
                 $target_user->password = $request->password;
                 $target_user->code = null;
                 $target_user->save();
-                return sendResponse(200,trans('lang.password_changed_s'),$target_user);
-            }else{
+                return sendResponse(200, trans('lang.password_changed_s'), $target_user);
+            } else {
                 return msgdata($request, failed(), trans('lang.make_sure_code'), (object)[]);
             }
-        }else {
+        } else {
             return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
         }
     }

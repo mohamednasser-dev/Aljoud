@@ -1,13 +1,9 @@
 @component('mail::message')
-# Introduction
+#  Reset Password
 
 Your Verification Code is :
 {{ $token }}
 
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
-
 Thanks,<br>
-{{ config('app.name') }}
+AL-Joud
 @endcomponent
