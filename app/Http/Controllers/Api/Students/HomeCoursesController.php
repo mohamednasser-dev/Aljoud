@@ -8,10 +8,12 @@ use App\Models\College;
 use App\Models\Course;
 use App\Models\CourseRate;
 use App\Models\Exam;
+use App\Models\ExamQuestion;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\Offer;
 use App\Models\Quiz;
+use App\Models\QuizQuestion;
 use App\Models\University;
 use App\Models\UserLesson;
 use App\Models\Video;
@@ -84,11 +86,33 @@ class HomeCoursesController extends Controller
 
         return msgdata($request, success(), trans('lang.shown_s'), $data);
     }
-    public function exames(Request $request,$id)
+    public function exams(Request $request,$id)
     {
-        $user = check_api_token($request->header('api_token'));
-        $data['course_data'] = Course::where('id',$id)->first();
-        $data['lessons'] = Exam::where('course_id',$id)->where('show',1)->orderBy('sort','asc')->get();
+        $data = Exam::where('course_id',$id)->where('show',1)->orderBy('sort','asc')->paginate(10);
         return msgdata($request, success(), trans('lang.shown_s'), $data);
     }
+
+    public function exam_questions(Request $request,$id)
+    {
+        $data = ExamQuestion::where('exam_id',$id)->where('show',1)->orderBy('sort','asc')->paginate(10);
+        return msgdata($request, success(), trans('lang.shown_s'), $data);
+    }
+
+    public function lesson_quizzes(Request $request,$id)
+    {
+        $data = Quiz::where('lesson_id',$id)->where('show',1)->orderBy('sort','asc')->paginate(10);
+        return msgdata($request, success(), trans('lang.shown_s'), $data);
+    }
+    public function quiz_questions(Request $request,$id)
+    {
+        $data = QuizQuestion::where('quiz_id',$id)->where('show',1)->orderBy('sort','asc')->paginate(10);
+        return msgdata($request, success(), trans('lang.shown_s'), $data);
+    }
+
+    public function lesson_videos(Request $request,$id)
+    {
+        $data = Video::where('lesson_id',$id)->where('show',1)->orderBy('sort','asc')->paginate(10);
+        return msgdata($request, success(), trans('lang.shown_s'), $data);
+    }
+
 }

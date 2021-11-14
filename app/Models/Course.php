@@ -61,6 +61,10 @@ class Course extends Model
     {
         return $this->hasMany(Exam::class, 'course_id');
     }
+    public function Exams()
+    {
+        return $this->hasMany(Exam::class, 'course_id')->where('show',1)->orderBy('sort','asc');
+    }
 
     public function Level()
     {
