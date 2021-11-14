@@ -39,7 +39,7 @@ class LoginController extends Controller
         if ($user->type == 'student') {
             if ($user->device_id != null && $user->device_id != $request->device_id) {
                 Auth::logout();
-                return msgdata($request, not_active(), trans('lang.device_invalid'), (object)[]);
+                return msgdata($request, failed(), trans('lang.device_invalid'), null);
             }
         }
         if ($user->verified == 0) {
