@@ -219,5 +219,38 @@ class UnivesityController extends Controller
 
     }
 
+    public function ShowDataStatusAction(Request $request, $id)
+    {
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $university = University::whereId($id)->first();
+                if ($university) {
+
+                    if ($university->show_data == 1) {
+                        $university->show_data = 0;
+                    } else {
+                        $university->show_data = 1;
+                    }
+                    $university->save();
+                    return msgdata($request, success(), trans('lang.updated_s'), $university);
+                } else {
+                    return msgdata($request, not_found(), trans('lang.not_found'), (object)[]);
+
+                }
+
+            } else {
+
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+
+    }
+
 
 }

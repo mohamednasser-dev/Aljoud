@@ -79,6 +79,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/universities-destroy/{id}', [UnivesityController::class, 'destroy']);
         Route::get('/universities-specialists/{id}', [UnivesityController::class, 'show']);
         Route::get('/universities-status-Action/{id}', [UnivesityController::class, 'statusAction']);
+        Route::get('/universities-show-data-Action/{id}', [UnivesityController::class, 'ShowDataStatusAction']);
 
 //Colleges Crud
         Route::get('/specialists/{university_id}', [SpecialistController::class, 'index']);
@@ -252,6 +253,9 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::get('/lock-inbox/{id}', [InboxController::class, 'LockInbox']);
     Route::get('/unread-inbox/{id}', [InboxController::class, 'unreadInbox']);
     Route::post('/append-assinstance', [InboxController::class, 'AppendInboxToAssinstance']);
+    Route::post('/Ask-in-course', [InboxController::class, 'AskInCourse']);
+    Route::post('/Ask-in-lesson', [InboxController::class, 'AskInLesson']);
+    Route::post('/Request-service', [InboxController::class, 'RequestService']);
 
 
     // helpers
@@ -265,5 +269,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/get_currency', [HelpersController::class, 'get_currency']);
         Route::get('/get_enable_students', [HelpersController::class, 'get_enable_students']);
         Route::get('/inbox_count', [HelpersController::class, 'inbox_count']);
+        Route::get('/get_services', [HelpersController::class, 'get_services']);
     });
 });

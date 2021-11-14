@@ -9,6 +9,7 @@ use App\Models\Currency;
 use App\Models\Inbox;
 use App\Models\Lesson;
 use App\Models\Level;
+use App\Models\RequestType;
 use App\Models\University;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -53,6 +54,12 @@ class HelpersController extends Controller
     public function get_currency(Request $request)
     {
         $universities = Currency::orderBy('created_at', 'desc')->get();
+        return msgdata($request, success(), trans('lang.shown_s'), $universities);
+    }
+
+    public function get_services(Request $request)
+    {
+        $universities = RequestType::where('show',1)->orderBy('id', 'desc')->get();
         return msgdata($request, success(), trans('lang.shown_s'), $universities);
     }
 

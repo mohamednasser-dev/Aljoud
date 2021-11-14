@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\Inbox;
 use App\Models\InboxFile;
+use App\Models\Lesson;
+use App\Models\RequestType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -248,7 +251,6 @@ class InboxController extends Controller
         }
     }
 
-
     public function AppendInboxToAssinstance(Request $request)
     {
 
@@ -279,6 +281,154 @@ class InboxController extends Controller
             } else {
                 return msgdata($request, not_found(), trans('lang.not_found'), (object)[]);
             }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+    }
+
+    public function AskInCourse(Request $request)
+    {
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+
+            $rules =
+                [
+                    'message' => 'required|string',
+                    'file' => 'nullable|array',
+                    'file.*' => 'mimes:jpg,jpeg,png,gif,bmp,pdf,doc,docx',
+                    'course_id' => 'required|exists:courses,id',
+                ];
+
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
+            }
+            $admin = User::where('type', 'admin')->first();
+            $inbox = new Inbox();
+            $course = Course::whereId($request->course_id)->first();
+            $message1 = $course->Level->College->University->name . ' - ' .
+                $course->Level->College->name . ' - ' .
+                $course->Level->name . ' - ' .
+                $course->name;
+            $inbox->message = $message1 . ' <br> ' . $request->message;
+            $inbox->receiver_id = $admin->id;
+            $inbox->sender_id = $user->id;
+            try {
+                $inbox->save();
+            } catch (\Exception $e) {
+                return msgdata($request, failed(), trans('lang.error'), (object)[]);
+            }
+            if ($request->file != null) {
+                foreach ($request->file as $file) {
+                    InboxFile::create([
+                        'inbox_id' => $inbox->id,
+                        'file' => $file
+                    ]);
+                }
+            }
+            $inbox = Inbox::whereId($inbox->id)->first();
+            return msgdata($request, success(), trans('lang.inbox_sent'), $inbox);
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+    }
+
+    public function AskInLesson(Request $request)
+    {
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+
+            $rules =
+                [
+                    'message' => 'required|string',
+                    'file' => 'nullable|array',
+                    'file.*' => 'mimes:jpg,jpeg,png,gif,bmp,pdf,doc,docx',
+                    'lesson_id' => 'required|exists:lessons,id',
+                ];
+
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
+            }
+            $admin = User::where('type', 'admin')->first();
+            $inbox = new Inbox();
+            $lesson = Lesson::whereId($request->lesson_id)->first();
+            $message1 = $lesson->Course->Level->College->University->name . ' - ' .
+                $lesson->Course->Level->College->name . ' - ' .
+                $lesson->Course->Level->name . ' - ' .
+                $lesson->Course->name . ' - ' .
+                $lesson->name;
+            $inbox->message = $message1 . ' <br> ' . $request->message;
+            $inbox->receiver_id = $admin->id;
+            $inbox->sender_id = $user->id;
+            try {
+                $inbox->save();
+            } catch (\Exception $e) {
+                return msgdata($request, failed(), trans('lang.error'), (object)[]);
+            }
+            if ($request->file != null) {
+                foreach ($request->file as $file) {
+                    InboxFile::create([
+                        'inbox_id' => $inbox->id,
+                        'file' => $file
+                    ]);
+                }
+            }
+            $inbox = Inbox::whereId($inbox->id)->first();
+            return msgdata($request, success(), trans('lang.inbox_sent'), $inbox);
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+    }
+
+    public function RequestService(Request $request)
+    {
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+
+            $rules =
+                [
+                    'message' => 'required|string',
+                    'file' => 'nullable|array',
+                    'file.*' => 'mimes:jpg,jpeg,png,gif,bmp,pdf,doc,docx',
+                    'service_id' => 'required|exists:request_types,id',
+                ];
+
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
+            }
+            $admin = User::where('type', 'admin')->first();
+            $inbox = new Inbox();
+            $service = RequestType::whereId($request->service_id)->first();
+            $message1 = $service->name;
+            $inbox->message = $message1 . ' <br> ' . $request->message;
+            $inbox->receiver_id = $admin->id;
+            $inbox->sender_id = $user->id;
+            try {
+                $inbox->save();
+            } catch (\Exception $e) {
+                return msgdata($request, failed(), trans('lang.error'), (object)[]);
+            }
+            if ($request->file != null) {
+                foreach ($request->file as $file) {
+                    InboxFile::create([
+                        'inbox_id' => $inbox->id,
+                        'file' => $file
+                    ]);
+                }
+            }
+            $inbox = Inbox::whereId($inbox->id)->first();
+            return msgdata($request, success(), trans('lang.inbox_sent'), $inbox);
 
         } else {
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
