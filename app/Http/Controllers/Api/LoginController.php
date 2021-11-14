@@ -85,6 +85,10 @@ class LoginController extends Controller
             Storage::disk('public')->put($qr_image_name, base64_decode(DNS2DFacade::getBarcodePNG($idString, "QRCODE")));
             $user->qr_image = $qr_image_name;
             $user->save();
+            $six_digit_random_number = mt_rand(1000, 9999);
+            $user->code = $six_digit_random_number;
+            $user->save();
+            Mail::to($request->email)->send(new SendCode($six_digit_random_number));
 
             return msgdata($request, success(), trans('lang.register_done'), (object)[]);
         }
@@ -146,6 +150,7 @@ class LoginController extends Controller
             // dd($pass_reset);
             if ($target_user != null) {
                 $data['status'] = true;
+                    $target_user->verified = 1;
                 return sendResponse(200, trans('lang.code_checked_s'), $data);
             } else {
                 $target_user = User::where('code', $request->code)
@@ -153,6 +158,7 @@ class LoginController extends Controller
 
                 if ($target_user != null) {
                     $data['status'] = true;
+                        $target_user->verified = 1;
                     return sendResponse(200, trans('lang.code_checked_s'), $data);
                 }
                 $data['status'] = false;
