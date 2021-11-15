@@ -16,4 +16,14 @@ class Video extends Model
         }
         return '';
     }
+    protected $appends = ['name'];
+
+    public function getNameAttribute()
+    {
+        if ($locale = App::currentLocale() == "ar") {
+            return $this->name_ar;
+        } else {
+            return $this->name_en;
+        }
+    }
 }
