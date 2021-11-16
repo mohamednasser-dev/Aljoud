@@ -114,5 +114,10 @@ class HomeCoursesController extends Controller
         $data = Video::where('lesson_id',$id)->where('show',1)->orderBy('sort','asc')->paginate(10);
         return msgdata($request, success(), trans('lang.shown_s'), $data);
     }
+    public function lesson_articles(Request $request,$id)
+    {
+        $data = Article::where('lesson_id',$id)->where('show',1)->orderBy('sort','asc')->paginate(10);
+        return msgdata($request, success(), trans('lang.shown_s'), $data);
+    }
 
 }
