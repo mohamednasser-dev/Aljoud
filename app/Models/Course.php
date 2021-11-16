@@ -42,6 +42,11 @@ class Course extends Model
         return $this->hasMany(Lesson::class, 'course_id');
     }
 
+    public function Couse_Lesson()
+    {
+        return $this->hasMany(Lesson::class, 'course_id')->where('show',1);
+    }
+
     public function Content()
     {
         return $this->hasMany(CourseContent::class, 'course_id');

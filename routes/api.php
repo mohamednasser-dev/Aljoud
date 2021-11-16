@@ -67,6 +67,8 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::get('/exam/questions/{id}', [HomeCoursesController::class, 'exam_questions']);
     Route::get('/lesson/quizzes/{id}', [HomeCoursesController::class, 'lesson_quizzes']);
     Route::get('/lesson/videos/{id}', [HomeCoursesController::class, 'lesson_videos']);
+    Route::get('/student/buy/course/{id}', [HomeCoursesController::class, 'buy_course']);
+    Route::get('/student/buy/offer/{id}', [HomeCoursesController::class, 'buy_offer']);
     Route::get('/lesson/articles/{id}', [HomeCoursesController::class, 'lesson_articles']);
     Route::get('/quiz/questions/{id}', [HomeCoursesController::class, 'quiz_questions']);
     Route::get('/offers', [HomeController::class, 'offers']);

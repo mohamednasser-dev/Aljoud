@@ -35,4 +35,7 @@ return [
 
     'inbox_locked' => 'admin has lock the conversation',
     'inbox_sent' => 'message sent successfully',
+    'should_choose_valid_course' => 'should choose a valid course',
+    'course_buy_s' => 'course buy successfully',
+    'offer_buy_s' => 'offer buy successfully',
 ];
