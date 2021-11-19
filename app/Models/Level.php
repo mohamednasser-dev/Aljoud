@@ -35,6 +35,10 @@ class Level extends Model
         return $this->belongsTo(College::class ,'college_id');
     }
 
+    public function College_data(){
+        return $this->belongsTo(College::class ,'college_id')->with('University');
+    }
+
 
 
     public function getImageAttribute($image)

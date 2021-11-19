@@ -128,39 +128,11 @@ class HomeCoursesController extends Controller
         $course = Course::where('id', $id)->where('show', 1)->first();
         if ($course) {
             $user = check_api_token($request->header('api_token'));
-            if($user->type != 'student'){
-                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
-            }
-            foreach ($course->Couse_Lesson as $row) {
-                $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
-                if (!$exists_lesson) {
-                    $user_data['status'] = 1;
-                    $user_data['lesson_id'] = $row->id;
-                    $user_data['user_id'] = $user->id;
-                    UserLesson::create($user_data);
-                } else {
-                    $exists_lesson->status = 1;
-                    $exists_lesson->save();
+            if ($user) {
+                if ($user->type != 'student') {
+                    return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
                 }
-            }
-
-            return msgdata($request, success(), trans('lang.course_buy_s'), (object)[]);
-        } else {
-            return msgdata($request, failed(), trans('lang.should_choose_valid_course'), (object)[]);
-        }
-    }
-    public function buy_offer(Request $request, $id)
-    {
-        $offer = Offer::where('id', $id)->where('show', 1)->first();
-        if ($offer) {
-            $user = check_api_token($request->header('api_token'));
-            if($user->type != 'student'){
-                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
-            }
-         
-            foreach ($offer->Courses as $course) {
-                $couse_Lesson = Lesson::where('course_id',$course->id)->where('show',1)->get();
-                foreach ($couse_Lesson as $row) {
+                foreach ($course->Couse_Lesson as $row) {
                     $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
                     if (!$exists_lesson) {
                         $user_data['status'] = 1;
@@ -172,9 +144,46 @@ class HomeCoursesController extends Controller
                         $exists_lesson->save();
                     }
                 }
-            }
 
-            return msgdata($request, success(), trans('lang.offer_buy_s'), (object)[]);
+                return msgdata($request, success(), trans('lang.course_buy_s'), (object)[]);
+            } else {
+                return msgdata($request, failed(), trans('lang.should_login'), (object)[]);
+            }
+        } else {
+            return msgdata($request, failed(), trans('lang.should_choose_valid_course'), (object)[]);
+        }
+    }
+
+    public function buy_offer(Request $request, $id)
+    {
+        $offer = Offer::where('id', $id)->where('show', 1)->first();
+        if ($offer) {
+            $user = check_api_token($request->header('api_token'));
+            if ($user) {
+                if ($user->type != 'student') {
+                    return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+                }
+
+                foreach ($offer->Courses as $course) {
+                    $couse_Lesson = Lesson::where('course_id', $course->id)->where('show', 1)->get();
+                    foreach ($couse_Lesson as $row) {
+                        $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
+                        if (!$exists_lesson) {
+                            $user_data['status'] = 1;
+                            $user_data['lesson_id'] = $row->id;
+                            $user_data['user_id'] = $user->id;
+                            UserLesson::create($user_data);
+                        } else {
+                            $exists_lesson->status = 1;
+                            $exists_lesson->save();
+                        }
+                    }
+                }
+
+                return msgdata($request, success(), trans('lang.offer_buy_s'), (object)[]);
+            } else {
+                return msgdata($request, failed(), trans('lang.should_login'), (object)[]);
+            }
         } else {
             return msgdata($request, failed(), trans('lang.should_choose_valid_course'), (object)[]);
         }
