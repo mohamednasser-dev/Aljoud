@@ -346,7 +346,6 @@ class CoursesController extends Controller
                 }
 
                 if ($request->users) {
-
                     $lessons = Lesson::where('course_id', $request->course_id)->pluck('id')->toArray();
                     $lesson_users = UserLesson::whereIn('user_id', $request->users)->whereIn('lesson_id', $lessons)->delete();
 
