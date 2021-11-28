@@ -39,7 +39,7 @@ class LoginController extends Controller
         if ($user->type == 'student') {
             if ($user->device_id != null && $user->device_id != $request->device_id) {
                 Auth::logout();
-                return msgdata($request, not_active(), trans('lang.device_invalid'), (object)[]);
+                return msgdata($request, failed(), trans('lang.device_invalid'), null);
             }
         }
         if ($user->verified == 0) {
@@ -82,18 +82,16 @@ class LoginController extends Controller
         $data['password'] = $request->password;
         $data['type'] = 'student';
         $user = User::create($data);
-
         if ($user) {
             $idString = (string)$user->id;
             $qr_image_name = 'qr_' . $user->id . '.png';
             Storage::disk('public')->put($qr_image_name, base64_decode(DNS2DFacade::getBarcodePNG($idString, "QRCODE")));
             $user->qr_image = $qr_image_name;
             $user->save();
-            $six_digit_random_number = mt_rand(1000, 9999);
-            $user->code = $six_digit_random_number;
+            $four_digit_random_number = mt_rand(1000, 9999);
+            $user->code = $four_digit_random_number;
             $user->save();
-            Mail::to($request->email)->send(new SendCode($six_digit_random_number));
-
+            Mail::to($request->email)->send(new SendCode($four_digit_random_number));
             return msgdata($request, success(), trans('lang.register_done'), (object)[]);
         }
     }

@@ -18,7 +18,7 @@ class Offer extends Model
 
     public function Level()
     {
-        return $this->belongsTo(Level::class, 'level_id');
+        return $this->belongsTo(Level::class, 'level_id')->with('College_data');
     }
 
     public function Currency()

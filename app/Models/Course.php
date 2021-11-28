@@ -42,6 +42,11 @@ class Course extends Model
         return $this->hasMany(Lesson::class, 'course_id');
     }
 
+    public function Couse_Lesson()
+    {
+        return $this->hasMany(Lesson::class, 'course_id')->where('show',1);
+    }
+
     public function Content()
     {
         return $this->hasMany(CourseContent::class, 'course_id');
@@ -60,6 +65,10 @@ class Course extends Model
     public function CourseExams()
     {
         return $this->hasMany(Exam::class, 'course_id');
+    }
+    public function Exams()
+    {
+        return $this->hasMany(Exam::class, 'course_id')->where('show',1)->orderBy('sort','asc');
     }
 
     public function Level()

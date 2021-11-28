@@ -31,10 +31,18 @@ class Lesson extends Model
     {
         return $this->hasMany(Video::class, 'lesson_id');
     }
+    public function Lesson_videos()
+    {
+        return $this->hasMany(Video::class, 'lesson_id')->where('show',1)->orderBy('sort','asc');;
+    }
 
     public function quizes()
     {
         return $this->hasMany(Quiz::class, 'lesson_id');
+    }
+    public function lesson_quizzes()
+    {
+        return $this->hasMany(Quiz::class, 'lesson_id')->where('show',1)->orderBy('sort','asc');
     }
 
     public function articles()

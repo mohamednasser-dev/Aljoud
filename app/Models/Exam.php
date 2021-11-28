@@ -24,5 +24,9 @@ class Exam extends Model
     {
         return $this->hasMany(ExamQuestion::class, 'exam_id');
     }
+    public function ExamQuestion()
+    {
+        return $this->hasMany(ExamQuestion::class, 'exam_id')->where('show',1)->orderBy('sort','asc');
+    }
 
 }

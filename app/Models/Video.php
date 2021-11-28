@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 
 class Video extends Model
 {
@@ -15,5 +16,15 @@ class Video extends Model
             return  'https://res.cloudinary.com/dwevccen7/video/upload/v1581928924/' . $url;
         }
         return '';
+    }
+    protected $appends = ['name'];
+
+    public function getNameAttribute()
+    {
+        if ($locale = App::currentLocale() == "ar") {
+            return $this->name_ar;
+        } else {
+            return $this->name_en;
+        }
     }
 }
