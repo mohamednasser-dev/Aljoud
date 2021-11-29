@@ -193,7 +193,7 @@ function not_active()
 function upload($file, $dir)
 {
     $image = time() . uniqid() . '.' . $file->getClientOriginalExtension();
-    $file->move('uploads' . '/' . $dir, $image);
+    $file->move('public/uploads' . '/' . $dir, $image);
     return $image;
 }
 
