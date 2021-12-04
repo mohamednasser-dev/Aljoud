@@ -1,5 +1,5 @@
 @component('mail::message')
-#  Reset Password
+#  Confirmation
 
 Your Verification Code is :
 {{ $token }}
