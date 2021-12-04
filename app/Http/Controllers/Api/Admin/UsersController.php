@@ -25,9 +25,9 @@ class UsersController extends Controller
             if ($user->type == "admin") {
                 $result = User::query();
                 if($request->search){
-                    $result = $result->where('name',$request->search);
-                    $result = $result->orWhere('phone',$request->search);
-                    $result = $result->orWhere('email',$request->search);
+                    $result = $result->where('name', 'like', '%' . $request->search . '%');
+                    $result = $result->orWhere('phone', 'like', '%' . $request->search . '%');
+                    $result = $result->orWhere('email', 'like', '%' . $request->search . '%');
                 }
                 $result =  $result->where('type', $type)->orderBy('created_at', 'desc')->paginate(10);
                 return msgdata($request, success(), trans('lang.shown_s'), $result);
@@ -124,6 +124,7 @@ class UsersController extends Controller
                 }
                 //Request is valid, create new user
                 $data['password'] = $request->password;
+                $data['verified'] = 1;
                 $data['type'] = $type;
                 $user = User::create($data);
                 $out = User::where('id',$user->id)->first();
