@@ -23,13 +23,15 @@ class UsersController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $result = User::query();
+                $result = User::where('type', $type);
                 if($request->search){
-                    $result = $result->where('name', 'like', '%' . $request->search . '%');
-                    $result = $result->orWhere('phone', 'like', '%' . $request->search . '%');
-                    $result = $result->orWhere('email', 'like', '%' . $request->search . '%');
+                    $result = $result->where(function($e)use($request){
+                            $e->where('name', 'like', '%' . $request->search . '%')
+                                ->orWhere('phone', 'like', '%' . $request->search . '%')
+                                ->orWhere('email', 'like', '%' . $request->search . '%');
+                        });
                 }
-                $result =  $result->where('type', $type)->orderBy('created_at', 'desc')->paginate(10);
+                $result =  $result->orderBy('created_at', 'desc')->paginate(10);
                 return msgdata($request, success(), trans('lang.shown_s'), $result);
             } else {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), []);
