@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,10 @@ class Inbox extends Model
         'created_at' => 'datetime:Y-m-d h:i',
     ];
 
+    public function getCreatedAtAttribute($created_at)
+    {
+        return Carbon::parse($created_at)->diffForHumans();
+    }
 
     public function files()
     {
