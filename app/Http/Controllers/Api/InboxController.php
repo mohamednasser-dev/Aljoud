@@ -30,7 +30,7 @@ class InboxController extends Controller
             return msgdata($request, success(), trans('lang.shown_s'), $inbox);
 
         } else {
-            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
 
         }
     }
