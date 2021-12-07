@@ -7,6 +7,7 @@ use App\Models\College;
 use App\Models\Course;
 use App\Models\Currency;
 use App\Models\Inbox;
+use App\Models\Instructor;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\RequestType;
@@ -24,6 +25,11 @@ class HelpersController extends Controller
     public function get_universities(Request $request)
     {
         $universities = University::where('show', 1)->orderBy('sort', 'asc')->get();
+        return msgdata($request, success(), trans('lang.shown_s'), $universities);
+    }
+    public function get_instructors(Request $request)
+    {
+        $universities = Instructor::orderBy('name', 'asc')->get();
         return msgdata($request, success(), trans('lang.shown_s'), $universities);
     }
 

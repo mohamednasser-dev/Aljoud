@@ -237,6 +237,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     // helpers
     Route::group(['prefix' => 'helpers'], function () {
         Route::get('/get_universities', [HelpersController::class, 'get_universities']);
+        Route::get('/get_instructors', [HelpersController::class, 'get_instructors']);
         Route::get('/get_specialty_by_university/{id}', [HelpersController::class, 'get_specialty_by_university']);
         Route::get('/get_levels_by_specialty/{id}', [HelpersController::class, 'get_levels_by_specialty']);
         Route::get('/get_courses_by_level/{id}', [HelpersController::class, 'get_courses_by_level']);
