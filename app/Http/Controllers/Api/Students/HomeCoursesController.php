@@ -29,6 +29,21 @@ class HomeCoursesController extends Controller
     public function details(Request $request, $id)
     {
         $data = Course::where('id', $id)->first();
+
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            //user courses
+            $user_lessons = UserLesson::where('user_id', $user->id)->pluck('lesson_id')->toArray();
+            $user_courses = Lesson::whereIn('id', $user_lessons)->where('course_id',$id)->first();
+            if($user_courses){
+                $data->my_course = true ;
+            }else{
+                $data->my_course = false ;
+            }
+        }else{
+            $data->my_course = false ;
+        }
+
         $lessons_ids = Lesson::where('course_id', $id)->where('show', 1)->pluck('id')->toArray();
         $data->Count_videos_time = Video::whereIn('lesson_id', $lessons_ids)->where('show', 1)->get()->sum('time');
         $data->Count_articles = Article::whereIn('lesson_id', $lessons_ids)->where('show', 1)->get()->count();
