@@ -29,7 +29,7 @@ class InboxFile extends Model
     {
 
         if (is_file($image)) {
-            $imageFields = upload($image, 'inboxes');
+            $imageFields = upload_multiple($image, 'inboxes');
             $this->attributes['file'] = $imageFields;
 
         }
