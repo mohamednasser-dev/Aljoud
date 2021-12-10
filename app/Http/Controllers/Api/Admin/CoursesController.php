@@ -133,6 +133,7 @@ class CoursesController extends Controller
                     'desc_en' => 'required',
                     'image' => 'nullable|image',
                     'discount' => 'nullable|numeric',
+                    'price' => 'nullable|numeric',
                     'instructor_id ' => 'nullable|exists:instructors,id',
                     'currency_id' => 'required|exists:currencies,id',
                 ];
@@ -147,7 +148,7 @@ class CoursesController extends Controller
                     $college->desc_en = $request->desc_en;
                     $college->instructor_id = $request->instructor_id;
                     $college->discount = $request->discount;
-                    $college->discount = $request->discount;
+                    $college->price = $request->price;
                     if ($request->file('image')) {
                         $college->image = $request->image;
                     }
