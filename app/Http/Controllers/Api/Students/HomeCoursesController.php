@@ -84,6 +84,18 @@ class HomeCoursesController extends Controller
     {
         $user = check_api_token($request->header('api_token'));
         $data['course_data'] = Course::where('id', $id)->first();
+        if ($user) {
+            //user courses
+            $user_lessons = UserLesson::where('user_id', $user->id)->pluck('lesson_id')->toArray();
+            $user_courses = Lesson::whereIn('id', $user_lessons)->where('course_id',$id)->first();
+            if($user_courses){
+                $data['course_data']->my_course = true ;
+            }else{
+                $data['course_data']->my_course = false ;
+            }
+        }else{
+            $data['course_data']->my_course = false ;
+        }
         $data['lessons'] = Lesson::where('course_id', $id)->where('show', 1)->orderBy('sort', 'asc')->get()
             ->map(function ($data) use ($user) {
                 if ($user) {
