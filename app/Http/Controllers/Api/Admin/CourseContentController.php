@@ -22,7 +22,7 @@ class CourseContentController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $levels = CourseContent::orderBy('sort', 'asc')->where('course_id', $course_id)->paginate(10);
+                $levels = CourseContent::orderBy('id', 'asc')->where('course_id', $course_id)->paginate(10);
                 return msgdata($request, success(), trans('lang.shown_s'), $levels);
             } else {
 
