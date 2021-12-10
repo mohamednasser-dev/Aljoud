@@ -42,7 +42,6 @@ class InboxController extends Controller
             $inbox = Inbox::whereId($id)->with('childreninboxes')->first();
             if ($inbox) {
 
-
                 if ($user->type == "admin") {
                     $admins = User::where('type', 'admin')->pluck('id')->toArray();
                     if (in_array($inbox->receiver_id, $admins)) {
@@ -76,7 +75,6 @@ class InboxController extends Controller
 
     public function storeReply(Request $request)
     {
-
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             $rules =
