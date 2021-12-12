@@ -153,6 +153,8 @@ class LoginController extends Controller
             if ($target_user != null) {
                 $data['status'] = true;
                 $target_user->verified = 1;
+                $target_user->code = null;
+                $target_user->save();
                 return sendResponse(200, trans('lang.code_checked_s'), $data);
             } else {
                 $target_user = User::where('code', $request->code)
@@ -160,6 +162,7 @@ class LoginController extends Controller
                 if ($target_user != null) {
                     $data['status'] = true;
                     $target_user->verified = 1;
+                    $target_user->save();
                     return sendResponse(200, trans('lang.code_checked_s'), $data);
                 }
                 $data['status'] = false;
