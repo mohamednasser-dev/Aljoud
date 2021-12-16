@@ -71,7 +71,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     //payment methods
     Route::get('/student/buy/course/payment_step_one/{id}', [HomeCoursesController::class, 'payment_step_one']);
     Route::get('/student/buy/course/payment_step_two/{payment_method}/{course_id}', [HomeCoursesController::class, 'payment_step_two']);
-    Route::post('/student/buy/course/webhook_json', [HomeCoursesController::class, 'excute_pay']);
+
 
 
     Route::get('/student/buy/offer/{id}', [HomeCoursesController::class, 'buy_offer']);
@@ -255,6 +255,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     });
 });
 
-
+Route::post('/student/buy/course/webhook_json', [HomeCoursesController::class, 'excute_pay']);
 Route::get('/pay/success', [HomeCoursesController::class, 'pay_sucess']);
 Route::get('/pay/error', [HomeCoursesController::class, 'pay_error']);
