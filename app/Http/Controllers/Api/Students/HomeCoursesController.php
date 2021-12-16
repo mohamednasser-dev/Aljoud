@@ -9,6 +9,7 @@ use App\Models\Course;
 use App\Models\CourseRate;
 use App\Models\Exam;
 use App\Models\ExamQuestion;
+use App\Models\Invoices;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\Offer;
@@ -34,14 +35,14 @@ class HomeCoursesController extends Controller
         if ($user) {
             //user courses
             $user_lessons = UserLesson::where('user_id', $user->id)->pluck('lesson_id')->toArray();
-            $user_courses = Lesson::whereIn('id', $user_lessons)->where('course_id',$id)->first();
-            if($user_courses){
-                $data->my_course = true ;
-            }else{
-                $data->my_course = false ;
+            $user_courses = Lesson::whereIn('id', $user_lessons)->where('course_id', $id)->first();
+            if ($user_courses) {
+                $data->my_course = true;
+            } else {
+                $data->my_course = false;
             }
-        }else{
-            $data->my_course = false ;
+        } else {
+            $data->my_course = false;
         }
 
         $lessons_ids = Lesson::where('course_id', $id)->where('show', 1)->pluck('id')->toArray();
@@ -87,14 +88,14 @@ class HomeCoursesController extends Controller
         if ($user) {
             //user courses
             $user_lessons = UserLesson::where('user_id', $user->id)->pluck('lesson_id')->toArray();
-            $user_courses = Lesson::whereIn('id', $user_lessons)->where('course_id',$id)->first();
-            if($user_courses){
-                $data['course_data']->my_course = true ;
-            }else{
-                $data['course_data']->my_course = false ;
+            $user_courses = Lesson::whereIn('id', $user_lessons)->where('course_id', $id)->first();
+            if ($user_courses) {
+                $data['course_data']->my_course = true;
+            } else {
+                $data['course_data']->my_course = false;
             }
-        }else{
-            $data['course_data']->my_course = false ;
+        } else {
+            $data['course_data']->my_course = false;
         }
         $data['lessons'] = Lesson::where('course_id', $id)->where('show', 1)->orderBy('sort', 'asc')->get()
             ->map(function ($data) use ($user) {
@@ -149,36 +150,149 @@ class HomeCoursesController extends Controller
         $data = Article::where('lesson_id', $id)->where('show', 1)->orderBy('sort', 'asc')->paginate(10);
         return msgdata($request, success(), trans('lang.shown_s'), $data);
     }
-
-    public function buy_course(Request $request, $id)
+    public function payment_step_one(Request $request, $id)
     {
-        $course = Course::where('id', $id)->where('show', 1)->first();
-        if ($course) {
-            $user = check_api_token($request->header('api_token'));
-            if ($user) {
-                if ($user->type != 'student') {
-                    return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
-                }
-                foreach ($course->Couse_Lesson as $row) {
-                    $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
-                    if (!$exists_lesson) {
-                        $user_data['status'] = 1;
-                        $user_data['lesson_id'] = $row->id;
-                        $user_data['user_id'] = $user->id;
-                        UserLesson::create($user_data);
-                    } else {
-                        $exists_lesson->status = 1;
-                        $exists_lesson->save();
-                    }
-                }
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://fawaterkstage.com/api/v2/getPaymentmethods',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Authorization: Bearer 579c255c10d042c22ac6bc2753145ce306e72cedba88c22606'
+            ),
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $response = json_decode($response) ;
+        return msgdata($request, success(), trans('lang.shown_s'), $response);
+    }
 
-                return msgdata($request, success(), trans('lang.course_buy_s'), (object)[]);
+    public function payment_step_two(Request $request,$payment_method_id, $course_id)
+    {
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type != 'student') {
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+            $course = Course::where('id', $course_id)->where('show', 1)->first();
+            if ($course) {
+                //Generate price
+                $price = $course->price;
+                if ($course->discount > 0) {
+                    $discount_value = $course->price * ( $course->discount / 100) ;
+                    $price = $price - $discount_value ;
+                }
+                $price = (string)$price;
+
+                $Currency =  $course->Currency->code;
+                //convert currency code to upper case ...
+                //end
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'http://fawaterkstage.com/api/v2/invoiceInitPay',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS =>'{
+                        "payment_method_id": '.$payment_method_id.',
+                        "cartTotal": '.$price.',
+                        "currency": "'.$Currency.'",
+                        "customer": {
+                            "first_name": "'.$user->name.'",
+                            "last_name": "customer",
+                            "email": "'.$user->email.'",
+                            "phone": "01010676962",
+                            "address": "test address"
+                        },
+                        "cartItems": [
+                            {
+                                "name": "'.$course->name.'",
+                                "price": '.$price.',
+                                "quantity": "1"
+                            }
+
+                        ]
+                    }',
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json',
+                        'Authorization: Bearer 579c255c10d042c22ac6bc2753145ce306e72cedba88c22606'
+                    ),
+                ));
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+                $response = json_decode($response) ;
+                //store invoice data to database with course id and user_id ...
+                    $data['invoice_id']= $response->data->invoice_id;
+                    $data['invoice_key']= $response->data->invoice_key;
+                    $data['user_id']= $user->id;
+                    $data['course_id']= $course->id;
+                    Invoices::create($data);
+                //end store invoice .....
+                return msgdata($request, success(), trans('lang.shown_s'), $response);
             } else {
-                return msgdata($request, failed(), trans('lang.should_login'), (object)[]);
+                return msgdata($request, failed(), trans('lang.should_choose_valid_course'), (object)[]);
             }
         } else {
-            return msgdata($request, failed(), trans('lang.should_choose_valid_course'), (object)[]);
+            return msgdata($request, failed(), trans('lang.should_login'), (object)[]);
         }
+    }
+
+    public function excute_pay(Request $request)
+    {
+        $invoice = Invoices::where('invoice_id',$request->invoice_id)->first();
+        if($invoice){
+            $id = $invoice->coourse_id;
+            $course = Course::where('id', $id)->where('show', 1)->first();
+            if ($course) {
+                $user = check_api_token($request->header('api_token'));
+                if ($user) {
+                    if ($user->type != 'student') {
+                        return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+                    }
+                    foreach ($course->Couse_Lesson as $row) {
+                        $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
+                        if (!$exists_lesson) {
+                            $user_data['status'] = 1;
+                            $user_data['lesson_id'] = $row->id;
+                            $user_data['user_id'] = $user->id;
+                            UserLesson::create($user_data);
+                        } else {
+                            $exists_lesson->status = 1;
+                            $exists_lesson->save();
+                        }
+                    }
+
+                    return msgdata($request, success(), trans('lang.course_buy_s'), (object)[]);
+                } else {
+                    return msgdata($request, failed(), trans('lang.should_login'), (object)[]);
+                }
+            } else {
+                return msgdata($request, failed(), trans('lang.should_choose_valid_course'), (object)[]);
+            }
+        } else {
+            return msgdata($request, failed(), 'invoice not found', (object)[]);
+        }
+    }
+
+    public function pay_sucess()
+    {
+        return "Please wait success page ...";
+    }
+
+    public function pay_error()
+    {
+        return "Please wait fails page...";
     }
 
     public function buy_offer(Request $request, $id)

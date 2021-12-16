@@ -67,7 +67,13 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::get('/exam/questions/{id}', [HomeCoursesController::class, 'exam_questions']);
     Route::get('/lesson/quizzes/{id}', [HomeCoursesController::class, 'lesson_quizzes']);
     Route::get('/lesson/videos/{id}', [HomeCoursesController::class, 'lesson_videos']);
-    Route::get('/student/buy/course/{id}', [HomeCoursesController::class, 'buy_course']);
+
+    //payment methods
+    Route::get('/student/buy/course/payment_step_one/{id}', [HomeCoursesController::class, 'payment_step_one']);
+    Route::get('/student/buy/course/payment_step_two/{payment_method}/{course_id}', [HomeCoursesController::class, 'payment_step_two']);
+    Route::post('/student/buy/course/webhook_json', [HomeCoursesController::class, 'excute_pay']);
+
+
     Route::get('/student/buy/offer/{id}', [HomeCoursesController::class, 'buy_offer']);
     Route::get('/lesson/articles/{id}', [HomeCoursesController::class, 'lesson_articles']);
     Route::get('/quiz/questions/{id}', [HomeCoursesController::class, 'quiz_questions']);
@@ -248,3 +254,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/get_services', [HelpersController::class, 'get_services']);
     });
 });
+
+
+Route::get('/pay/success', [HomeCoursesController::class, 'pay_sucess']);
+Route::get('/pay/error', [HomeCoursesController::class, 'pay_error']);
