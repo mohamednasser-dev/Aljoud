@@ -254,9 +254,8 @@ class HomeCoursesController extends Controller
         if($invoice){
             $id = $invoice->coourse_id;
             $course = Course::where('id', $id)->where('show', 1)->first();
+            $user = User::where('id', $invoice->user_id)->first();
             if ($course) {
-                $user = check_api_token($request->header('api_token'));
-                if ($user) {
                     if ($user->type != 'student') {
                         return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
                     }
@@ -272,11 +271,7 @@ class HomeCoursesController extends Controller
                             $exists_lesson->save();
                         }
                     }
-
                     return msgdata($request, success(), trans('lang.course_buy_s'), (object)[]);
-                } else {
-                    return msgdata($request, failed(), trans('lang.should_login'), (object)[]);
-                }
             } else {
                 return msgdata($request, failed(), trans('lang.should_choose_valid_course'), (object)[]);
             }
