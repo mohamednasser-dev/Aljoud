@@ -233,8 +233,6 @@ class HomeCoursesController extends Controller
                 curl_close($curl);
                 $response = json_decode($response) ;
                 //store invoice data to database with course id and user_id ...
-                    $data = [];
-                    return $response ;
                     $data['invoice_id']= $response->data->invoice_id;
                     $data['invoice_key']= $response->data->invoice_key;
                     $data['user_id']= $user->id;
