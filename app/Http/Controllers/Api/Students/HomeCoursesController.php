@@ -150,7 +150,7 @@ class HomeCoursesController extends Controller
         $data = Article::where('lesson_id', $id)->where('show', 1)->orderBy('sort', 'asc')->paginate(10);
         return msgdata($request, success(), trans('lang.shown_s'), $data);
     }
-    public function payment_step_one(Request $request, $id)
+    public function payment_step_one(Request $request)
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -164,7 +164,7 @@ class HomeCoursesController extends Controller
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: Bearer 68ff7da7f25aba19ac79b47ba64ffd5ca600fae81ef2a8789a'
+                'Authorization: Bearer 579c255c10d042c22ac6bc2753145ce306e72cedba88c22606'
             ),
         ));
         $response = curl_exec($curl);
@@ -225,7 +225,7 @@ class HomeCoursesController extends Controller
                     }',
                     CURLOPT_HTTPHEADER => array(
                         'Content-Type: application/json',
-                        'Authorization: Bearer 68ff7da7f25aba19ac79b47ba64ffd5ca600fae81ef2a8789a'
+                        'Authorization: Bearer 579c255c10d042c22ac6bc2753145ce306e72cedba88c22606'
                     ),
                 ));
                 $response = curl_exec($curl);
