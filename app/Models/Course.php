@@ -102,7 +102,7 @@ class Course extends Model
     {
         $count_rates = CourseRate::where('course_id',$this->id)->get()->count();
         if($count_rates == 0){
-            return 0 ;
+            return 5 ;
         }
         $sum_rates = CourseRate::where('course_id',$this->id)->get()->sum('rate');
         $rate = $sum_rates / $count_rates;
