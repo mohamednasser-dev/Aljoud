@@ -273,12 +273,12 @@ class HomeCoursesController extends Controller
                             $exists_lesson->save();
                         }
                     }
-                    return msgdata($request, success(), trans('lang.course_buy_s'), (object)[]);
+                return "course payed successfully";
             } else {
-                return msgdata($request, failed(), trans('lang.should_choose_valid_course'), (object)[]);
+                return "no course selected";
             }
         } else {
-            return msgdata($request, failed(), 'invoice not found', (object)[]);
+            return "no invoice selected";
         }
     }
 
