@@ -154,7 +154,7 @@ class HomeCoursesController extends Controller
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://fawaterkstage.com/api/v2/getPaymentmethods',
+            CURLOPT_URL => 'https://app.fawaterk.com/api/v2/getPaymentmethods',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -195,7 +195,7 @@ class HomeCoursesController extends Controller
                 //end
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://fawaterkstage.com/api/v2/invoiceInitPay',
+                    CURLOPT_URL => 'https://app.fawaterk.com/api/v2/invoiceInitPay',
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
