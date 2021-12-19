@@ -253,6 +253,8 @@ class HomeCoursesController extends Controller
         $invoice = Invoices::where('invoice_id',$request->invoice_id)->first();
         if($invoice){
             $id = $invoice->coourse_id;
+            $invoice->status = 1;
+            $invoice->save();
             $course = Course::where('id', $id)->where('show', 1)->first();
             $user = User::where('id', $invoice->user_id)->first();
             if ($course) {
