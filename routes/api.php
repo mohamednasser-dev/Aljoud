@@ -48,7 +48,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
 //student
     //login
     Route::get('/student/buy/course/payment_step_one', [HomeCoursesController::class, 'payment_step_one']);
-    Route::get('/student/buy/course/payment_step_two/{payment_method}/{course_id}', [HomeCoursesController::class, 'payment_step_two']);
+    Route::get('/student/buy/{type}/payment_step_two/{payment_method}/{course_id}', [HomeCoursesController::class, 'payment_step_two']);
 
     Route::post('/login', [LoginController::class, 'login']);
     Route::get('/logout', [LoginController::class, 'logout']);

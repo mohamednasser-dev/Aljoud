@@ -173,26 +173,42 @@ class HomeCoursesController extends Controller
         return msgdata($request, success(), trans('lang.shown_s'), $response);
     }
 
-    public function payment_step_two(Request $request,$payment_method_id, $course_id)
+    public function payment_step_two(Request $request,$type,$payment_method_id, $course_id)
     {
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type != 'student') {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
-            $course = Course::where('id', $course_id)->where('show', 1)->first();
-            if ($course) {
-                //Generate price
-                $price = $course->price;
-                if ($course->discount > 0) {
-                    $discount_value = $course->price * ( $course->discount / 100) ;
-                    $price = $price - $discount_value ;
+            if($type == 'course'){
+                $course = Course::where('id', $course_id)->where('show', 1)->first();
+                if ($course) {
+                    //Generate price
+                    $price = $course->price;
+                    if ($course->discount > 0) {
+                        $discount_value = $course->price * ( $course->discount / 100) ;
+                        $price = $price - $discount_value ;
+                    }
+                    $price = (string)$price;
+                    $Currency =  $course->Currency->code;
+                    //convert currency code to upper case ...
+                    //end
+                } else {
+                    return msgdata($request, not_authoize(), trans('lang.should_choose_valid_course'), (object)[]);
                 }
-                $price = (string)$price;
+            }elseif($type == 'offer'){
+                $course = Offer::where('id', $course_id)->where('show', 1)->first();
+                if ($course) {
+                    //Generate price
+                    $price = $course->price;
+                    $price = (string)$price;
+                    $Currency =  $course->Currency->code;
+                    //end
+                } else {
+                    return msgdata($request, not_authoize(), trans('lang.should_choose_valid_offer'), (object)[]);
+                }
+            }
 
-                $Currency =  $course->Currency->code;
-                //convert currency code to upper case ...
-                //end
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://app.fawaterk.com/api/v2/invoiceInitPay',
@@ -233,18 +249,30 @@ class HomeCoursesController extends Controller
                 curl_close($curl);
                 $response = json_decode($response) ;
                 //store invoice data to database with course id and user_id ...
-                    $data['invoice_id']= $response->data->invoice_id;
-                    $data['invoice_key']= $response->data->invoice_key;
-                    $data['user_id']= $user->id;
-                    $data['course_id']= $course->id;
-                    Invoices::create($data);
+                $data['invoice_id']= $response->data->invoice_id;
+                $data['invoice_key']= $response->data->invoice_key;
+                $data['user_id']= $user->id;
+                if($type == 'course'){
+                    $data['course_id']= $course_id;
+                }elseif($type == 'offer'){
+                    $data['offer_id']= $course_id;
+
+                }
+                $data['payment_id']= $payment_method_id;
+                $data['type']= $type;
+                if($course->data->payment_data){
+                    $data['fawry_code']= $course->data->payment_data->fawryCode;
+                    $data['fawry_expire_date']= $course->data->payment_data->fawryCode;
+                }
+                if($course->data->payment_data->meezaReference){
+                    $data['meeza_reference']= $course->data->payment_data->meezaReference;
+                }
+                Invoices::create($data);
                 //end store invoice .....
                 return msgdata($request, success(), trans('lang.shown_s'), $response);
-            } else {
-                return msgdata($request, failed(), trans('lang.should_choose_valid_course'), (object)[]);
-            }
+
         } else {
-            return msgdata($request, failed(), trans('lang.should_login'), (object)[]);
+            return msgdata($request, not_authoize(), trans('lang.should_login'), (object)[]);
         }
     }
 

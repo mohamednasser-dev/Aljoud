@@ -14,6 +14,8 @@ class UpdateInvoiceTable extends Migration
     public function up()
     {
         Schema::table('invoices', function (Blueprint $table) {
+            $table->bigInteger('offer_id')->unsigned()->nullable();
+            $table->foreign('offer_id')->references('id')->on('offers')->onDelete('set null');
             $table->integer('payment_id');
             $table->enum('type',['course','offer'])->default('course');
             $table->string('fawry_code')->nullable();
