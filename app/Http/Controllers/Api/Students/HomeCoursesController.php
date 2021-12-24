@@ -150,6 +150,7 @@ class HomeCoursesController extends Controller
         $data = Article::where('lesson_id', $id)->where('show', 1)->orderBy('sort', 'asc')->paginate(10);
         return msgdata($request, success(), trans('lang.shown_s'), $data);
     }
+
     public function payment_step_one(Request $request)
     {
         $curl = curl_init();
@@ -169,97 +170,97 @@ class HomeCoursesController extends Controller
         ));
         $response = curl_exec($curl);
         curl_close($curl);
-        $response = json_decode($response) ;
+        $response = json_decode($response);
         return msgdata($request, success(), trans('lang.shown_s'), $response);
     }
 
-    public function payment_step_two(Request $request,$type,$payment_method_id, $course_id)
+    public function payment_step_two(Request $request, $type, $payment_method_id, $course_id)
     {
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type != 'student') {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
-            if($type == 'course'){
+            if ($type == 'course') {
                 $course = Course::where('id', $course_id)->where('show', 1)->first();
                 if ($course) {
                     //Generate price
                     $price = $course->price;
                     if ($course->discount > 0) {
-                        $discount_value = $course->price * ( $course->discount / 100) ;
-                        $price = $price - $discount_value ;
+                        $discount_value = $course->price * ($course->discount / 100);
+                        $price = $price - $discount_value;
                     }
                     $price = (string)$price;
-                    $Currency =  $course->Currency->code;
+                    $Currency = $course->Currency->code;
                     //convert currency code to upper case ...
                     //end
                 } else {
                     return msgdata($request, not_authoize(), trans('lang.should_choose_valid_course'), (object)[]);
                 }
-            }elseif($type == 'offer'){
+            } elseif ($type == 'offer') {
                 $course = Offer::where('id', $course_id)->where('show', 1)->first();
                 if ($course) {
                     //Generate price
                     $price = $course->price;
                     $price = (string)$price;
-                    $Currency =  $course->Currency->code;
+                    $Currency = $course->Currency->code;
                     //end
                 } else {
                     return msgdata($request, not_authoize(), trans('lang.should_choose_valid_offer'), (object)[]);
                 }
             }
 
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://app.fawaterk.com/api/v2/invoiceInitPay',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS =>'{
-                        "payment_method_id": '.$payment_method_id.',
-                        "cartTotal": '.$price.',
-                        "currency": "'.$Currency.'",
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://app.fawaterk.com/api/v2/invoiceInitPay',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '{
+                        "payment_method_id": ' . $payment_method_id . ',
+                        "cartTotal": ' . $price . ',
+                        "currency": "' . $Currency . '",
                         "customer": {
-                            "first_name": "'.$user->name.'",
+                            "first_name": "' . $user->name . '",
                             "last_name": "customer",
-                            "email": "'.$user->email.'",
+                            "email": "' . $user->email . '",
                             "phone": "01010676962",
                             "address": "test address"
                         },
                         "cartItems": [
                             {
-                                "name": "'.$course->name.'",
-                                "price": '.$price.',
+                                "name": "' . $course->name . '",
+                                "price": ' . $price . ',
                                 "quantity": "1"
                             }
 
                         ]
                     }',
-                    CURLOPT_HTTPHEADER => array(
-                        'Content-Type: application/json',
-                        'Authorization: Bearer 68ff7da7f25aba19ac79b47ba64ffd5ca600fae81ef2a8789a'
-                    ),
-                ));
-                $response = curl_exec($curl);
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'Authorization: Bearer 68ff7da7f25aba19ac79b47ba64ffd5ca600fae81ef2a8789a'
+                ),
+            ));
+            $response = curl_exec($curl);
 
-                curl_close($curl);
-                $response = json_decode($response) ;
-                //store invoice data to database with course id and user_id ...
-                $data['invoice_id']= $response->data->invoice_id;
-                $data['invoice_key']= $response->data->invoice_key;
-                $data['user_id']= $user->id;
-                if($type == 'course'){
-                    $data['course_id']= $course_id;
-                }elseif($type == 'offer'){
-                    $data['offer_id']= $course_id;
+            curl_close($curl);
+            $response = json_decode($response);
+            //store invoice data to database with course id and user_id ...
+            $data['invoice_id'] = $response->data->invoice_id;
+            $data['invoice_key'] = $response->data->invoice_key;
+            $data['user_id'] = $user->id;
+            if ($type == 'course') {
+                $data['course_id'] = $course_id;
+            } elseif ($type == 'offer') {
+                $data['offer_id'] = $course_id;
 
-                }
-                $data['payment_id']= $payment_method_id;
-                $data['type']= $type;
+            }
+            $data['payment_id'] = $payment_method_id;
+            $data['type'] = $type;
 //                if($response->data->payment_data){
 //                    $data['fawry_code']= $response->data->payment_data->fawryCode;
 //                    $data['fawry_expire_date']= $response->data->payment_data->fawryCode;
@@ -267,9 +268,9 @@ class HomeCoursesController extends Controller
 //                if($response->data->payment_data->meezaReference){
 //                    $data['meeza_reference']= $response->data->payment_data->meezaReference;
 //                }
-                Invoices::create($data);
-                //end store invoice .....
-                return msgdata($request, success(), trans('lang.shown_s'), $response);
+            Invoices::create($data);
+            //end store invoice .....
+            return msgdata($request, success(), trans('lang.shown_s'), $response);
 
         } else {
             return msgdata($request, not_authoize(), trans('lang.should_login'), (object)[]);
@@ -278,17 +279,22 @@ class HomeCoursesController extends Controller
 
     public function excute_pay(Request $request)
     {
-        $invoice = Invoices::where('invoice_id',$request->invoice_id)->first();
-        if($invoice){
-            $id = $invoice->coourse_id;
+        $invoice = Invoices::where('invoice_id', $request->invoice_id)->first();
+        if ($invoice) {
             $invoice->status = 1;
             $invoice->save();
-            $course = Course::where('id', $id)->where('show', 1)->first();
             $user = User::where('id', $invoice->user_id)->first();
-            if ($course) {
-                    if ($user->type != 'student') {
-                        return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
-                    }
+            if ($user) {
+                if ($user->type != 'student') {
+                    return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+                }
+            } else {
+                return msgdata($request, failed(), trans('lang.should_login'), (object)[]);
+            }
+            if ($invoice->type == 'course') {
+                $id = $invoice->coourse_id;
+                $course = Course::where('id', $id)->where('show', 1)->first();
+                if ($course) {
                     foreach ($course->Couse_Lesson as $row) {
                         $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
                         if (!$exists_lesson) {
@@ -301,9 +307,33 @@ class HomeCoursesController extends Controller
                             $exists_lesson->save();
                         }
                     }
-                return "course payed successfully";
+                    return "course payed successfully";
+                } else {
+                    return "no course selected";
+                }
             } else {
-                return "no course selected";
+                $id = $invoice->offer_id;
+                $offer = Offer::where('id', $id)->where('show', 1)->first();
+                if ($offer) {
+                    foreach ($offer->Courses as $course) {
+                        $couse_Lesson = Lesson::where('course_id', $course->id)->where('show', 1)->get();
+                        foreach ($couse_Lesson as $row) {
+                            $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
+                            if (!$exists_lesson) {
+                                $user_data['status'] = 1;
+                                $user_data['lesson_id'] = $row->id;
+                                $user_data['user_id'] = $user->id;
+                                UserLesson::create($user_data);
+                            } else {
+                                $exists_lesson->status = 1;
+                                $exists_lesson->save();
+                            }
+                        }
+                    }
+                    return "offer payed successfully";
+                } else {
+                    return "should choose valid offer";
+                }
             }
         } else {
             return "no invoice selected";
