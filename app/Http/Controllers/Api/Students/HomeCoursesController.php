@@ -260,12 +260,12 @@ class HomeCoursesController extends Controller
                 }
                 $data['payment_id']= $payment_method_id;
                 $data['type']= $type;
-                if($course->data->payment_data){
-                    $data['fawry_code']= $course->data->payment_data->fawryCode;
-                    $data['fawry_expire_date']= $course->data->payment_data->fawryCode;
+                if($response->data->payment_data){
+                    $data['fawry_code']= $response->data->payment_data->fawryCode;
+                    $data['fawry_expire_date']= $response->data->payment_data->fawryCode;
                 }
-                if($course->data->payment_data->meezaReference){
-                    $data['meeza_reference']= $course->data->payment_data->meezaReference;
+                if($response->data->payment_data->meezaReference){
+                    $data['meeza_reference']= $response->data->payment_data->meezaReference;
                 }
                 Invoices::create($data);
                 //end store invoice .....
