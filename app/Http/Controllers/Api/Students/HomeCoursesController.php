@@ -165,7 +165,7 @@ class HomeCoursesController extends Controller
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: Bearer 579c255c10d042c22ac6bc2753145ce306e72cedba88c22606'
+                'Authorization: Bearer 2f0e02999398cbf1b89395346146b703985ffcb9ff3f783e62'
             ),
         ));
         $response = curl_exec($curl);
@@ -242,7 +242,7 @@ class HomeCoursesController extends Controller
                     }',
                 CURLOPT_HTTPHEADER => array(
                     'Content-Type: application/json',
-                    'Authorization: Bearer 579c255c10d042c22ac6bc2753145ce306e72cedba88c22606'
+                    'Authorization: Bearer 2f0e02999398cbf1b89395346146b703985ffcb9ff3f783e62'
                 ),
             ));
             $response = curl_exec($curl);
