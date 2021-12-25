@@ -107,7 +107,8 @@ function msg($request, $status, $key)
 
 function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جديدة فى البريد", $type = 'mail', $chat = null)
 {
-    $key = 'AAAA3G2KNCA:APA91bFXw37Kvqy-_NRSEsOrTBviHY4hSSwvuAvGDT7qbY6MNxwvU66hYc6ZWythp1I7KzWlc6ogx4vUMmgx1qwVYiyDAetd4EXIddNFeeqpjlF-owNE_aEkE_6Y9gdlwN5i6_jUlBMg';
+    $key = 'AAAAJwmC-jk:APA91bEjxczUGkd4_WGnJxwPCrqM4hSh06w5Uthqcp-QzCwuNn8FqvVRfi_rv2BAMLpYA1aIN8hqmeN-xVAYjBEB3ktYxjm5HTvm5uZFLFzHtY0BrFFjwE05yAIlkYEFWbSiOdJvRvJj';
+
 
     $fields = array
     (
@@ -149,8 +150,8 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
     $result = curl_exec($ch);
 
-    if ($result === FALSE) {
 
+    if ($result === FALSE) {
         die('Curl failed: ' . curl_error($ch));
     }
 

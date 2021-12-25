@@ -19,6 +19,9 @@ class Inbox extends Model
         'created_at' => 'datetime:Y-m-d h:i',
     ];
 
+    protected $dispatchesEvents = [
+        'created'=>'App\Events\InboxCreated'
+    ];
     public function getCreatedAtAttribute($created_at)
     {
         return Carbon::parse($created_at)->diffForHumans();
@@ -46,16 +49,16 @@ class Inbox extends Model
 
     public function Sender()
     {
-        return $this->belongsTo(User::class, 'sender_id')->select('id', 'name', 'image');
+        return $this->belongsTo(User::class, 'sender_id')->select('id', 'name', 'image','fcm_token');
     }
 
     public function Receiver()
     {
-        return $this->belongsTo(User::class, 'receiver_id')->select('id', 'name', 'image');
+        return $this->belongsTo(User::class, 'receiver_id')->select('id', 'name', 'image','fcm_token');
     }
 
     public function Assistance()
     {
-        return $this->belongsTo(User::class, 'assistant_id')->select('id', 'name', 'image');
+        return $this->belongsTo(User::class, 'assistant_id')->select('id', 'name', 'image','fcm_token');
     }
 }

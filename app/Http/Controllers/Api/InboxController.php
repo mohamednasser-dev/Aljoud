@@ -162,6 +162,7 @@ class InboxController extends Controller
             if ($validator->fails()) {
                 return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
             }
+
             $admin = User::where('type', 'admin')->first();
             $inbox = new Inbox();
             $inbox->message = $request->message;
@@ -171,9 +172,11 @@ class InboxController extends Controller
                 $inbox->receiver_id = $admin->id;
             }
             $inbox->sender_id = $user->id;
+
             try {
                 $inbox->save();
             } catch (\Exception $e) {
+                dd($e);
                 return msgdata($request, failed(), trans('lang.error'), (object)[]);
             }
             if ($request->file != null) {
