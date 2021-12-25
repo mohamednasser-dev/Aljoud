@@ -155,7 +155,7 @@ class HomeCoursesController extends Controller
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://app.fawaterk.com/api/v2/getPaymentmethods',
+            CURLOPT_URL => 'https://fawaterkstage.com/api/v2/getPaymentmethods',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -165,7 +165,7 @@ class HomeCoursesController extends Controller
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: Bearer 68ff7da7f25aba19ac79b47ba64ffd5ca600fae81ef2a8789a'
+                'Authorization: Bearer 579c255c10d042c22ac6bc2753145ce306e72cedba88c22606'
             ),
         ));
         $response = curl_exec($curl);
@@ -212,7 +212,7 @@ class HomeCoursesController extends Controller
 
             $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://app.fawaterk.com/api/v2/invoiceInitPay',
+                CURLOPT_URL => 'https://fawaterkstage.com/api/v2/invoiceInitPay',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -242,7 +242,7 @@ class HomeCoursesController extends Controller
                     }',
                 CURLOPT_HTTPHEADER => array(
                     'Content-Type: application/json',
-                    'Authorization: Bearer 68ff7da7f25aba19ac79b47ba64ffd5ca600fae81ef2a8789a'
+                    'Authorization: Bearer 579c255c10d042c22ac6bc2753145ce306e72cedba88c22606'
                 ),
             ));
             $response = curl_exec($curl);
