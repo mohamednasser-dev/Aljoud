@@ -117,7 +117,7 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
         'data' => [
             'title' => $title,
             'body' => $msg,
-            'msg' => $chat,
+            'id' => $chat,
             'type' => $type,
             'icon' => 'myIcon',
             'sound' => 'mySound',
@@ -125,7 +125,7 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
         'notification' => [
             'title' => $title,
             'body' => $msg,
-            'msg' => $chat,
+            'id' => $chat,
             'type' => $type,
             'icon' => 'myIcon',
             'sound' => 'mySound',

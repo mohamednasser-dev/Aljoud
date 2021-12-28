@@ -307,6 +307,8 @@ class HomeCoursesController extends Controller
                             $exists_lesson->save();
                         }
                     }
+                    send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the course", "course" , $course->id );
+
                     return "course payed successfully";
                 } else {
                     return "no course selected";
@@ -330,6 +332,8 @@ class HomeCoursesController extends Controller
                             }
                         }
                     }
+                    send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the offer", "offer" , $offer->id );
+
                     return "offer payed successfully";
                 } else {
                     return "should choose valid offer";

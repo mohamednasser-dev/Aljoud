@@ -31,7 +31,7 @@ class NotifyInboxCreated
         send($receiver->fcm_token, 'رسالة جديدة', $inbox->message, $inbox->message);
         $assistant = $inbox->Assistance;
         if ($assistant) {
-            send($assistant->fcm_token, 'رسالة جديدة', $inbox->message, $inbox->message);
+            send($assistant->fcm_token, 'رسالة جديدة', $inbox->message, "inbox" , $inbox->id );
         }
 
     }
