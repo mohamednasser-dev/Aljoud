@@ -13,9 +13,9 @@ class Video extends Model
 
     public function getUrlAttribute($url){
         if (!empty($url)) {
-            return  'https://res.cloudinary.com/dwevccen7/video/upload/v1581928924/' . $url;
+            return asset('uploads/videos') . '/' . $url;
         }
-        return '';
+        return asset('uploads/videos/default.jpg');
     }
     protected $appends = ['name'];
 
