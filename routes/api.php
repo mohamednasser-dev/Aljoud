@@ -74,7 +74,6 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     //payment methods
 
 
-
     Route::get('/student/buy/offer/{id}', [HomeCoursesController::class, 'buy_offer']);
     Route::get('/lesson/articles/{id}', [HomeCoursesController::class, 'lesson_articles']);
     Route::get('/quiz/questions/{id}', [HomeCoursesController::class, 'quiz_questions']);

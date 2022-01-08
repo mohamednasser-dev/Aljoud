@@ -48,7 +48,6 @@ class Article extends Model
         if (is_file($image)) {
             $imageFields = upload($image, 'articles');
             $this->attributes['file'] = $imageFields;
-
         }
 
     }
