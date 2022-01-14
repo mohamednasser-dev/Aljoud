@@ -99,10 +99,13 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $api_token = $request->header('api_token');
+
         $user = check_api_token($api_token);
+
         if (!$user) {
-            return response()->json(msg($request, not_authoize(), 'not_authorize'), (object)[]);
+            return response()->json(msg($request, not_authoize(), 'not_authorize',(object)[]));
         }
+
         $user->api_token = null;
         if ($user->save()) {
             return msgdata($request, success(), trans('lang.logout_s'), (object)[]);
