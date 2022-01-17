@@ -98,8 +98,14 @@ class UsersController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                User::where('id', $id)->delete();
-                return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+                try {
+                    User::where('id', $id)->delete();
+                    return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+                }catch (\Exception $e){
+                    User::where('id', $id)->delete();
+                    return msgdata($request, failed(), trans('lang.error'), (object)[]);
+                }
+
             } else {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
