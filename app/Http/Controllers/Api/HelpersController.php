@@ -84,7 +84,7 @@ class HelpersController extends Controller
 
             return msgdata($request, success(), trans('lang.shown_s'), $inbox);
         } else {
-            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), 0);
 
         }
     }
