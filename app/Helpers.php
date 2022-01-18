@@ -17,7 +17,7 @@ function send_notification($title, $body, $details, $image, $data, $token)
     );
 
     $fields = array('registration_ids' => $token,
-        'notification' => array('title' => $title, 'body' => $message, 'details' => $details, 'image' => $image));
+        'notification' => array('title' => $title, 'body' =>  strip_tags($message), 'details' => $details, 'image' => $image));
 
     $payload = json_encode($fields);
     $curl_session = curl_init();
@@ -116,7 +116,7 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
         "priority" => 10,
         'data' => [
             'title' => $title,
-            'body' => $msg,
+            'body' => strip_tags($msg),
             'id' => $chat,
             'type' => $type,
             'icon' => 'myIcon',
@@ -124,7 +124,7 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
         ],
         'notification' => [
             'title' => $title,
-            'body' => $msg,
+            'body' =>  strip_tags($msg),
             'id' => $chat,
             'type' => $type,
             'icon' => 'myIcon',

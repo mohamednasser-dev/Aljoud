@@ -226,7 +226,6 @@ class InboxController extends Controller
 
     public function unreadInbox(Request $request, $id)
     {
-
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             $inbox = Inbox::whereId($id)->first();
@@ -234,21 +233,15 @@ class InboxController extends Controller
                 if ($user->type == "admin") {
                     $inbox->is_read = 0;
                     $inbox->save();
-
                     return msgdata($request, success(), trans('lang.updated_s'), $inbox);
-
                 } else {
                     return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
-
                 }
-
             } else {
                 return msgdata($request, not_found(), trans('lang.not_found'), (object)[]);
             }
-
         } else {
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
-
         }
     }
 
