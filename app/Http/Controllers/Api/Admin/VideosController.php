@@ -69,15 +69,15 @@ class VideosController extends Controller
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
-                    if($request->url){
+                    if ($request->url) {
 //                        videos upload ...
-                            $file = $request->file('url');
-                            $name = $file->getClientOriginalName();
-                            $ext = $file->getClientOriginalExtension();
-                            // Move Image To Folder ..
-                            $fileNewName = 'img_' . time() . '.' . $ext;
-                            $file->move(public_path('uploads/videos'), $fileNewName);
-                            $input['url'] = $fileNewName;
+                        $file = $request->file('url');
+                        $name = $file->getClientOriginalName();
+                        $ext = $file->getClientOriginalExtension();
+                        // Move Image To Folder ..
+                        $fileNewName = 'img_' . time() . '.' . $ext;
+                        $file->move(public_path('uploads/videos'), $fileNewName);
+                        $input['url'] = $fileNewName;
 
 // cloudinary way
 //                        $uploadedFileUrl = $this->upload($request->file('url'));
@@ -122,7 +122,7 @@ class VideosController extends Controller
 //                    unset($input['url']);
 
 //                    File::delete($selected_video->url);
-                    if($request->url){
+                    if ($request->url) {
                         $file = $request->file('url');
                         $name = $file->getClientOriginalName();
                         $ext = $file->getClientOriginalExtension();
@@ -140,7 +140,7 @@ class VideosController extends Controller
 //                        $image_format2 = $uploadedFileUrl->getExtension();
 //                        $image_new_story = $image_id2 . '.' . $image_format2;
 //                        $input['url'] = $image_new_story;
-                    }else{
+                    } else {
                         unset($input['url']);
                     }
                     Video::whereId($request->id)->update($input);

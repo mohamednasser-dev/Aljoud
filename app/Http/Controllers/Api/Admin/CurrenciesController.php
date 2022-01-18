@@ -42,9 +42,9 @@ class CurrenciesController extends Controller
                     Currency::where('id', $id)->delete();
                     return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
                 } catch (\Exception $e) {
-
                     return msgdata($request, failed(), trans('lang.error'), (object)[]);
                 }
+
             } else {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
