@@ -74,12 +74,12 @@ class HelpersController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "student") {
-                $inbox = Inbox::where('receiver_id', $user->id)->where('is_read', 0)->count();
+                $inbox = Inbox::where('receiver_id', $user->id)->where('parent_id',null)->where('is_read', 0)->count();
             } elseif ($user->type == "admin") {
                 $admins = User::where('type', 'admin')->pluck('id')->toArray();
-                $inbox = Inbox::whereIn('receiver_id', $admins)->where('is_read', 0)->count();
+                $inbox = Inbox::whereIn('receiver_id', $admins)->where('parent_id',null)->where('is_read', 0)->count();
             } else {
-                $inbox = Inbox::where('assistant_id', $user->id)->where('is_read', 0)->count();
+                $inbox = Inbox::where('assistant_id', $user->id)->where('parent_id',null)->where('is_read', 0)->count();
             }
 
             return msgdata($request, success(), trans('lang.shown_s'), $inbox);
