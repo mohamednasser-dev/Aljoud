@@ -34,11 +34,13 @@ class HomeCoursesController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             //user courses
-            $user_lessons = UserLesson::where('user_id', $user->id)->pluck('lesson_id')->toArray();
-            $user_courses = Lesson::whereIn('id', $user_lessons)->where('course_id', $id)->first();
-            if ($user_courses) {
+            $user_course_lessons = UserLesson::where('user_id', $user->id)->where('status',1)->pluck('lesson_id')->toArray();
+            $user_courses = Lesson::whereIn('id', $user_course_lessons)->where('course_id', $id)->get()->count();
+
+            $course_lesson_count = Lesson::where('course_id', $id)->get()->count();
+            if($course_lesson_count == $user_courses){
                 $data->my_course = true;
-            } else {
+            }else{
                 $data->my_course = false;
             }
         } else {
@@ -292,7 +294,7 @@ class HomeCoursesController extends Controller
                 return msgdata($request, failed(), trans('lang.should_login'), (object)[]);
             }
             if ($invoice->type == 'course') {
-                $id = $invoice->coourse_id;
+                $id = $invoice->course_id;
                 $course = Course::where('id', $id)->where('show', 1)->first();
                 if ($course) {
                     foreach ($course->Couse_Lesson as $row) {
@@ -306,7 +308,7 @@ class HomeCoursesController extends Controller
                             $exists_lesson->status = 1;
                             $exists_lesson->save();
                         }
-                    }
+                    }fix
                     send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the course", "course" , $course->id );
 
                     return "course payed successfully";
