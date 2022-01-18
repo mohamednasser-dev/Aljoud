@@ -308,7 +308,7 @@ class HomeCoursesController extends Controller
                             $exists_lesson->status = 1;
                             $exists_lesson->save();
                         }
-                    }fix
+                    }
                     send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the course", "course" , $course->id );
 
                     return "course payed successfully";
