@@ -7,6 +7,7 @@ use App\Models\College;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\University;
+use App\Models\UserCourses;
 use App\Models\UserLesson;
 use Illuminate\Http\Request;
 use Validator;
@@ -87,9 +88,19 @@ class LessonController extends Controller
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
-                    $level = Lesson::create($input);
-                    $level = Lesson::whereId($level->id)->first();
-                    return msgdata($request, success(), trans('lang.added_s'), $level);
+                    $lesson = Lesson::create($input);
+                    $lesson_data = Lesson::whereId($lesson->id)->first();
+                    if($lesson_data){
+                       $exits_user_courses = UserCourses::where('course_id',$request->course_id)->where('status',1)->get();
+                       foreach($exits_user_courses as $row){
+                           $user_lesson_data['lesson_id'] =$lesson_data->id;
+                           $user_lesson_data['user_id'] = $row->user_id;
+                           $user_lesson_data['status'] = 1;
+                           UserLesson::create($user_lesson_data);
+                       }
+
+                    }
+                    return msgdata($request, success(), trans('lang.added_s'), $lesson_data);
                 }
 
             } else {

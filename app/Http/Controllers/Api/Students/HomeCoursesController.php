@@ -16,6 +16,7 @@ use App\Models\Offer;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\University;
+use App\Models\UserCourses;
 use App\Models\UserLesson;
 use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
@@ -30,15 +31,11 @@ class HomeCoursesController extends Controller
     public function details(Request $request, $id)
     {
         $data = Course::where('id', $id)->first();
-
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             //user courses
-            $user_course_lessons = UserLesson::where('user_id', $user->id)->where('status',1)->pluck('lesson_id')->toArray();
-            $user_courses = Lesson::whereIn('id', $user_course_lessons)->where('course_id', $id)->get()->count();
-
-            $course_lesson_count = Lesson::where('course_id', $id)->get()->count();
-            if($course_lesson_count == $user_courses){
+            $user_course_lessons = UserCourses::where('course_id',$id)->where('user_id', $user->id)->where('status',1)->first();
+            if($user_course_lessons){
                 $data->my_course = true;
             }else{
                 $data->my_course = false;
@@ -46,7 +43,6 @@ class HomeCoursesController extends Controller
         } else {
             $data->my_course = false;
         }
-
         $lessons_ids = Lesson::where('course_id', $id)->where('show', 1)->pluck('id')->toArray();
         $data->Count_videos_time = Video::whereIn('lesson_id', $lessons_ids)->where('show', 1)->get()->sum('time');
         $data->Count_articles = Article::whereIn('lesson_id', $lessons_ids)->where('show', 1)->get()->count();
@@ -297,6 +293,10 @@ class HomeCoursesController extends Controller
                 $id = $invoice->course_id;
                 $course = Course::where('id', $id)->where('show', 1)->first();
                 if ($course) {
+                    $user_course_data['user_id'] = $invoice->user_id ;
+                    $user_course_data['status'] = 1;
+                    $user_course_data['course_id'] = $id;
+                    UserCourses::create($user_course_data);
                     foreach ($course->Couse_Lesson as $row) {
                         $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
                         if (!$exists_lesson) {
@@ -309,6 +309,7 @@ class HomeCoursesController extends Controller
                             $exists_lesson->save();
                         }
                     }
+
                     send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the course", "course" , $course->id );
 
                     return "course payed successfully";
@@ -321,6 +322,12 @@ class HomeCoursesController extends Controller
                 if ($offer) {
                     foreach ($offer->Courses as $course) {
                         $couse_Lesson = Lesson::where('course_id', $course->id)->where('show', 1)->get();
+
+                        $user_course_data['user_id'] = $invoice->user_id ;
+                        $user_course_data['course_id'] =  $course->id;
+                        $user_course_data['status'] = 1;
+                        UserCourses::create($user_course_data);
+
                         foreach ($couse_Lesson as $row) {
                             $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
                             if (!$exists_lesson) {
