@@ -194,7 +194,7 @@ class HomeCoursesController extends Controller
                     //convert currency code to upper case ...
                     //end
                 } else {
-                    return msgdata($request, not_authoize(), trans('lang.should_choose_valid_course'), (object)[]);
+                    return msgdata($request, failed(), trans('lang.should_choose_valid_course'), (object)[]);
                 }
             } elseif ($type == 'offer') {
                 $course = Offer::where('id', $course_id)->where('show', 1)->first();
@@ -205,7 +205,7 @@ class HomeCoursesController extends Controller
                     $Currency = $course->Currency->code;
                     //end
                 } else {
-                    return msgdata($request, not_authoize(), trans('lang.should_choose_valid_offer'), (object)[]);
+                    return msgdata($request, failed(), trans('lang.should_choose_valid_offer'), (object)[]);
                 }
             }
 
