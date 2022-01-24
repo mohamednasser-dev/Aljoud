@@ -356,12 +356,12 @@ class HomeCoursesController extends Controller
 
     public function pay_sucess()
     {
-        return "success";
+        return redirect()->route('success');
     }
 
     public function pay_error()
     {
-        return "failed";
+        return redirect()->route('error');
     }
 
     public function buy_offer(Request $request, $id)

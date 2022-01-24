@@ -21,6 +21,12 @@ Route::post('login', [\App\Http\Controllers\Api\LoginController::class, 'login']
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
+Route::get('/success', function () {
+    return view('success');
+});
+Route::get('/error', function () {
+    return view('error');
+});
 //Route::get('qr-code-g', function () {
 //
 //    \SimpleSoftwareIO\QrCode::size(500)
