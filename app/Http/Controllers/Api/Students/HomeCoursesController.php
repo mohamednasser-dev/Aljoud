@@ -356,12 +356,12 @@ class HomeCoursesController extends Controller
 
     public function pay_sucess()
     {
-        return "Please wait success page ...";
+        return redirect()->route('home');
     }
 
     public function pay_error()
     {
-        return "Please wait fails page...";
+        return redirect()->route('home');
     }
 
     public function buy_offer(Request $request, $id)
