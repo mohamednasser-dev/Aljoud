@@ -100,4 +100,21 @@ class HelpersController extends Controller
         $result = $result->where('type', 'student')->where('status', 'enable')->orderBy('created_at', 'desc')->get();
         return msgdata($request, success(), trans('lang.shown_s'), $result);
     }
+
+    public function make_screen_shoot(Request $request)
+    {
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "student") {
+                $student = User::where('id', $user->id)->first();
+                $student->screen_shoot_count = $student->screen_shoot_count + 1;
+                $student->save();
+                return msgdata($request, success(), trans('lang.added_s'), (object)[]);
+            } else {
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+        }
+    }
 }

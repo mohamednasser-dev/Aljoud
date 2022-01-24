@@ -112,6 +112,24 @@ class UsersController extends Controller
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
     }
+    public function reset_screen_shoots(Request $request, $id)
+    {
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                try {
+                    User::where('id', $id)->update(['screen_shoot_count'=>0]);
+                    return msgdata($request, success(), trans('lang.updated_s'), (object)[]);
+                } catch (\Exception $e) {
+                    return msgdata($request, failed(), trans('lang.error'), (object)[]);
+                }
+            } else {
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+        }
+    }
 
     public function store(Request $request, $type)
     {
