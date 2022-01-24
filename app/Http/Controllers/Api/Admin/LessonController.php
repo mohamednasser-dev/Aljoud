@@ -7,6 +7,7 @@ use App\Models\College;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\University;
+use App\Models\User;
 use App\Models\UserCourses;
 use App\Models\UserLesson;
 use Illuminate\Http\Request;
@@ -100,6 +101,11 @@ class LessonController extends Controller
                        }
 
                     }
+
+                    $UserCourses = UserCourses::where('course_id', $request->course_id)->pluck('user_id')->toArray();
+                    $users = User::whereIn('id', $UserCourses)->pluck('fcm_token')->toArray();
+                    send($users, 'new notification', "new article  added to the course", "course", $request->course_id);
+
                     return msgdata($request, success(), trans('lang.added_s'), $lesson_data);
                 }
 

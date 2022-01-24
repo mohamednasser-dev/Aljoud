@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Lesson;
+use App\Models\User;
+use App\Models\UserCourses;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -88,6 +91,11 @@ class VideosController extends Controller
                     }
                     $level = Video::create($input);
                     $level = Video::whereId($level->id)->first();
+                    $lesson = Lesson::find($request->lesson_id)->first();
+                    $UserCourses = UserCourses::where('course_id', $lesson->course_id)->pluck('user_id')->toArray();
+                    $users = User::whereIn('id', $UserCourses)->pluck('fcm_token')->toArray();
+                    send($users, 'new notification', "new video  added to the course", "course", $lesson->course_id);
+
                     return msgdata($request, success(), trans('lang.added_s'), $level);
                 }
 

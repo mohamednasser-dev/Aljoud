@@ -10,6 +10,10 @@ class UserCourses extends Model
     use HasFactory;
     protected $guarded = [];
 
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d h:i',
+    ];
+
     public function Course()
     {
         return $this->belongsTo(Course::class, 'course_id');

@@ -112,7 +112,7 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
 
     $fields = array
     (
-        "registration_ids" => (array)$tokens,  //array of user token whom notification sent two
+        "registration_ids" => (array)$tokens,  //array of user token whom notification sent to
         "priority" => 10,
         'data' => [
             'title' => $title,
@@ -154,6 +154,7 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
     if ($result === FALSE) {
         die('Curl failed: ' . curl_error($ch));
     }
+
 
     curl_close($ch);
     return $result;
