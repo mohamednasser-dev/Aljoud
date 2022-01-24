@@ -224,10 +224,10 @@ class HomeCoursesController extends Controller
                         "cartTotal": ' . $price . ',
                         "currency": "' . $Currency . '",
                         "customer": {
-                            "first_name": "' . $user->name . '",
+                            "first_name": "' . $user->name . ' '.$user->phone.'",
                             "last_name": "' . $user->id . '",
                             "email": "' . $user->email . '",
-                            "phone": "' . $user->phone . '",
+                            "phone": "01018203630",
                             "address": "address"
                         },
                         "cartItems": [
