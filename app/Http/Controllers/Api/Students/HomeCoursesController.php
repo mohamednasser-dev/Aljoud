@@ -257,7 +257,6 @@ class HomeCoursesController extends Controller
                 $data['course_id'] = $course_id;
             } elseif ($type == 'offer') {
                 $data['offer_id'] = $course_id;
-
             }
             $data['payment_id'] = $payment_method_id;
             $data['type'] = $type;
