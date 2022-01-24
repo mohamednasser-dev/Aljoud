@@ -44,7 +44,8 @@ class HomeCoursesController extends Controller
             $data->my_course = false;
         }
         $lessons_ids = Lesson::where('course_id', $id)->where('show', 1)->pluck('id')->toArray();
-        $data->Count_videos_time = Video::whereIn('lesson_id', $lessons_ids)->where('show', 1)->get()->sum('time');
+        $Count_videos_time = Video::whereIn('lesson_id', $lessons_ids)->where('show', 1)->get()->sum('time') / 60;
+        $data->Count_videos_time = ceil($Count_videos_time);
         $data->Count_articles = Article::whereIn('lesson_id', $lessons_ids)->where('show', 1)->get()->count();
         $data->Count_quizzes = Quiz::whereIn('lesson_id', $lessons_ids)->where('show', 1)->get()->count();
 //        $data->rate = Quiz::whereIn('lesson_id',$lessons_ids)->where('show',1)->get()->count();
