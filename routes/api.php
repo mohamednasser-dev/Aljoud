@@ -257,8 +257,8 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     });
 
     Route::post('/student/buy/course/webhook_json', [HomeCoursesController::class, 'excute_pay']);
-    Route::get('/pay/success', [HomeCoursesController::class, 'pay_sucess'])->name('success');
-    Route::get('/pay/error', [HomeCoursesController::class, 'pay_error'])->name('error');
+    Route::get('/pay/success', [HomeCoursesController::class, 'pay_sucess']);
+    Route::get('/pay/error', [HomeCoursesController::class, 'pay_error']);
 
 });
 
