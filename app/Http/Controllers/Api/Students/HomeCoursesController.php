@@ -324,11 +324,6 @@ class HomeCoursesController extends Controller
                     foreach ($offer->Courses as $course) {
                         $couse_Lesson = Lesson::where('course_id', $course->id)->where('show', 1)->get();
 
-                        $user_course_data['user_id'] = $invoice->user_id ;
-                        $user_course_data['course_id'] =  $course->id;
-                        $user_course_data['status'] = 1;
-                        UserCourses::create($user_course_data);
-
                         foreach ($couse_Lesson as $row) {
                             $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
                             if (!$exists_lesson) {
@@ -340,6 +335,13 @@ class HomeCoursesController extends Controller
                                 $exists_lesson->status = 1;
                                 $exists_lesson->save();
                             }
+                        }
+                        $exists_course = UserCourses::where('user_id',$invoice->user_id )->where('course_id',$course->id)->first();
+                        if(!$exists_course){
+                            $user_course_data['user_id'] = $invoice->user_id ;
+                            $user_course_data['course_id'] =  $course->id;
+                            $user_course_data['status'] = 1;
+                            UserCourses::create($user_course_data);
                         }
                     }
                     send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the offer", "offer" , $offer->id );
