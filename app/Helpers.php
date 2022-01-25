@@ -109,7 +109,6 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
 {
     $key = 'AAAA31ep5NE:APA91bFGi2zgaq3HwWcMz6Q77Me3CnFcxKms93YaC4GKoPQMwNWnwt3vV-58SXlg1HWKH800Li2FLoqhD9RLJvOeVCu-J93aC4T-MTtg6X30f6KVYIZt7sqmxGxjuXboFLc61HF6qjho';
 
-
     $fields = array
     (
         "registration_ids" => (array)$tokens,  //array of user token whom notification sent to
@@ -154,6 +153,7 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
     if ($result === FALSE) {
         die('Curl failed: ' . curl_error($ch));
     }
+
 
 
     curl_close($ch);
