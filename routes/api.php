@@ -196,6 +196,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/users/refresh/{id}', [UsersController::class, 'refresh']);
         Route::get('/users/disable/{id}', [UsersController::class, 'disable']);
         Route::get('/users/delete/{id}', [UsersController::class, 'delete']);
+        Route::get('/users/reset_screen_shoots/{id}', [UsersController::class, 'reset_screen_shoots']);
         Route::post('/users/{type}/store', [UsersController::class, 'store']);
         Route::post('/users/update', [UsersController::class, 'update']);
         Route::post('/users/assign_lesson', [UsersController::class, 'assign_lesson']);
@@ -252,6 +253,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/get_enable_students', [HelpersController::class, 'get_enable_students']);
         Route::get('/inbox_count', [HelpersController::class, 'inbox_count']);
         Route::get('/get_services', [HelpersController::class, 'get_services']);
+        Route::get('/make/screen_shoot', [HelpersController::class, 'make_screen_shoot']);
     });
 
     Route::post('/student/buy/course/webhook_json', [HomeCoursesController::class, 'excute_pay']);

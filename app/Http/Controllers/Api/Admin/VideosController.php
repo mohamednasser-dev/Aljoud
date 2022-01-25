@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Lesson;
+use App\Models\User;
+use App\Models\UserCourses;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -69,15 +72,15 @@ class VideosController extends Controller
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
-                    if($request->url){
+                    if ($request->url) {
 //                        videos upload ...
-                            $file = $request->file('url');
-                            $name = $file->getClientOriginalName();
-                            $ext = $file->getClientOriginalExtension();
-                            // Move Image To Folder ..
-                            $fileNewName = 'img_' . time() . '.' . $ext;
-                            $file->move(public_path('uploads/videos'), $fileNewName);
-                            $input['url'] = $fileNewName;
+                        $file = $request->file('url');
+                        $name = $file->getClientOriginalName();
+                        $ext = $file->getClientOriginalExtension();
+                        // Move Image To Folder ..
+                        $fileNewName = 'img_' . time() . '.' . $ext;
+                        $file->move(public_path('uploads/videos'), $fileNewName);
+                        $input['url'] = $fileNewName;
 
 // cloudinary way
 //                        $uploadedFileUrl = $this->upload($request->file('url'));
@@ -88,6 +91,11 @@ class VideosController extends Controller
                     }
                     $level = Video::create($input);
                     $level = Video::whereId($level->id)->first();
+                    $lesson = Lesson::find($request->lesson_id)->first();
+                    $UserCourses = UserCourses::where('course_id', $lesson->course_id)->pluck('user_id')->toArray();
+                    $users = User::whereIn('id', $UserCourses)->pluck('fcm_token')->toArray();
+                    send($users, 'new notification', "new video  added to the course", "course", $lesson->course_id);
+
                     return msgdata($request, success(), trans('lang.added_s'), $level);
                 }
 
@@ -122,7 +130,7 @@ class VideosController extends Controller
 //                    unset($input['url']);
 
 //                    File::delete($selected_video->url);
-                    if($request->url){
+                    if ($request->url) {
                         $file = $request->file('url');
                         $name = $file->getClientOriginalName();
                         $ext = $file->getClientOriginalExtension();
@@ -140,7 +148,7 @@ class VideosController extends Controller
 //                        $image_format2 = $uploadedFileUrl->getExtension();
 //                        $image_new_story = $image_id2 . '.' . $image_format2;
 //                        $input['url'] = $image_new_story;
-                    }else{
+                    } else {
                         unset($input['url']);
                     }
                     Video::whereId($request->id)->update($input);

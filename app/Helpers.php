@@ -9,7 +9,7 @@ function send_notification($title, $body, $details, $image, $data, $token)
 
     $message = $body;
     $path_to_fcm = 'https://fcm.googleapis.com/fcm/send';
-    $server_key = "AAAAucvSpPc:APA91bGgpd0rDg9pxrKIv3WEpokXldpM0MgK3K4LnZx9ks4T6EIXThIB8HCLuKpZI2ICaamTdm3x8biANjnU8xpjDl9Okuu_4ObHfeBVsFMhyvSxRVnxNTu5Hf8zPFp3vDOi-fPvPoZ9";
+    $server_key = "AAAA31ep5NE:APA91bFGi2zgaq3HwWcMz6Q77Me3CnFcxKms93YaC4GKoPQMwNWnwt3vV-58SXlg1HWKH800Li2FLoqhD9RLJvOeVCu-J93aC4T-MTtg6X30f6KVYIZt7sqmxGxjuXboFLc61HF6qjho";
 
     $headers = array(
         'Authorization:key=' . $server_key,
@@ -17,7 +17,7 @@ function send_notification($title, $body, $details, $image, $data, $token)
     );
 
     $fields = array('registration_ids' => $token,
-        'notification' => array('title' => $title, 'body' => $message, 'details' => $details, 'image' => $image));
+        'notification' => array('title' => $title, 'body' =>  strip_tags($message), 'details' => $details, 'image' => $image));
 
     $payload = json_encode($fields);
     $curl_session = curl_init();
@@ -107,16 +107,16 @@ function msg($request, $status, $key)
 
 function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جديدة فى البريد", $type = 'mail', $chat = null)
 {
-    $key = 'AAAAJwmC-jk:APA91bEjxczUGkd4_WGnJxwPCrqM4hSh06w5Uthqcp-QzCwuNn8FqvVRfi_rv2BAMLpYA1aIN8hqmeN-xVAYjBEB3ktYxjm5HTvm5uZFLFzHtY0BrFFjwE05yAIlkYEFWbSiOdJvRvJj';
+    $key = 'AAAA31ep5NE:APA91bFGi2zgaq3HwWcMz6Q77Me3CnFcxKms93YaC4GKoPQMwNWnwt3vV-58SXlg1HWKH800Li2FLoqhD9RLJvOeVCu-J93aC4T-MTtg6X30f6KVYIZt7sqmxGxjuXboFLc61HF6qjho';
 
 
     $fields = array
     (
-        "registration_ids" => (array)$tokens,  //array of user token whom notification sent two
+        "registration_ids" => (array)$tokens,  //array of user token whom notification sent to
         "priority" => 10,
         'data' => [
             'title' => $title,
-            'body' => $msg,
+            'body' => strip_tags($msg),
             'id' => $chat,
             'type' => $type,
             'icon' => 'myIcon',
@@ -124,7 +124,7 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
         ],
         'notification' => [
             'title' => $title,
-            'body' => $msg,
+            'body' =>  strip_tags($msg),
             'id' => $chat,
             'type' => $type,
             'icon' => 'myIcon',
@@ -154,6 +154,7 @@ function send($tokens, $title = "رسالة جديدة", $msg = "رسالة جد
     if ($result === FALSE) {
         die('Curl failed: ' . curl_error($ch));
     }
+
 
     curl_close($ch);
     return $result;

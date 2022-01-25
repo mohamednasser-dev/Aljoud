@@ -37,8 +37,13 @@ class InstructorsController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                Instructor::where('id', $id)->delete();
-                return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+
+                try {
+                    Instructor::where('id', $id)->delete();
+                    return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+                } catch (\Exception $e) {
+                    return msgdata($request, failed(), trans('lang.error'), (object)[]);
+                }
             } else {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }

@@ -38,13 +38,18 @@ class CurrenciesController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                Currency::where('id', $id)->delete();
-                return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+                try {
+                    Currency::where('id', $id)->delete();
+                    return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+                } catch (\Exception $e) {
+                    return msgdata($request, failed(), trans('lang.error'), (object)[]);
+                }
+
             } else {
-                return msgdata($request, failed(), trans('lang.permission_warrning'),  (object)[]);
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
         } else {
-            return msgdata($request, not_authoize(), trans('lang.not_authorize'),  (object)[]);
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
     }
 
@@ -56,10 +61,10 @@ class CurrenciesController extends Controller
                 $data = Currency::where('id', $id)->first();
                 return msgdata($request, success(), trans('lang.shown_s'), $data);
             } else {
-                return msgdata($request, failed(), trans('lang.permission_warrning'),  (object)[]);
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
         } else {
-            return msgdata($request, not_authoize(), trans('lang.not_authorize'),  (object)[]);
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
     }
 
@@ -79,7 +84,7 @@ class CurrenciesController extends Controller
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 }
                 $user = Currency::create($data);
-                $out = Currency::where('id',$user->id)->first();
+                $out = Currency::where('id', $user->id)->first();
                 return msgdata($request, success(), trans('lang.added_s'), $out);
             } else {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);

@@ -184,14 +184,14 @@ class LoginController extends Controller
             'password' => 'required|confirmed',
         ]);
         if (!$validator->fails()) {
-            $target_user = User::where('code', '!=', null)->where('email', $request->email)->first();
+            $target_user = User::where('email', $request->email)->first();
             if ($target_user != null) {
                 $target_user->password = $request->password;
                 $target_user->code = null;
                 $target_user->save();
                 return sendResponse(200, trans('lang.password_changed_s'), $target_user);
             } else {
-                return msgdata($request, failed(), trans('lang.make_sure_code'), (object)[]);
+                return msgdata($request, failed(), trans('lang.not_found'), (object)[]);
             }
         } else {
             return msgdata($request, failed(), $validator->messages()->first(), (object)[]);

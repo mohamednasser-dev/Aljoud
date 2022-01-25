@@ -140,7 +140,6 @@ class UnivesityController extends Controller
                         $university->delete();
                     } catch (\Exception $e) {
                         return msgdata($request, failed(), trans('lang.error'), (object)[]);
-
                     }
 
                     return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);

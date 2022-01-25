@@ -9,6 +9,8 @@ use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\Quiz;
 use App\Models\University;
+use App\Models\User;
+use App\Models\UserCourses;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -88,6 +90,11 @@ class QuizController extends Controller
                 } else {
                     $level = Quiz::create($input);
                     $level = Quiz::whereId($level->id)->first();
+                    $lesson = Lesson::find($request->lesson_id)->first();
+                    $UserCourses = UserCourses::where('course_id', $lesson->course_id)->pluck('user_id')->toArray();
+                    $users = User::whereIn('id', $UserCourses)->pluck('fcm_token')->toArray();
+                    send($users, 'new notification', "new quiz  added to the course", "course", $lesson->course_id);
+
                     return msgdata($request, success(), trans('lang.added_s'), $level);
                 }
 
