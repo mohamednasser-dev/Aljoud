@@ -104,7 +104,7 @@ class LessonController extends Controller
 
                     $UserCourses = UserCourses::where('course_id', $request->course_id)->pluck('user_id')->toArray();
                     $users = User::whereIn('id', $UserCourses)->pluck('fcm_token')->toArray();
-                    send($users, 'new notification', "new article  added to the course", "course", $request->course_id);
+                    send($users, 'new notification', "new lesson  added to the course", "course", $request->course_id);
 
                     return msgdata($request, success(), trans('lang.added_s'), $lesson_data);
                 }

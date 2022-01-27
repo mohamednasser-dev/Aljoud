@@ -23,10 +23,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/success', function () {
     return view('success');
-});
+})->name('success');
 Route::get('/error', function () {
     return view('error');
-});
+})->name('error');
 //Route::get('qr-code-g', function () {
 //
 //    \SimpleSoftwareIO\QrCode::size(500)
