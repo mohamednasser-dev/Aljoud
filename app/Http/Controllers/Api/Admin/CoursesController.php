@@ -10,6 +10,7 @@ use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\University;
 use App\Models\User;
+use App\Models\UserCourses;
 use App\Models\UserLesson;
 use Illuminate\Http\Request;
 use Validator;
@@ -289,7 +290,6 @@ class CoursesController extends Controller
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 }
-
                 if ($request->users) {
                     $lessons = Lesson::where('course_id', $request->course_id)->pluck('id')->toArray();
                     $lesson_users = UserLesson::whereIn('user_id', $request->users)->whereIn('lesson_id', $lessons)->delete();
@@ -302,32 +302,31 @@ class CoursesController extends Controller
                             ]);
                         }
                     }
-
+                    foreach ($request->users as $user) {
+                       $exists_course = UserCourses::where('course_id',$request->course_id)->where('user_id',$user)->first();
+                       if(!$exists_course){
+                           UserCourses::create([
+                               'user_id' => $user,
+                               'course_id' => $request->course_id,
+                               'status' => 1
+                           ]);
+                       }
+                    }
                     $user_lessons = UserLesson::whereHas('Lesson', function ($q) use ($request) {
                         $q->where('course_id', $request->course_id);
                     })->with('Users')->get()->unique('user_id');
-
-
                     $user_lessons = $user_lessons->pluck('user_id');
                     $users = User::whereIn('id', $user_lessons)->get();
                     return msgdata($request, success(), trans('lang.shown_s'), $users);
-
-
                 } else {
                     return msgdata($request, failed(), trans('lang.error'), (object)[]);
-
                 }
-
             } else {
-
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
             }
-
         } else {
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
-
         }
-
     }
 
     public function DeleteUsers(Request $request)
