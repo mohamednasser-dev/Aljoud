@@ -40,10 +40,7 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
-//        ini_set('max_execution_time', -1); //6 minutes
-//        ini_set('post_max_size', '200M');
-//        ini_set('upload_max_filesize', '200M');
-//        dd(ini_get('upload_max_filesize'));
+
 
     }
 }
