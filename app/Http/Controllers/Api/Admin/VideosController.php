@@ -73,14 +73,16 @@ class VideosController extends Controller
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     if ($request->url) {
+                        $input['url'] = "default";
+
 //                        videos upload ...
-                        $file = $request->file('url');
-                        $name = $file->getClientOriginalName();
-                        $ext = $file->getClientOriginalExtension();
-                        // Move Image To Folder ..
-                        $fileNewName = 'img_' . time() . '.' . $ext;
-                        $file->move(public_path('uploads/videos'), $fileNewName);
-                        $input['url'] = $fileNewName;
+//                        $file = $request->file('url');
+//                        $name = $file->getClientOriginalName();
+//                        $ext = $file->getClientOriginalExtension();
+//                        // Move Image To Folder ..
+//                        $fileNewName = 'img_' . time() . '.' . $ext;
+//                        $file->move(public_path('uploads/videos'), $fileNewName);
+//                        $input['url'] = $fileNewName;
 
 // cloudinary way
 //                        $uploadedFileUrl = $this->upload($request->file('url'));
@@ -88,8 +90,6 @@ class VideosController extends Controller
 //                        $image_format2 = $uploadedFileUrl->getExtension();
 //                        $image_new_story = $image_id2 . '.' . $image_format2;
 //                        $input['url'] = $image_new_story;
-                    }else{
-                        $input['url'] = "default";
                     }
                     $level = Video::create($input);
                     $level = Video::whereId($level->id)->first();
