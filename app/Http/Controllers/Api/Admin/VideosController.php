@@ -64,7 +64,7 @@ class VideosController extends Controller
                 $rules = [
                     'name_ar' => 'required',
                     'name_en' => 'required',
-                    'url' => 'required',
+                    'url' => '',
                     'time' => 'required',
                     'lesson_id' => 'required|exists:lessons,id',
                 ];
@@ -88,6 +88,8 @@ class VideosController extends Controller
 //                        $image_format2 = $uploadedFileUrl->getExtension();
 //                        $image_new_story = $image_id2 . '.' . $image_format2;
 //                        $input['url'] = $image_new_story;
+                    }else{
+                        $input['url'] = "default";
                     }
                     $level = Video::create($input);
                     $level = Video::whereId($level->id)->first();
