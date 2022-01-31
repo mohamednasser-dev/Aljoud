@@ -90,10 +90,12 @@ class QuizController extends Controller
                 } else {
                     $level = Quiz::create($input);
                     $level = Quiz::whereId($level->id)->first();
-                    $lesson = Lesson::find($request->lesson_id)->first();
+                    $lesson = Lesson::find($request->lesson_id);
                     $UserCourses = UserCourses::where('course_id', $lesson->course_id)->pluck('user_id')->toArray();
                     $users = User::whereIn('id', $UserCourses)->pluck('fcm_token')->toArray();
-                    send($users, 'new notification', "new quiz  added to the course", "course", $lesson->course_id);
+                    $message = "new quiz  added to the course ".$lesson->name." in course " .$lesson->Course->name;
+
+                    send($users, 'new notification', $message, "course", $lesson->course_id);
 
                     return msgdata($request, success(), trans('lang.added_s'), $level);
                 }

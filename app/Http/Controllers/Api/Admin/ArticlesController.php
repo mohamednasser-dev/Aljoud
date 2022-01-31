@@ -92,10 +92,11 @@ class ArticlesController extends Controller
                 } else {
                     $level = Article::create($input);
                     $level = Article::whereId($level->id)->first();
-                    $lesson = Lesson::find($request->lesson_id)->first();
+                    $lesson = Lesson::find($request->lesson_id);
                     $UserCourses = UserCourses::where('course_id', $lesson->course_id)->pluck('user_id')->toArray();
                     $users = User::whereIn('id', $UserCourses)->pluck('fcm_token')->toArray();
-                    send($users, 'new notification', "new article  added to the course", "course", $lesson->course_id);
+                    $message = "new article  added to the lesson ".$lesson->name." in course " .$lesson->Course->name;
+                    send($users, 'new notification', $message, "course", $lesson->course_id);
 
                     return msgdata($request, success(), trans('lang.added_s'), $level);
                 }

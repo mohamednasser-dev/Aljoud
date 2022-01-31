@@ -87,6 +87,7 @@ class ExamController extends Controller
                 } else {
                     $level = Exam::create($input);
                     $level = Exam::whereId($level->id)->first();
+
                     return msgdata($request, success(), trans('lang.added_s'), $level);
                 }
 

@@ -99,12 +99,12 @@ class LessonController extends Controller
                            $user_lesson_data['status'] = 1;
                            UserLesson::create($user_lesson_data);
                        }
-
                     }
-
                     $UserCourses = UserCourses::where('course_id', $request->course_id)->pluck('user_id')->toArray();
                     $users = User::whereIn('id', $UserCourses)->pluck('fcm_token')->toArray();
-                    send($users, 'new notification', "new lesson  added to the course", "course", $request->course_id);
+                    $message = "new lesson  added to the course " .$lesson_data->Course->name;
+
+                    send($users, 'new notification', $message, "course", $request->course_id);
 
                     return msgdata($request, success(), trans('lang.added_s'), $lesson_data);
                 }
