@@ -73,16 +73,14 @@ class VideosController extends Controller
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     if ($request->url) {
-                        $input['url'] = "default";
-
 //                        videos upload ...
-//                        $file = $request->file('url');
-//                        $name = $file->getClientOriginalName();
-//                        $ext = $file->getClientOriginalExtension();
-//                        // Move Image To Folder ..
-//                        $fileNewName = 'img_' . time() . '.' . $ext;
-//                        $file->move(public_path('uploads/videos'), $fileNewName);
-//                        $input['url'] = $fileNewName;
+                        $file = $request->file('url');
+                        $name = $file->getClientOriginalName();
+                        $ext = $file->getClientOriginalExtension();
+                        // Move Image To Folder ..
+                        $fileNewName = 'img_' . time() . '.' . $ext;
+                        $file->move(public_path('uploads/videos'), $fileNewName);
+                        $input['url'] = $fileNewName;
 
 // cloudinary way
 //                        $uploadedFileUrl = $this->upload($request->file('url'));
