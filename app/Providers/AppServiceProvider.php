@@ -39,5 +39,10 @@ class AppServiceProvider extends ServiceProvider
                 App::setLocale('ar');
             }
         }
+
+        ini_set('max_execution_time', 1440); //6 minutes
+        ini_set('post_max_size', 2048); //6 minutes
+        ini_set('upload_max_filesize', 2048); //6 minutes
+
     }
 }
