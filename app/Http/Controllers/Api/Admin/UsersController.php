@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\University;
 use App\Models\User;
+use App\Models\UserCourses;
 use App\Models\UserLesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -211,6 +212,14 @@ class UsersController extends Controller
                 $selected_user = User::whereId($request->user_id)->first();
                 if ($selected_user->type != 'student') {
                     return msgdata($request, failed(), trans('lang.should_select_student'), (object)[]);
+                }
+                $exists_course = UserCourses::where('course_id',$request->course_id)->where('user_id',$request->user_id)->first();
+                if(!$exists_course){
+                    UserCourses::create([
+                        'user_id' => $request->user_id,
+                        'course_id' => $request->course_id,
+                        'status' => 1
+                    ]);
                 }
                 $lessons = Lesson::where('course_id', $request->course_id)->where('show', 1)->get();
                 foreach ($lessons as $row) {
