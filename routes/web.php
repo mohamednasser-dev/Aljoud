@@ -37,3 +37,7 @@ Route::get('/error', function () {
 //});
 
 Route::get('/generate-barcode', [\App\Http\Controllers\HomeController::class, 'index'])->name('generate.barcode');
+
+Route::get('/phpinfo', function () {
+    echo phpinfo();
+});
