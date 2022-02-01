@@ -164,10 +164,11 @@ class LessonController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                $lessonUsers = UserLesson::where('lesson_id',$id)->delete();
+
                 $university = Lesson::whereId($id)->first();
                 if ($university) {
                     try {
+                        $lessonUsers = UserLesson::where('lesson_id',$id)->delete();
                         $university->delete();
                     } catch (\Exception $e) {
                         return msgdata($request, failed(), trans('lang.error'), (object)[]);
