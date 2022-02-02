@@ -122,7 +122,7 @@ class VideosController extends Controller
                     'id' => 'required|exists:videos,id',
                     'name_ar' => 'required',
                     'name_en' => 'required',
-                    'url' => 'nullable|file|mimes:mp4',
+                    'url' => 'required',
                     'time' => 'required',
                 ];
                 $validator = Validator::make($request->all(), $rules);
