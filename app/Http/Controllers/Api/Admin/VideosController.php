@@ -152,7 +152,7 @@ class VideosController extends Controller
 //                        $image_new_story = $image_id2 . '.' . $image_format2;
 //                        $input['url'] = $image_new_story;
                     } else {
-                        unset($input['url']);
+//                        unset($input['url']);
                     }
                     Video::whereId($request->id)->update($input);
 
