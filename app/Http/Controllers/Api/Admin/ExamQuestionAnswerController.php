@@ -170,4 +170,21 @@ class ExamQuestionAnswerController extends Controller
     }
 
 
+    public function delete(Request $request, $id)
+    {
+        $input = $request->all();
+
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                ExamQuestionAnswer::where('id', $request->id)->delete();
+                return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+
+            }
+            return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+
+        }
+        return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+    }
 }
