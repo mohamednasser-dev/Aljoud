@@ -64,7 +64,7 @@ class VideosController extends Controller
                 $rules = [
                     'name_ar' => 'required',
                     'name_en' => 'required',
-                    'url' => 'required|file|mimes:mp4|max:102400',
+                    'url' => 'required|file|mimes:mp4',
                     'time' => 'required',
                     'lesson_id' => 'required|exists:lessons,id',
                 ];
