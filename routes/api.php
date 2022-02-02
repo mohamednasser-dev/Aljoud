@@ -190,6 +190,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/quiz-question-status-Action/{id}', [QuizQuestionController::class, 'statusAction']);
 //Course Exams Questions Answer ADD-Delete
         Route::get('/quiz-question-answer/{question_id}', [QuizQuestionAnswerController::class, 'index']);
+        Route::get('/delete-quiz-question-answer/{question_id}', [QuizQuestionAnswerController::class, 'delete']);
         Route::post('/quiz-question-answer-store', [QuizQuestionAnswerController::class, 'store']);
         Route::post('/quiz-question-answer-update', [QuizQuestionAnswerController::class, 'update']);
 //cpanel users
