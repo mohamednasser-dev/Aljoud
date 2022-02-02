@@ -47,18 +47,19 @@ class ExamQuestionAnswerController extends Controller
             if ($user->type == "admin") {
 
                 $rules = [
-
                     'exam_question_id' => 'required|exists:exam_questions,id',
-
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     if ($request->get('answers')) {
-                        if (count($request->answers) < 2) {
-                            return msgdata($request, failed(), trans('lang.answers_must_be_more_two'), (object)[]);
+                        $questions = ExamQuestionAnswer::where('exam_question_id', $request->exam_question_id)->count();
+                        if ($questions == 0) {
+                            if (count($request->answers) < 2) {
+                                return msgdata($request, failed(), trans('lang.answers_must_be_more_two'), (object)[]);
 
+                            }
                         }
                         $flage = false;
                         foreach ($request->get('answers') as $answer) {
