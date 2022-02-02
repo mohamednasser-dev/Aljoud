@@ -133,14 +133,15 @@ class VideosController extends Controller
 
 //                    File::delete($selected_video->url);
                     if ($request->url) {
-                        $file = $request->file('url');
-                        $name = $file->getClientOriginalName();
-                        $ext = $file->getClientOriginalExtension();
-                        // Move Image To Folder ..
-                        $fileNewName = 'img_' . time() . '.' . $ext;
-                        $file->move(public_path('uploads/videos'), $fileNewName);
-                        $input['url'] = $fileNewName;
-                        $selected_video = Video::find($request->id);
+//                        $file = $request->file('url');
+//                        $name = $file->getClientOriginalName();
+//                        $ext = $file->getClientOriginalExtension();
+//                        // Move Image To Folder ..
+//                        $fileNewName = 'img_' . time() . '.' . $ext;
+//                        $file->move(public_path('uploads/videos'), $fileNewName);
+//                        $input['url'] = $fileNewName;
+//                        $selected_video = Video::find($request->id);
+                        $input['url'] = $request->url;
 
 //                        unlink($selected_video->url);
 
