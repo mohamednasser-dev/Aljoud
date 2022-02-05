@@ -81,6 +81,7 @@ class LoginController extends Controller
         //Request is valid, create new user
         $data['password'] = $request->password;
         $data['type'] = 'student';
+        $data['verified'] = 1;
         $user = User::create($data);
         if ($user) {
             $idString = (string)$user->id;
@@ -88,10 +89,12 @@ class LoginController extends Controller
             Storage::disk('public')->put($qr_image_name, base64_decode(DNS2DFacade::getBarcodePNG($idString, "QRCODE")));
             $user->qr_image = $qr_image_name;
             $user->save();
-            $four_digit_random_number = mt_rand(1000, 9999);
-            $user->code = $four_digit_random_number;
-            $user->save();
-            Mail::to($request->email)->send(new SendCode($four_digit_random_number));
+            //FOR send mail with verify code to user ...
+//            $four_digit_random_number = mt_rand(1000, 9999);
+//            $user->code = $four_digit_random_number;
+//            $user->save();
+//            Mail::to($request->email)->send(new SendCode($four_digit_random_number));
+
             return msgdata($request, success(), trans('lang.register_done'), (object)[]);
         }
     }
