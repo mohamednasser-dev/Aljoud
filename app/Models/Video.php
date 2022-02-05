@@ -11,12 +11,12 @@ class Video extends Model
     use HasFactory;
     protected $guarded = [];
 
-    public function getUrlAttribute($url){
-        if (!empty($url)) {
-            return asset('uploads/videos') . '/' . $url;
-        }
-        return asset('uploads/videos/default.jpg');
-    }
+//    public function getUrlAttribute($url){
+//        if (!empty($url)) {
+//            return asset('uploads/videos') . '/' . $url;
+//        }
+//        return asset('uploads/videos/default.jpg');
+//    }
     protected $appends = ['name'];
 
     public function getNameAttribute()

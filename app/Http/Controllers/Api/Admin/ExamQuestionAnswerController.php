@@ -47,18 +47,19 @@ class ExamQuestionAnswerController extends Controller
             if ($user->type == "admin") {
 
                 $rules = [
-
                     'exam_question_id' => 'required|exists:exam_questions,id',
-
                 ];
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     if ($request->get('answers')) {
-                        if (count($request->answers) < 2) {
-                            return msgdata($request, failed(), trans('lang.answers_must_be_more_two'), (object)[]);
+                        $questions = ExamQuestionAnswer::where('exam_question_id', $request->exam_question_id)->count();
+                        if ($questions == 0) {
+                            if (count($request->answers) < 2) {
+                                return msgdata($request, failed(), trans('lang.answers_must_be_more_two'), (object)[]);
 
+                            }
                         }
                         $flage = false;
                         foreach ($request->get('answers') as $answer) {
@@ -169,4 +170,21 @@ class ExamQuestionAnswerController extends Controller
     }
 
 
+    public function delete(Request $request, $id)
+    {
+        $input = $request->all();
+
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                ExamQuestionAnswer::where('id', $request->id)->delete();
+                return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+
+            }
+            return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+
+        }
+        return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+    }
 }

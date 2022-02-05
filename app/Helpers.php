@@ -208,11 +208,11 @@ function upload_multiple($file, $dir)
 }
 
 
+
 if (!function_exists('HttpPost')) {
     function HttpPost($url_path, $data = [])
     {
         $apiURL = 'https://accept.paymob.com/api/' . $url_path;
-
         // Create curl resource
         $ch = curl_init($apiURL);
         // Request headers

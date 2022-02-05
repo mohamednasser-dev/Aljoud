@@ -168,6 +168,8 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/exam-question-status-Action/{id}', [ExamQuestionController::class, 'statusAction']);
 //Course Exams Questions Answer ADD-Delete
         Route::get('/exam-question-answer/{question_id}', [ExamQuestionAnswerController::class, 'index']);
+        Route::get('/delete-exam-question-answer/{question_id}', [ExamQuestionAnswerController::class, 'delete']);
+
         Route::post('/exam-question-answer-store', [ExamQuestionAnswerController::class, 'store']);
         Route::post('/exam-question-answer-update', [ExamQuestionAnswerController::class, 'update']);
 //lesson Quize Crud
@@ -188,6 +190,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/quiz-question-status-Action/{id}', [QuizQuestionController::class, 'statusAction']);
 //Course Exams Questions Answer ADD-Delete
         Route::get('/quiz-question-answer/{question_id}', [QuizQuestionAnswerController::class, 'index']);
+        Route::get('/delete-quiz-question-answer/{question_id}', [QuizQuestionAnswerController::class, 'delete']);
         Route::post('/quiz-question-answer-store', [QuizQuestionAnswerController::class, 'store']);
         Route::post('/quiz-question-answer-update', [QuizQuestionAnswerController::class, 'update']);
 //cpanel users

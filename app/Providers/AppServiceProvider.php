@@ -39,5 +39,8 @@ class AppServiceProvider extends ServiceProvider
                 App::setLocale('ar');
             }
         }
+
+
+
     }
 }

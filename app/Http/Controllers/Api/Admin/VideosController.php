@@ -64,7 +64,7 @@ class VideosController extends Controller
                 $rules = [
                     'name_ar' => 'required',
                     'name_en' => 'required',
-                    'url' => 'required|file|mimes:mp4',
+                    'url' => 'required',
                     'time' => 'required',
                     'lesson_id' => 'required|exists:lessons,id',
                 ];
@@ -74,13 +74,13 @@ class VideosController extends Controller
                 } else {
                     if ($request->url) {
 //                        videos upload ...
-                        $file = $request->file('url');
-                        $name = $file->getClientOriginalName();
-                        $ext = $file->getClientOriginalExtension();
-                        // Move Image To Folder ..
-                        $fileNewName = 'img_' . time() . '.' . $ext;
-                        $file->move(public_path('uploads/videos'), $fileNewName);
-                        $input['url'] = $fileNewName;
+//                        $file = $request->file('url');
+//                        $name = $file->getClientOriginalName();
+//                        $ext = $file->getClientOriginalExtension();
+//                        // Move Image To Folder ..
+//                        $fileNewName = 'img_' . time() . '.' . $ext;
+//                        $file->move(public_path('uploads/videos'), $fileNewName);
+                        $input['url'] = $request->url;
 
 // cloudinary way
 //                        $uploadedFileUrl = $this->upload($request->file('url'));
@@ -122,7 +122,7 @@ class VideosController extends Controller
                     'id' => 'required|exists:videos,id',
                     'name_ar' => 'required',
                     'name_en' => 'required',
-                    'url' => 'nullable|file|mimes:mp4',
+                    'url' => 'required',
                     'time' => 'required',
                 ];
                 $validator = Validator::make($request->all(), $rules);
@@ -133,14 +133,15 @@ class VideosController extends Controller
 
 //                    File::delete($selected_video->url);
                     if ($request->url) {
-                        $file = $request->file('url');
-                        $name = $file->getClientOriginalName();
-                        $ext = $file->getClientOriginalExtension();
-                        // Move Image To Folder ..
-                        $fileNewName = 'img_' . time() . '.' . $ext;
-                        $file->move(public_path('uploads/videos'), $fileNewName);
-                        $input['url'] = $fileNewName;
-                        $selected_video = Video::find($request->id);
+//                        $file = $request->file('url');
+//                        $name = $file->getClientOriginalName();
+//                        $ext = $file->getClientOriginalExtension();
+//                        // Move Image To Folder ..
+//                        $fileNewName = 'img_' . time() . '.' . $ext;
+//                        $file->move(public_path('uploads/videos'), $fileNewName);
+//                        $input['url'] = $fileNewName;
+//                        $selected_video = Video::find($request->id);
+                        $input['url'] = $request->url;
 
 //                        unlink($selected_video->url);
 
@@ -151,7 +152,7 @@ class VideosController extends Controller
 //                        $image_new_story = $image_id2 . '.' . $image_format2;
 //                        $input['url'] = $image_new_story;
                     } else {
-                        unset($input['url']);
+//                        unset($input['url']);
                     }
                     Video::whereId($request->id)->update($input);
 
