@@ -54,22 +54,22 @@ class ExamQuestionAnswerController extends Controller
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     if ($request->get('answers')) {
-                        $questions = ExamQuestionAnswer::where('exam_question_id', $request->exam_question_id)->count();
-                        if ($questions == 0) {
-                            if (count($request->answers) < 2) {
-                                return msgdata($request, failed(), trans('lang.answers_must_be_more_two'), (object)[]);
-
-                            }
-                        }
-                        $flage = false;
-                        foreach ($request->get('answers') as $answer) {
-                            if ($answer['correct'] == 1) {
-                                $flage = true;
-                            }
-                        }
-                        if (!$flage) {
-                            return msgdata($request, failed(), trans('lang.must_be_one_answer_correct'), (object)[]);
-                        }
+//                        $questions = ExamQuestionAnswer::where('exam_question_id', $request->exam_question_id)->count();
+//                        if ($questions == 0) {
+//                            if (count($request->answers) < 2) {
+//                                return msgdata($request, failed(), trans('lang.answers_must_be_more_two'), (object)[]);
+//
+//                            }
+//                        }
+//                        $flage = false;
+//                        foreach ($request->get('answers') as $answer) {
+//                            if ($answer['correct'] == 1) {
+//                                $flage = true;
+//                            }
+//                        }
+//                        if (!$flage) {
+//                            return msgdata($request, failed(), trans('lang.must_be_one_answer_correct'), (object)[]);
+//                        }
 
                         foreach ($request->answers as $answer) {
 
