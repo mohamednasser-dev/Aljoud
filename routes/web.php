@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/terms', function () {
+    return view('front.terms-and-conditions');
+});
 Route::post('login', [\App\Http\Controllers\Api\LoginController::class, 'login']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
