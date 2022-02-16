@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/terms', function () {
-    return view('front.terms-and-conditions');
+Route::get('/privacy_policy', function () {
+    return view('front.privacy_policy');
 });
 Route::post('login', [\App\Http\Controllers\Api\LoginController::class, 'login']);
 

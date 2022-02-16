@@ -60,11 +60,11 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mr-auto"></ul>
-{{--                    <ul class="navbar-nav">--}}
-{{--                        <li class="nav-item">--}}
-{{--                            <a class="nav-link navbar-font" href="{{url('/')}}">home<span--}}
-{{--                                    class="sr-only">(current)</span></a>--}}
-{{--                        </li>--}}
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link navbar-font" href="{{url('/')}}">home<span
+                                    class="sr-only">(current)</span></a>
+                        </li>
 {{--                        <li class="nav-item">--}}
 {{--                            <a class="nav-link navbar-font" href="#">terms and condition</a>--}}
 {{--                        </li>--}}
@@ -74,10 +74,10 @@
 {{--                        <li class="nav-item">--}}
 {{--                            <a class="nav-link navbar-font" href="#">contact us</a>--}}
 {{--                        </li>--}}
-{{--                        <li class="nav-item">--}}
-{{--                            <a class="nav-link navbar-font" href="#">privacy policy</a>--}}
-{{--                        </li>--}}
-{{--                    </ul>--}}
+                        <li class="nav-item">
+                            <a class="nav-link navbar-font" href="{{url('/privacy_policy')}}">privacy policy</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -153,7 +153,7 @@
 
                     <!--Grid column-->
                     <div class="col-lg-2 col-md-2 mb-md-0 footer-items">
-                        <span class="footer-title text-uppercase mb-4">Download</span>
+{{--                        <span class="footer-title text-uppercase mb-4">Download</span>--}}
 
 {{--                        <ul class="list-unstyled">--}}
 {{--                            <li>--}}
@@ -195,7 +195,7 @@
             <!-- Copyright -->
             <div class="text-center" style="background-color: rgba(0, 0, 0, 0.2);font-size: 12px">
 
-               
+
             </div>
         </footer>
     </div>
