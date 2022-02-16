@@ -1,6 +1,6 @@
 @extends('layouts.landing.app')
 
-@section('title','Terms & Conditions')
+@section('title','Home')
 
 @section('content')
     <main>
