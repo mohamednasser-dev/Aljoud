@@ -66,13 +66,13 @@
                                     class="sr-only">(current)</span></a>
                         </li>
 {{--                        <li class="nav-item">--}}
-{{--                            <a class="nav-link navbar-font" href="#">terms and condition</a>--}}
+{{--                            <a class="nav-link navbar-font" href="{{url('/')}}">terms and condition</a>--}}
 {{--                        </li>--}}
 {{--                        <li class="nav-item">--}}
-{{--                            <a class="nav-link navbar-font" href="#">about us</a>--}}
+{{--                            <a class="nav-link navbar-font" href="{{url('/')}}">about us</a>--}}
 {{--                        </li>--}}
 {{--                        <li class="nav-item">--}}
-{{--                            <a class="nav-link navbar-font" href="#">contact us</a>--}}
+{{--                            <a class="nav-link navbar-font" href="{{url('/')}}">contact us</a>--}}
 {{--                        </li>--}}
                         <li class="nav-item">
                             <a class="nav-link navbar-font" href="{{url('/privacy_policy')}}">privacy policy</a>
@@ -100,7 +100,7 @@
                             class="row d-flex justify-content-center justify-content-md-start text-center text-md-left">
                             <div class="col-md-12 col-sm-12 d-flex justify-content-center justify-content-md-start text-center text-md-left"
                                  style="padding: 0">
-                                <a class="" href="#">
+                                <a class="" href="{{url('/')}}">
                                     <img class="rounded float-left"
                                          onerror="this.src='{{asset('uploads\users\default.jpg')}}'"
                                          src="{{asset('uploads\users\default.jpg')}}"
@@ -116,12 +116,12 @@
                         </div>
 
                         <div class="mt-4">
-                            <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="text-white" style="margin-left: 44px"><i
+                            <a href="{{url('/')}}" class="text-white"><i class="fab fa-twitter"></i></a>
+                            <a href="{{url('/')}}" class="text-white" style="margin-left: 44px"><i
                                     class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="text-white" style="margin-left: 44px"><i
+                            <a href="{{url('/')}}" class="text-white" style="margin-left: 44px"><i
                                     class="fab fa-linkedin"></i></a>
-                            <a href="#" class="text-white" style="margin-left: 44px"><i
+                            <a href="{{url('/')}}" class="text-white" style="margin-left: 44px"><i
                                     class="fab fa-skype"></i></a>
                         </div>
                     </div>
@@ -138,10 +138,10 @@
 {{--                                <a href="{#" class="footer-item text-white">{{__('messages.about_us')}}</a>--}}
 {{--                            </li>--}}
 {{--                            <li>--}}
-{{--                                <a href="#" class="footer-item text-white">{{__('messages.contact_us')}}</a>--}}
+{{--                                <a href="{{url('/')}}" class="footer-item text-white">{{__('messages.contact_us')}}</a>--}}
 {{--                            </li>--}}
 {{--                            <li>--}}
-{{--                                <a href="#" class="footer-item text-white">{{__('messages.privacy_policy')}}</a>--}}
+{{--                                <a href="{{url('/')}}" class="footer-item text-white">{{__('messages.privacy_policy')}}</a>--}}
 {{--                            </li>--}}
 {{--                            <li>--}}
 {{--                                <a href="{{url('terms')}}" class="footer-item text-white">{{__('messages.terms_and_condition')}}</a>--}}
