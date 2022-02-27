@@ -176,7 +176,6 @@ class QuizQuestionAnswerController extends Controller
     public function delete(Request $request, $id)
     {
         $input = $request->all();
-
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
