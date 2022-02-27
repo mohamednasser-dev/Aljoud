@@ -179,7 +179,7 @@ class QuizQuestionAnswerController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                QuizQuestionAnswer::where('id', $request->id)->delete();
+                QuizQuestionAnswer::where('id', $id)->delete();
                 return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
 
             }

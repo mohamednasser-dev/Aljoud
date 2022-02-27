@@ -177,7 +177,7 @@ class ExamQuestionAnswerController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
-                ExamQuestionAnswer::where('id', $request->id)->delete();
+                ExamQuestionAnswer::where('id', $id)->delete();
                 return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
 
             }
