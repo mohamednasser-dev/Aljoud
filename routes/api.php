@@ -245,6 +245,9 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/Ask-in-course', [InboxController::class, 'AskInCourse']);
     Route::post('/Ask-in-lesson', [InboxController::class, 'AskInLesson']);
     Route::post('/Request-service', [InboxController::class, 'RequestService']);
+    Route::get('/delete-inboxes/{id}', [InboxController::class, 'destroy']);
+    Route::post('/storeInboxCourse', [InboxController::class, 'storeInboxCourse']);
+
     // helpers
     Route::group(['prefix' => 'helpers'], function () {
         Route::get('/get_universities', [HelpersController::class, 'get_universities']);

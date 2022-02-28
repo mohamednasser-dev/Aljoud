@@ -9,6 +9,7 @@ use App\Models\InboxFile;
 use App\Models\Lesson;
 use App\Models\RequestType;
 use App\Models\User;
+use App\Models\UserCourses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -176,7 +177,7 @@ class InboxController extends Controller
             try {
                 $inbox->save();
             } catch (\Exception $e) {
-                dd($e);
+
                 return msgdata($request, failed(), trans('lang.error'), (object)[]);
             }
             if ($request->file != null) {
@@ -427,6 +428,80 @@ class InboxController extends Controller
         } else {
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
 
+        }
+    }
+
+
+    public function destroy(Request $request, $id)
+    {
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $university = Inbox::whereId($id)->first();
+                if ($university) {
+                    try {
+                        $university->delete();
+                    } catch (\Exception $e) {
+                        return msgdata($request, failed(), trans('lang.error'), (object)[]);
+                    }
+                    return msgdata($request, success(), trans('lang.deleted_s'), (object)[]);
+                } else {
+                    return msgdata($request, not_found(), trans('lang.not_found'), (object)[]);
+                }
+            } else {
+                return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+        }
+    }
+
+    public function storeInboxCourse(Request $request)
+    {
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $rules =
+                    [
+                        'message' => 'required|string',
+                        'course_id' => 'required|exists:courses,id',
+                        'file' => 'nullable|array',
+                        'file.*' => 'mimes:jpg,jpeg,png,gif,bmp,pdf,doc,docx',
+                    ];
+
+
+                $validator = Validator::make($request->all(), $rules);
+                if ($validator->fails()) {
+                    return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
+                }
+
+                $userCourses = UserCourses::where('course_id', $request->course_id)->pluck('user_id')->toArray();
+
+                foreach ($userCourses as $user_id) {
+                    $inbox = new Inbox();
+                    $inbox->message = $request->message;
+                    $inbox->receiver_id = $user_id;
+                    $inbox->sender_id = $user->id;
+                    $inbox->save();
+
+                    if ($request->file != null) {
+                        foreach ($request->file as $file) {
+                            InboxFile::create([
+                                'inbox_id' => $inbox->id,
+                                'file' => $file
+                            ]);
+                        }
+                    }
+                }
+                return msgdata($request, success(), trans('lang.inbox_sent'), (object)[]);
+
+            } else {
+                return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
+
+            }
         }
     }
 
