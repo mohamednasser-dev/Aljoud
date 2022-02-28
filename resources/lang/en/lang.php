@@ -2,6 +2,10 @@
 
 return [
 
+    'name' => 'name',
+    'email' => 'email',
+    'phone' => 'phone',
+    'created_at' => 'created at',
 
     'login_s' => 'login success',
     'added_s' => 'Added successfully',

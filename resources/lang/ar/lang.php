@@ -3,6 +3,11 @@
 return [
 
 
+    'name' => 'الاسم',
+    'email' => 'البريد الإلكتروني',
+    'phone' => 'رقم الجوال',
+    'created_at' => 'تاريخ الانشاء',
+
     'should_choose_valid_course' => 'يجب اختيار كورس اولا',
     'should_choose_valid_offer' => 'يجب اختيار عرض اولا',
     'login_s' => 'تم تسجيل الدخول بنجاح',

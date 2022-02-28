@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Milon\Barcode\Facades\DNS2DFacade;
 use Validator;
+use PDF;
 
 class UsersController extends Controller
 {
@@ -282,11 +283,16 @@ class UsersController extends Controller
     {
         $input = $request->all();
         $user = check_api_token($request->header('api_token'));
+
         if ($user) {
             if ($user->type == "admin") {
                 $user_lessons = UserLesson::where('user_id', $id)->pluck('lesson_id')->toArray();
                 $user_courses = Lesson::whereIn('id', $user_lessons)->pluck('course_id')->toArray();
-                $courses = Course::whereIn('id', $user_courses)->get();
+                $courses = Course::whereIn('id', $user_courses)->get()->map(function($data) use($id){
+                    $user_lessons = UserLesson::where('user_id', $id)->pluck('lesson_id')->toArray();
+                    $data->lessons = Lesson::whereIn('id', $user_lessons)->where('course_id',$data->id)->get();
+                    return $data;
+                });
                 return msgdata($request, success(), trans('lang.shown_s'), $courses);
             } else {
                 return msgdata($request, failed(), trans('lang.permission_warrning'), (object)[]);
@@ -295,4 +301,30 @@ class UsersController extends Controller
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
     }
+        public function export_pdf(Request $request, $type)
+        {
+            $user = check_api_token($request->header('api_token'));
+            $lang = check_api_token($request->header('lang'));
+            if ($user) {
+                if ($user->type == "admin") {
+                    $result = User::where('type', $type);
+                    if ($request->search) {
+                        $result = $result->where(function ($e) use ($request) {
+                            $e->where('name', 'like', '%' . $request->search . '%')
+                                ->orWhere('phone', 'like', '%' . $request->search . '%')
+                                ->orWhere('email', 'like', '%' . $request->search . '%');
+                        });
+                    }
+                    $result = $result->orderBy('created_at', 'desc')->get();
+                    $pdf = PDF::loadView('print.users', ['data' => $result,'lang'=>$lang]);
+                    $num = rand(00000,99999) .time();
+                    $pdf->save(public_path() .'/uploads/print/users/'.$num.'.pdf');
+                    return msgdata($request, success(), trans('lang.shown_s'), env('APP_URL')  .'/uploads/print/users/'.$num.'.pdf');
+                } else {
+                    return msgdata($request, failed(), trans('lang.permission_warrning'), []);
+                }
+            } else {
+                return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+            }
+        }
 }
