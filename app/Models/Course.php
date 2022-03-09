@@ -106,6 +106,7 @@ class Course extends Model
         }
         $sum_rates = CourseRate::where('course_id',$this->id)->get()->sum('rate');
         $rate = $sum_rates / $count_rates;
+        $rate = ceil($rate);
         return $rate ;
     }
 
