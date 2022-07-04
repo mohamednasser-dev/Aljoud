@@ -13,6 +13,9 @@ class UserCourses extends Model
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i',
     ];
+    protected $dispatchesEvents = [
+        'created'=>'App\Events\IncrementStudentsCountEvent'
+    ];
 
     public function Course()
     {
@@ -23,4 +26,6 @@ class UserCourses extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+//    protected $dispatchesEvents = ['created' => 'App\Events\NotificationEvent'];
 }

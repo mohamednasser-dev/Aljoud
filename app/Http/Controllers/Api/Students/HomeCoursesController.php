@@ -34,10 +34,10 @@ class HomeCoursesController extends Controller
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             //user courses
-            $user_course_lessons = UserCourses::where('course_id',$id)->where('user_id', $user->id)->where('status',1)->first();
-            if($user_course_lessons){
+            $user_course_lessons = UserCourses::where('course_id', $id)->where('user_id', $user->id)->where('status', 1)->first();
+            if ($user_course_lessons) {
                 $data->my_course = true;
-            }else{
+            } else {
                 $data->my_course = false;
             }
         } else {
@@ -224,7 +224,7 @@ class HomeCoursesController extends Controller
                         "cartTotal": ' . $price . ',
                         "currency": "' . $Currency . '",
                         "customer": {
-                            "first_name": "' . $user->name . ' '.$user->phone.'",
+                            "first_name": "' . $user->name . ' ' . $user->phone . '",
                             "last_name": "' . $user->id . '",
                             "email": "' . $user->email . '",
                             "phone": "01018203630",
@@ -294,7 +294,7 @@ class HomeCoursesController extends Controller
                 $id = $invoice->course_id;
                 $course = Course::where('id', $id)->where('show', 1)->first();
                 if ($course) {
-                    $user_course_data['user_id'] = $invoice->user_id ;
+                    $user_course_data['user_id'] = $invoice->user_id;
                     $user_course_data['status'] = 1;
                     $user_course_data['course_id'] = $id;
                     UserCourses::create($user_course_data);
@@ -311,13 +311,13 @@ class HomeCoursesController extends Controller
                         }
                     }
 
-                    send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the course", "course" , $course->id );
+                    send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the course", "course", $course->id);
 
                     return "course payed successfully";
                 } else {
                     return "no course selected";
                 }
-            } else {
+            } elseif ($invoice->type == 'offer') {
                 $id = $invoice->offer_id;
                 $offer = Offer::where('id', $id)->where('show', 1)->first();
                 if ($offer) {
@@ -336,19 +336,46 @@ class HomeCoursesController extends Controller
                                 $exists_lesson->save();
                             }
                         }
-                        $exists_course = UserCourses::where('user_id',$invoice->user_id )->where('course_id',$course->id)->first();
-                        if(!$exists_course){
-                            $user_course_data['user_id'] = $invoice->user_id ;
-                            $user_course_data['course_id'] =  $course->id;
+                        $exists_course = UserCourses::where('user_id', $invoice->user_id)->where('course_id', $course->id)->first();
+                        if (!$exists_course) {
+                            $user_course_data['user_id'] = $invoice->user_id;
+                            $user_course_data['course_id'] = $course->id;
                             $user_course_data['status'] = 1;
                             UserCourses::create($user_course_data);
                         }
                     }
-                    send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the offer", "offer" , $offer->id );
+                    send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the offer", "offer", $offer->id);
 
                     return "offer payed successfully";
                 } else {
                     return "should choose valid offer";
+                }
+            } elseif ($invoice->type == 'courses_array') {
+                $ids = explode(',',$invoice->courses_array) ;
+                $courses = Course::whereIn('id', $ids)->where('show', 1)->get();
+                if (count($courses) > 0) {
+                    foreach ($courses as $course) {
+                        $user_course_data['user_id'] = $invoice->user_id;
+                        $user_course_data['status'] = 1;
+                        $user_course_data['course_id'] = $course->id;
+                        UserCourses::create($user_course_data);
+                        foreach ($course->Couse_Lesson as $row) {
+                            $exists_lesson = UserLesson::where('user_id', $user->id)->where('lesson_id', $row->id)->first();
+                            if (!$exists_lesson) {
+                                $user_data['status'] = 1;
+                                $user_data['lesson_id'] = $row->id;
+                                $user_data['user_id'] = $user->id;
+                                UserLesson::create($user_data);
+                            } else {
+                                $exists_lesson->status = 1;
+                                $exists_lesson->save();
+                            }
+                        }
+                        send($user->fcm_token, 'رسالة جديدة', "Successfully subscribed to the course", "course", $course->id);
+                    }
+                    return "course payed successfully";
+                } else {
+                    return "no course selected";
                 }
             }
         } else {

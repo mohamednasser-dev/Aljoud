@@ -96,4 +96,5 @@ class User extends Authenticatable
         return parent::castAttribute($key, $value);
     }
 
+
 }

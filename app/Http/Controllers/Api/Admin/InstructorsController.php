@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Instructor;
+use App\Models\Lesson;
 use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -32,6 +33,33 @@ class InstructorsController extends Controller
         }
     }
 
+    public function Sort(Request $request)
+    {
+        $input = $request->all();
+        $user = check_api_token($request->header('api_token'));
+        if ($user) {
+            if ($user->type == "admin") {
+                if ($request->get('rows')) {
+                    foreach ($request->get('rows') as $row) {
+                        Instructor::whereId($row['id'])->update([
+                            'sort' => $row['sort'],
+                        ]);
+                    }
+                    return response()->json(msgdata($request, success(), trans('lang.updated_s'), (object)[]));
+                } else {
+                    return response()->json(msgdata($request, failed(), trans('lang.sort_failed'), (object)[]));
+                }
+            } else {
+
+                return msgdata($request, failed(), trans('lang.permission_warrning'), []);
+            }
+
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+
+        }
+
+    }
     public function delete(Request $request, $id)
     {
         $user = check_api_token($request->header('api_token'));

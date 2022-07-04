@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Admin\CurrenciesController;
 use App\Http\Controllers\Api\Admin\RequestTypesController;
 use App\Http\Controllers\Api\InboxController;
 use App\Http\Controllers\Api\Students\ProfileController;
+use App\Http\Controllers\Api\Students\CartController;
 use App\Http\Controllers\Api\Admin\SpecialistController;
 use App\Http\Controllers\Api\Admin\UnivesityController;
 use App\Http\Controllers\Api\Students\HomeCoursesController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\Api\Admin\LevelsController;
 use App\Http\Controllers\Api\Admin\OffersController;
 use App\Http\Controllers\Api\Admin\UsersController;
 use App\Http\Controllers\Api\Admin\ExamController;
+use App\Http\Controllers\Api\Admin\SettingsController;
 use App\Http\Controllers\Api\Admin\QuizController;
 use App\Http\Controllers\Api\HelpersController;
 use App\Http\Controllers\Api\LoginController;
@@ -80,6 +82,12 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::get('/offers', [HomeController::class, 'offers']);
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::post('/update/profile', [ProfileController::class, 'update']);
+
+    Route::get('/student/cart', [CartController::class, 'get_cart']);
+    Route::get('/student/cart/count', [CartController::class, 'get_cart_count']);
+    Route::post('/student/cart/store', [CartController::class, 'store']);
+    Route::post('/student/cart/remove', [CartController::class, 'remove']);
+    Route::post('/student/cart/check_out', [CartController::class, 'check_out']);
 
     Route::group(['prefix' => 'admin'], function () {
 //universities Crud
@@ -211,6 +219,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('/instructors/delete/{id}', [InstructorsController::class, 'delete']);
         Route::get('/instructors/data/{id}', [InstructorsController::class, 'show']);
         Route::post('/instructors/store', [InstructorsController::class, 'store']);
+        Route::post('/instructors/sort', [InstructorsController::class, 'sort']);
         Route::post('/instructors/update', [InstructorsController::class, 'update']);
 //currencies
         Route::get('/currencies', [CurrenciesController::class, 'index']);
@@ -232,6 +241,10 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::post('/request-types-update', [RequestTypesController::class, 'update']);
         Route::get('/request-types-destroy/{id}', [RequestTypesController::class, 'destroy']);
         Route::get('/request-types-status-Action/{id}', [RequestTypesController::class, 'statusAction']);
+
+
+        Route::get('/settings/term_period', [SettingsController::class, 'index']);
+        Route::post('/settings/update/term_period', [SettingsController::class, 'update_term_period']);
     });
 
 //    inboxes

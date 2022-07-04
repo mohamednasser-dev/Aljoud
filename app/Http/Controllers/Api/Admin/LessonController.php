@@ -90,6 +90,10 @@ class LessonController extends Controller
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     $lesson = Lesson::create($input);
+                    $univ = University::whereId($lesson->Course->Level->College->university_id)->first();
+                    $univ->lessons +=  1 ;
+                    $univ->save();
+
                     $lesson_data = Lesson::whereId($lesson->id)->first();
                     if($lesson_data){
                        $exits_user_courses = UserCourses::where('course_id',$request->course_id)->where('status',1)->get();

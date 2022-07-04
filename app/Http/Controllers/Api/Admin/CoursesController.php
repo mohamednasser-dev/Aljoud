@@ -105,6 +105,9 @@ class CoursesController extends Controller
                 } else {
 
                     $level = Course::create($input);
+                    $univ = University::whereId($level->Level->College->university_id)->first();
+                    $univ->courses +=  1 ;
+                    $univ->save();
                     $level = Course::whereId($level->id)->first();
                     return msgdata($request, success(), trans('lang.added_s'), $level);
                 }

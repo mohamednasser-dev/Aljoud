@@ -3,6 +3,9 @@
 return [
 
 
+    'course_exists_in_cart' => 'المادة المحدد موجود من قبل في السلة',
+    'course_exists_in_your_courses' => 'المادة المحدد موجود من قبل في موادك',
+    'cart_empty' => 'سلتك فارغة',
     'name' => 'الاسم',
     'email' => 'البريد الإلكتروني',
     'phone' => 'رقم الجوال',

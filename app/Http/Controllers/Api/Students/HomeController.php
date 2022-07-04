@@ -42,15 +42,8 @@ class HomeController extends Controller
     public function colleges(Request $request,$id)
     {
         $university_data = University::where('id',$id)->first();
-        $university_data->spiecialest = $university_data->Specialists->count();
-        $colleges_ids = College::where('university_id',$id)->pluck('id')->toArray();
-        $levels_ids = Level::whereIn('college_id',$colleges_ids)->pluck('id')->toArray();
-        $university_data->courses = Course::whereIn('level_id',$levels_ids)->get()->count();
-        $courses_id = Course::whereIn('level_id',$levels_ids)->pluck('id')->toArray();
-        $university_data->lessons = Lesson::whereIn('course_id',$courses_id)->get()->count();
-        $university_data->students = UserLesson::where('status',1)->whereHas('Lesson', function ($q) use ($courses_id) {
-            $q->whereIn('course_id', $courses_id);
-        })->with('Users')->get()->unique('user_id')->count();
+        $university_data->specialists = $university_data->Specialists;
+
 
 
         return msgdata($request, success(), trans('lang.shown_s'), $university_data);

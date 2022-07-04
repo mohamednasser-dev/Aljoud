@@ -85,6 +85,10 @@ class SpecialistController extends Controller
                     return msgdata($request, failed(), $validator->messages()->first(), (object)[]);
                 } else {
                     $college = College::create($input);
+                    $univ = University::whereId($request->university_id)->first();
+                    $univ->spiecialest +=  1 ;
+                    $univ->save();
+
                     $college = College::whereId($college->id)->first();
                     return msgdata($request, success(), trans('lang.added_s'), $college);
                 }

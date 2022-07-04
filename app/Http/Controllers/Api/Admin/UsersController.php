@@ -26,6 +26,14 @@ class UsersController extends Controller
         if ($user) {
             if ($user->type == "admin") {
                 $result = User::where('type', $type);
+                if ($request->course_id) {
+                    $users_ids = UserCourses::where('course_id', $request->course_id)->pluck('user_id')->toArray();
+                    $result = $result->whereIn('id', $users_ids);
+                }
+                if ($request->lesson_id) {
+                    $users_ids = UserLesson::where('lesson_id', $request->lesson_id)->pluck('user_id')->toArray();
+                    $result = $result->whereIn('id', $users_ids);
+                }
                 if ($request->search) {
                     $result = $result->where(function ($e) use ($request) {
                         $e->where('name', 'like', '%' . $request->search . '%')
@@ -114,13 +122,14 @@ class UsersController extends Controller
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
     }
+
     public function reset_screen_shoots(Request $request, $id)
     {
         $user = check_api_token($request->header('api_token'));
         if ($user) {
             if ($user->type == "admin") {
                 try {
-                    User::where('id', $id)->update(['screen_shoot_count'=>0]);
+                    User::where('id', $id)->update(['screen_shoot_count' => 0]);
                     return msgdata($request, success(), trans('lang.updated_s'), (object)[]);
                 } catch (\Exception $e) {
                     return msgdata($request, failed(), trans('lang.error'), (object)[]);
@@ -214,8 +223,8 @@ class UsersController extends Controller
                 if ($selected_user->type != 'student') {
                     return msgdata($request, failed(), trans('lang.should_select_student'), (object)[]);
                 }
-                $exists_course = UserCourses::where('course_id',$request->course_id)->where('user_id',$request->user_id)->first();
-                if(!$exists_course){
+                $exists_course = UserCourses::where('course_id', $request->course_id)->where('user_id', $request->user_id)->first();
+                if (!$exists_course) {
                     UserCourses::create([
                         'user_id' => $request->user_id,
                         'course_id' => $request->course_id,
@@ -288,9 +297,9 @@ class UsersController extends Controller
             if ($user->type == "admin") {
                 $user_lessons = UserLesson::where('user_id', $id)->pluck('lesson_id')->toArray();
                 $user_courses = Lesson::whereIn('id', $user_lessons)->pluck('course_id')->toArray();
-                $courses = Course::whereIn('id', $user_courses)->get()->map(function($data) use($id){
+                $courses = Course::whereIn('id', $user_courses)->get()->map(function ($data) use ($id) {
                     $user_lessons = UserLesson::where('user_id', $id)->pluck('lesson_id')->toArray();
-                    $data->lessons = Lesson::whereIn('id', $user_lessons)->where('course_id',$data->id)->get();
+                    $data->lessons = Lesson::whereIn('id', $user_lessons)->where('course_id', $data->id)->get();
                     return $data;
                 });
                 return msgdata($request, success(), trans('lang.shown_s'), $courses);
@@ -301,30 +310,31 @@ class UsersController extends Controller
             return msgdata($request, not_authoize(), trans('lang.not_authorize'), (object)[]);
         }
     }
-        public function export_pdf(Request $request, $type)
-        {
-            $user = check_api_token($request->header('api_token'));
-            $lang = check_api_token($request->header('lang'));
-            if ($user) {
-                if ($user->type == "admin") {
-                    $result = User::where('type', $type);
-                    if ($request->search) {
-                        $result = $result->where(function ($e) use ($request) {
-                            $e->where('name', 'like', '%' . $request->search . '%')
-                                ->orWhere('phone', 'like', '%' . $request->search . '%')
-                                ->orWhere('email', 'like', '%' . $request->search . '%');
-                        });
-                    }
-                    $result = $result->orderBy('created_at', 'desc')->get();
-                    $pdf = PDF::loadView('print.users', ['data' => $result,'lang'=>$lang]);
-                    $num = rand(00000,99999) .time();
-                    $pdf->save(public_path() .'/uploads/print/users/'.$num.'.pdf');
-                    return msgdata($request, success(), trans('lang.shown_s'), env('APP_URL')  .'/uploads/print/users/'.$num.'.pdf');
-                } else {
-                    return msgdata($request, failed(), trans('lang.permission_warrning'), []);
+
+    public function export_pdf(Request $request, $type)
+    {
+        $user = check_api_token($request->header('api_token'));
+        $lang = check_api_token($request->header('lang'));
+        if ($user) {
+            if ($user->type == "admin") {
+                $result = User::where('type', $type);
+                if ($request->search) {
+                    $result = $result->where(function ($e) use ($request) {
+                        $e->where('name', 'like', '%' . $request->search . '%')
+                            ->orWhere('phone', 'like', '%' . $request->search . '%')
+                            ->orWhere('email', 'like', '%' . $request->search . '%');
+                    });
                 }
+                $result = $result->orderBy('created_at', 'desc')->get();
+                $pdf = PDF::loadView('print.users', ['data' => $result, 'lang' => $lang]);
+                $num = rand(00000, 99999) . time();
+                $pdf->save(public_path() . '/uploads/print/users/' . $num . '.pdf');
+                return msgdata($request, success(), trans('lang.shown_s'), env('APP_URL') . '/uploads/print/users/' . $num . '.pdf');
             } else {
-                return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
+                return msgdata($request, failed(), trans('lang.permission_warrning'), []);
             }
+        } else {
+            return msgdata($request, not_authoize(), trans('lang.not_authorize'), []);
         }
+    }
 }

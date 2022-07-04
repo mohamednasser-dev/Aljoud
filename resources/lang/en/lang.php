@@ -1,7 +1,9 @@
 <?php
 
 return [
-
+    'course_exists_in_cart' => 'course selected exists before in cart',
+    'course_exists_in_your_courses' => 'course selected exists before in your courses',
+    'cart_empty' => 'cart empty',
     'name' => 'name',
     'email' => 'email',
     'phone' => 'phone',

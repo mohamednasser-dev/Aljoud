@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Events\InboxCreated;
+use App\Events\IncrementStudentsCountEvent;
+use App\Listeners\IncrementStudentsCountListner;
 use App\Listeners\NotifyInboxCreated;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -22,6 +24,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         InboxCreated::class => [
             NotifyInboxCreated::class,
+        ], IncrementStudentsCountEvent::class => [
+            IncrementStudentsCountListner::class,
         ],
     ];
 
